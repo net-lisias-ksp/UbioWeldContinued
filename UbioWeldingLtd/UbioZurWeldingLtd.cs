@@ -60,6 +60,7 @@ namespace UbioWeldingLtd
             int editorButy = config.GetValue<int>(Constants.settingEdiButY);
             _databaseAutoReload = config.GetValue<bool>(Constants.settingDbAutoReload);
             Welder.IncludeAllNodes = config.GetValue<bool>(Constants.settingAllNodes);
+            Welder.dontProcessMasslessParts = config.GetValue<bool>(Constants.dontProcessMasslessParts);
             _allowCareerMode = config.GetValue<bool>(Constants.settingAllowCareer);
             _editorButton = new Rect(Screen.width - editorButx, editorButy, Constants.guiWeldButWidth, Constants.guiWeldButHeight);
             _editorErrorDial = new Rect(Screen.width / 2 - Constants.guiDialogX, Screen.height / 2 - Constants.guiDialogY, Constants.guiDialogW, Constants.guiDialogH);

@@ -93,6 +93,8 @@ namespace UbioWeldingLtd
 
         public ConfigNode FullConfigNode = new ConfigNode(Constants.weldPartNode);
         public static bool IncludeAllNodes = false;
+        //Do not process mass of massless parts (with PhysicsSignificance = 1)
+        public static bool dontProcessMasslessParts = false;
 
         /*
          * 
@@ -920,8 +922,16 @@ namespace UbioWeldingLtd
 
             //mass
             float oldmass = _fullmass;
-            float partwetmass = newpart.mass + newpart.GetResourceMass();
-            _mass += newpart.mass;
+            float partdrymass = 0.0f;
+            // if part's PhysicsSignificance = 1, then this part is "massless" and its mass would be ignored in stock KSP
+            if ((!dontProcessMasslessParts) || (newpart.PhysicsSignificance != 1))
+            {
+                partdrymass = newpart.mass;
+            }
+
+            float partwetmass = partdrymass + newpart.GetResourceMass();
+
+            _mass += partdrymass;
             _fullmass += partwetmass;
             _com = ((_com * oldmass) + (_coMOffset * partwetmass)) / _fullmass;
 #if (DEBUG)

@@ -54,6 +54,7 @@ namespace UbioWeldingLtd
         public const string settingDbAutoReload = "DataBaseAutoReload";
         public const string settingAllNodes     = "IncludeAllNodes";
         public const string settingAllowCareer  = "AllowCareerMode";
+        public const string dontProcessMasslessParts = "DontProcessMasslessParts";
         
         //Messages
         public const string msgSuccess          = "Welding is a success";
