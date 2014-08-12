@@ -907,7 +907,7 @@ namespace UbioWeldingLtd
             //newpart.partInfo.TechRequired
 
             //Cost
-            _cost += newpart.partInfo.cost;
+            _cost += (int)newpart.partInfo.cost;
             _crewCapacity += newpart.CrewCapacity;
 
             // srfAttachNode Rules
