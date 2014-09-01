@@ -383,6 +383,10 @@ namespace UbioWeldingLtd
 //                partname = partname.Replace('.', '_'); //Fixed the name change for the fuelTank_long (stored as fuelTank.long), science_module (stored as science.module)
 //            }
             Debug.Log(string.Format("{0}{1}{2}",Constants.logPrefix,Constants.logWeldingPart,partname));
+#if (DEBUG)
+            Debug.Log(string.Format("{0}..part rescaleFactor {1:F}", Constants.logPrefix, newpart.rescaleFactor));
+            Debug.Log(string.Format("{0}..part scaleFactor {1:F}", Constants.logPrefix, newpart.scaleFactor));
+#endif
 
             //--- Find all the config file with the name
             List<UrlDir.UrlConfig> matchingPartConfigs = new List<UrlDir.UrlConfig>();
@@ -390,7 +394,8 @@ namespace UbioWeldingLtd
             {
                 string newconfigname = config.name.Replace('_', '.');
 #if (DEBUG)
-                Debug.Log(string.Format("{0}.config name {1}", Constants.logPrefix, newconfigname));
+//Girka2K - too many spam in LOG from here
+//                Debug.Log(string.Format("{0}.config name {1}", Constants.logPrefix, newconfigname));
 #endif
                 if (System.String.Equals(partname, newconfigname, System.StringComparison.Ordinal))
                 {
@@ -433,9 +438,9 @@ namespace UbioWeldingLtd
                         info.scale = new Vector3(newpart.rescaleFactor, newpart.rescaleFactor, newpart.rescaleFactor);
 
 #if (DEBUG)
-                        Debug.Log(string.Format("{0}..position {1}",Constants.logPrefix,info.position));
-                        Debug.Log(string.Format("{0}..rotation {1}",Constants.logPrefix,info.rotation));
-                        Debug.Log(string.Format("{0}..scale {1}",Constants.logPrefix,info.scale));
+                        Debug.Log(string.Format("{0}..position {1:F3}", Constants.logPrefix, info.position));
+                        Debug.Log(string.Format("{0}..rotation {1:F3}", Constants.logPrefix, info.rotation));
+                        Debug.Log(string.Format("{0}..scale {1:F3}", Constants.logPrefix, info.scale));
 #endif
                         _models.Add(info);
                         _coMOffset += info.position;
@@ -460,17 +465,19 @@ namespace UbioWeldingLtd
                             }
                             Debug.Log(string.Format("{0}..{1}{2}", Constants.logPrefix, Constants.logModelUrl, info.url));
 
-                            Vector3 position = (node.HasValue("position")) ? ConfigNode.ParseVector3(node.GetValue("position")) : Vector3.zero;
+                            Vector3 position = (node.HasValue("position")) ? (ConfigNode.ParseVector3(node.GetValue("position")) * newpart.rescaleFactor) : Vector3.zero;
                             setRelativePosition(newpart, ref position);
+
                             info.position = position;
+
                             Vector3 rotation = (node.HasValue("rotation")) ? ConfigNode.ParseVector3(node.GetValue("rotation")) : Vector3.zero;
                             setRelativeRotation(newpart, ref rotation);
                             info.rotation = rotation;
-                            info.scale = (node.HasValue("scale")) ? ConfigNode.ParseVector3(node.GetValue("scale")) : new Vector3(newpart.rescaleFactor, newpart.rescaleFactor, newpart.rescaleFactor);
+                            info.scale = (node.HasValue("scale")) ? (ConfigNode.ParseVector3(node.GetValue("scale")) * newpart.rescaleFactor /*/ newpart.scaleFactor */ * (Constants.defaultRescaleFactor / _rescaleFactor)) : new Vector3(newpart.rescaleFactor, newpart.rescaleFactor, newpart.rescaleFactor);
 #if (DEBUG)
-                            Debug.Log(string.Format("{0}..position {1}", Constants.logPrefix, info.position));
-                            Debug.Log(string.Format("{0}..rotation {1}", Constants.logPrefix, info.rotation));
-                            Debug.Log(string.Format("{0}..scale {1}", Constants.logPrefix, info.scale));
+                            Debug.Log(string.Format("{0}..position {1:F3}", Constants.logPrefix, info.position));
+                            Debug.Log(string.Format("{0}..rotation {1:F3}", Constants.logPrefix, info.rotation));
+                            Debug.Log(string.Format("{0}..scale {1:F3}", Constants.logPrefix, info.scale));
 #endif
                             if (node.HasValue("texture"))
                             {
