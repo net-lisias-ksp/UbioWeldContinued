@@ -451,6 +451,7 @@ namespace UbioWeldingLtd
 #if (DEBUG)
                         Debug.Log(string.Format("{0}..Config {1} has {2} {3} node", Constants.logPrefix, cfg.name, modelnodes.Length, Constants.weldModelNode));
 #endif
+                        Vector3 _coMOffsetSum = Vector3.zero;
                         foreach (ConfigNode node in modelnodes)
                         {
                             ModelInfo info = new ModelInfo();
@@ -494,8 +495,9 @@ namespace UbioWeldingLtd
                                 info.parent = node.GetValue("parent");
                             }
                             _models.Add(info);
-                            _coMOffset += info.position;
+                            _coMOffsetSum += info.position;
                         } //foreach (ConfigNode node in modelnodes)
+                        _coMOffset = _coMOffsetSum / modelnodes.Length;
                     } // else of if ( !cfg.config.HasNode(Constants.weldModelNode) )
                     
                     //RESSOURCE
