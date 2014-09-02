@@ -107,7 +107,6 @@ namespace UbioWeldingLtd
         public const float weldRescaleFactor    = 1.0f;
         public const int weldDefaultPysicsSign  = -1;
         public const int weldDefaultEntryCost   = 0;
-        public const float defaultRescaleFactor = 1.25f; //for parts not containing RescaleFactor value
 
         //module name
         public const string modStockSas         = "ModuleSAS";

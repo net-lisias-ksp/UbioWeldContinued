@@ -474,7 +474,7 @@ namespace UbioWeldingLtd
                             Vector3 rotation = (node.HasValue("rotation")) ? ConfigNode.ParseVector3(node.GetValue("rotation")) : Vector3.zero;
                             setRelativeRotation(newpart, ref rotation);
                             info.rotation = rotation;
-                            info.scale = (node.HasValue("scale")) ? (ConfigNode.ParseVector3(node.GetValue("scale")) * newpart.rescaleFactor /*/ newpart.scaleFactor */ * (Constants.defaultRescaleFactor / _rescaleFactor)) : new Vector3(newpart.rescaleFactor, newpart.rescaleFactor, newpart.rescaleFactor);
+                            info.scale = (node.HasValue("scale")) ? (ConfigNode.ParseVector3(node.GetValue("scale")) * newpart.rescaleFactor * (newpart.rescaleFactor / _rescaleFactor)) : new Vector3((newpart.rescaleFactor / _rescaleFactor), (newpart.rescaleFactor / _rescaleFactor), (newpart.rescaleFactor / _rescaleFactor));
 #if (DEBUG)
                             Debug.Log(string.Format("{0}..position {1:F3}", Constants.logPrefix, info.position));
                             Debug.Log(string.Format("{0}..rotation {1:F3}", Constants.logPrefix, info.rotation));
