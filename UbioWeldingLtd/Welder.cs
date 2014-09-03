@@ -518,7 +518,7 @@ namespace UbioWeldingLtd
                                 float amount = float.Parse(res.GetValue("amount")) + float.Parse(rescfg.GetValue("amount"));
                                 float max = float.Parse(res.GetValue("maxAmount")) + float.Parse(rescfg.GetValue("maxAmount"));
                                 rescfg.SetValue("amount", amount.ToString());
-                                rescfg.SetValue("maxAmount", amount.ToString());
+                                rescfg.SetValue("maxAmount", max.ToString());
                                 exist = true;
                                 Debug.Log(string.Format("{0}..{1}{2} {3}/{4}", Constants.logPrefix, Constants.logResMerge, resname, amount, max));
                                 break;
