@@ -1,4 +1,7 @@
 ﻿using UnityEngine;
+using System.IO;
+using System.Reflection;
+using System.Collections.Generic;
 
 namespace UbioWeldingLtd
 {
@@ -49,12 +52,15 @@ namespace UbioWeldingLtd
         public const string guiDialSaved        = "New part saved and shipped!";
 
         //Settings
-        public const string settingEdiButX      = "EditorButtonX";
-        public const string settingEdiButY      = "EditorButtonY";
-        public const string settingDbAutoReload = "DataBaseAutoReload";
-        public const string settingAllNodes     = "IncludeAllNodes";
-        public const string settingAllowCareer  = "AllowCareerMode";
-        public const string dontProcessMasslessParts = "DontProcessMasslessParts";
+        public const string settingEdiButX      = "editorButtonXPosition";
+        public const string settingEdiButY      = "editorButtonYPosition";
+        public const string settingDbAutoReload = "dataBaseAutoReload";
+        public const string settingAllNodes     = "includeAllNodes";
+        public const string settingAllowCareer  = "allowCareerMode";
+        public const string settingDontProcessMasslessParts = "dontProcessMasslessParts";
+		public const string settingXmlFilePath = "/PluginData/UbioWeldingLtd/";
+		public const string settingXmlConfigFileName = "config.xml";
+		public static readonly string settingRuntimeDirectory = Assembly.GetExecutingAssembly().Location.Replace(new FileInfo(Assembly.GetExecutingAssembly().Location).Name, "");
         
         //Messages
         public const string msgSuccess          = "Welding is a success";

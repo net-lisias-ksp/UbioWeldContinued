@@ -1,7 +1,5 @@
 ﻿using UnityEngine;
 using System.IO;
-using System.Linq;
-using System.Text.RegularExpressions;
 using System.Collections.Generic;
 
 namespace UbioWeldingLtd
@@ -21,6 +19,8 @@ namespace UbioWeldingLtd
 
         }
 
+        public static UbioZurWeldingLtd instance { get; private set; }
+        
         private Rect _editorButton;
         private Rect _editorErrorDial;
         private Rect _editorWarningDial;
@@ -32,42 +32,53 @@ namespace UbioWeldingLtd
         private List<GUIContent> _catNames;
         private GUIDropdown _catDropdown;
         private GUIStyle _catListStyle;
-        private bool _databaseAutoReload;
-        private bool _allowCareerMode;
         private Vector2 _scrollRes = Vector2.zero;
         private Vector2 _scrollMod = Vector2.zero;
+
+        private WeldingConfiguration _config;
+        private bool _guiVisible = false;
+
+        /// <summary>
+        /// access to the config of the whole tool
+        /// </summary>
+        public WeldingConfiguration config
+        {
+            get { return _config; }
+        }
 
         /*
          * Called when plug in loaded
          */
         public void Awake()
         {
+            instance = this;
+            initConfig();
             _state = DisplayState.none;
             RenderingManager.AddToPostDrawQueue(0, OnDraw);
-            KSP.IO.PluginConfiguration config = KSP.IO.PluginConfiguration.CreateForType<UbioZurWeldingLtd>();
-            config.load();
-            //TODO: manage the case there is no config file (and so no values)
-            /* Save the value to create the config file
-            config.SetValue(Constants.settingEdiButX, 190);
-            config.SetValue(Constants.settingEdiButY, 50);
-            config.SetValue(Constants.settingDbAutoReload, true);
-            config.SetValue(Constants.settingAllNodes, false);
-            config.SetValue(Constants.settingAllowCareer, false);
-            config.save();
-            */
-
-            int editorButx = config.GetValue<int>(Constants.settingEdiButX);
-            int editorButy = config.GetValue<int>(Constants.settingEdiButY);
-            _databaseAutoReload = config.GetValue<bool>(Constants.settingDbAutoReload);
-            Welder.IncludeAllNodes = config.GetValue<bool>(Constants.settingAllNodes);
-            Welder.dontProcessMasslessParts = config.GetValue<bool>(Constants.dontProcessMasslessParts);
-            _allowCareerMode = config.GetValue<bool>(Constants.settingAllowCareer);
-            _editorButton = new Rect(Screen.width - editorButx, editorButy, Constants.guiWeldButWidth, Constants.guiWeldButHeight);
+            _editorButton = new Rect(Screen.width - _config.editorButtonX, _config.editorButtonY, Constants.guiWeldButWidth, Constants.guiWeldButHeight);
             _editorErrorDial = new Rect(Screen.width / 2 - Constants.guiDialogX, Screen.height / 2 - Constants.guiDialogY, Constants.guiDialogW, Constants.guiDialogH);
             _editorWarningDial = new Rect(Screen.width / 2 - Constants.guiDialogX, Screen.height / 2 - Constants.guiDialogY, Constants.guiDialogW, Constants.guiDialogH);
             _editorInfoWindow = new Rect(Screen.width / 2 - Constants.guiInfoWindowX, Screen.height / 2 - Constants.guiInfoWindowY, Constants.guiInfoWindowW, Constants.guiInfoWindowH);
             _editorOverwriteDial = new Rect(Screen.width / 2 - Constants.guiDialogX, Screen.height / 2 - Constants.guiDialogY, Constants.guiDialogW, Constants.guiDialogH);
             _editorSavedDial = new Rect(Screen.width / 2 - Constants.guiDialogX, Screen.height / 2 - Constants.guiDialogY, Constants.guiDialogW, Constants.guiDialogH);
+        }
+
+        /// <summary>
+        /// Loads the config for the Welding or prepares default values and generates a new config
+        /// </summary>
+        private void initConfig()
+        {
+            if (!System.IO.File.Exists(string.Concat(Constants.settingRuntimeDirectory, Constants.settingXmlFilePath, Constants.settingXmlConfigFileName)))
+            {
+                _config = new WeldingConfiguration();
+                FileManager.saveConfig(_config);
+            }
+            else
+            {
+                _config = FileManager.loadConfig();
+            }
+            Welder.includeAllNodes = _config.includeAllNodes;
+            Welder.dontProcessMasslessParts = _config.dontProcessMasslessParts;
         }
 
         /*
@@ -98,7 +109,7 @@ namespace UbioWeldingLtd
          */
         private void OnDraw()
         {
-            if (null == EditorLogic.fetch || (!_allowCareerMode && HighLogic.fetch.currentGame.Mode == Game.Modes.CAREER) )
+            if (null == EditorLogic.fetch || (!config.allowCareerMode && HighLogic.fetch.currentGame.Mode == Game.Modes.CAREER) )
             {
                 return;
             }
@@ -450,7 +461,7 @@ namespace UbioWeldingLtd
 
             _welder.FullConfigNode.Save(filepath);
 
-            if (_databaseAutoReload)
+            if (config.dataBaseAutoReload)
             {
                 ReloadDatabase();
             }

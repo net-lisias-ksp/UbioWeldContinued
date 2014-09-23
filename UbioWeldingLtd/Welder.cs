@@ -92,13 +92,21 @@ namespace UbioWeldingLtd
         private Vector3 _com = Vector3.zero;
 
         public ConfigNode FullConfigNode = new ConfigNode(Constants.weldPartNode);
-        public static bool IncludeAllNodes = false;
-        //Do not process mass of massless parts (with PhysicsSignificance = 1)
-        public static bool dontProcessMasslessParts = false;
+        private static bool _includeAllNodes = false;
+        private static bool _dontProcessMasslessParts = false;
 
-        /*
-         * 
-         */
+        public static bool includeAllNodes
+        {
+            get { return _includeAllNodes; }
+            set { _includeAllNodes = value; }
+        }
+
+        public static bool dontProcessMasslessParts
+        {
+            get { return _dontProcessMasslessParts; }
+            set { _dontProcessMasslessParts = value; }
+        }
+        
         public string Name
         { 
             get { return _name; }
@@ -131,6 +139,7 @@ namespace UbioWeldingLtd
         public float BreakingTorque { get { return _breakingTorque; } }
         public float MaxTemp { get { return _maxTemp; } }
         public float NbParts { get { return _partNumber; } }
+        
         public string[] Modules
         {
             get
@@ -145,6 +154,7 @@ namespace UbioWeldingLtd
                 return moduleslist;
             }
         }
+
         public string[] Resources
         {
             get
@@ -159,6 +169,7 @@ namespace UbioWeldingLtd
                 return resourceslist;
             }
         }
+
         public PartCategories Category
         { 
             get { return _category; }
@@ -377,11 +388,7 @@ namespace UbioWeldingLtd
             WeldingReturn ret = WeldingReturn.Success;
             string partname = (string)newpart.partInfo.partPrefab.name.Clone();
             removecClone(ref partname);
-            //KSP Squad specific hardcode :@
-//            if (string.Equals(partname, "fuelTank.long") || string.Equals(partname, "science.module"))
-//            {
-//                partname = partname.Replace('.', '_'); //Fixed the name change for the fuelTank_long (stored as fuelTank.long), science_module (stored as science.module)
-//            }
+
             Debug.Log(string.Format("{0}{1}{2}",Constants.logPrefix,Constants.logWeldingPart,partname));
 #if (DEBUG)
             Debug.Log(string.Format("{0}..part rescaleFactor {1:F}", Constants.logPrefix, newpart.rescaleFactor));
@@ -900,7 +907,7 @@ namespace UbioWeldingLtd
             foreach (AttachNode partnode in newpart.attachNodes)
             {
                 //only add node if not attached to another part (or if requested in the condig file)
-                if (IncludeAllNodes || null == partnode.attachedPart)
+                if (_includeAllNodes || null == partnode.attachedPart)
                 {
                     AttachNode node = partnode; //make sure we don't overwrite the part node
                     node.id += partname + _partNumber;
