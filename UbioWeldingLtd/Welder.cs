@@ -1033,9 +1033,13 @@ namespace UbioWeldingLtd
             {
                 //Make sure the orintation is an int
                 Vector3 orientation = Vector3.zero;
-                orientation.x = (int)Mathf.RoundToInt(node.orientation.x);
-                orientation.y = (int)Mathf.RoundToInt(node.orientation.y);
-                orientation.z = (int)Mathf.RoundToInt(node.orientation.z);
+                orientation.x = (int)Mathf.FloorToInt(node.orientation.x + 0.5f);
+                orientation.y = (int)Mathf.FloorToInt(node.orientation.y + 0.5f);
+                orientation.z = (int)Mathf.FloorToInt(node.orientation.z + 0.5f);
+                if (orientation == Vector3.zero)
+                {
+                    orientation = Vector3.up;
+                }
                 partconfig.AddValue(string.Format("node_stack_{0}", node.id), string.Format("{0},{1},{2}", ConfigNode.WriteVector(node.position), ConfigNode.WriteVector(orientation), node.size));
             }
             //add surface attach node
