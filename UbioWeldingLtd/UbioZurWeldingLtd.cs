@@ -55,6 +55,10 @@ namespace UbioWeldingLtd
             initConfig();
             _state = DisplayState.none;
             RenderingManager.AddToPostDrawQueue(0, OnDraw);
+			if (!_config.useStockToolbar)
+			{
+				_editorButton = new Rect(Screen.width - _config.editorButtonX, _config.editorButtonY, Constants.guiWeldButWidth, Constants.guiWeldButHeight);
+			}
             _editorButton = new Rect(Screen.width - _config.editorButtonX, _config.editorButtonY, Constants.guiWeldButWidth, Constants.guiWeldButHeight);
             _editorErrorDial = new Rect(Screen.width / 2 - Constants.guiDialogX, Screen.height / 2 - Constants.guiDialogY, Constants.guiDialogW, Constants.guiDialogH);
             _editorWarningDial = new Rect(Screen.width / 2 - Constants.guiDialogX, Screen.height / 2 - Constants.guiDialogY, Constants.guiDialogW, Constants.guiDialogH);
@@ -63,6 +67,20 @@ namespace UbioWeldingLtd
             _editorSavedDial = new Rect(Screen.width / 2 - Constants.guiDialogX, Screen.height / 2 - Constants.guiDialogY, Constants.guiDialogW, Constants.guiDialogH);
         }
 
+        /// <summary>
+        /// Welds the whole active craft in the scene in case the stocktoolbar is used
+        /// </summary>
+		public void stockToolbarButtonUsed()
+		{
+			if (!EditorLogic.softLock)
+			{
+                if (EditorLogic.startPod != null)
+                {
+                    weldPart(EditorLogic.startPod);
+                }
+			}
+			//_stockToolbarButton.SetFalse();
+		}
         /// <summary>
         /// Loads the config for the Welding or prepares default values and generates a new config
         /// </summary>
@@ -81,27 +99,34 @@ namespace UbioWeldingLtd
             Welder.dontProcessMasslessParts = _config.dontProcessMasslessParts;
         }
 
+        /// <summary>
+        /// Prepares the Stocktoolbar with the Icon or enables the old style button
+        /// </summary>
+		private void initGUI()
+		{
+			if (null == EditorLogic.fetch || (!_config.allowCareerMode && HighLogic.fetch.currentGame.Mode == Game.Modes.CAREER))
+			{
+				_guiVisible = false;
+			}
+			else
+			{
+				if (_config.useStockToolbar)
+				{
+					if (EditorToolbar.instance != null)
+					{
+						EditorToolbar.instance.initToolbar();
+					}
+				}
+				_guiVisible = true;
+			}
+		}
+
         /*
          * Called once everything in scene is loaded
          */
         public void Start()
         {
-            _catNames = new List<GUIContent>();
-            List<string> catlist = new List<string>(System.Enum.GetNames(typeof(PartCategories)));
-            catlist.Remove(PartCategories.none.ToString());
-            foreach (string cat in catlist)
-            {
-                _catNames.Add(new GUIContent(cat));
-            }
-            _catListStyle = new GUIStyle();
-            _catListStyle.normal.textColor = Color.white;
-            _catListStyle.onHover.background =
-            _catListStyle.hover.background = new Texture2D(2, 2);
-            _catListStyle.padding.left =
-            _catListStyle.padding.right =
-            _catListStyle.padding.top =
-            _catListStyle.padding.bottom = 1;
-            _catDropdown = new GUIDropdown(_catNames[0], _catNames.ToArray(), "button", "box", _catListStyle);
+            initGUI();
         }
 
         /*
@@ -109,69 +134,83 @@ namespace UbioWeldingLtd
          */
         private void OnDraw()
         {
-            if (null == EditorLogic.fetch || (!config.allowCareerMode && HighLogic.fetch.currentGame.Mode == Game.Modes.CAREER) )
+            if (_guiVisible)
             {
-                return;
-            }
+                //Set the GUI Skin
+                GUI.skin = HighLogic.Skin;
 
-            //Set the GUI Skin
-            GUI.skin = HighLogic.Skin;
-
-            switch (_state)
-            {
-                case DisplayState.none :
-                    OnWeldButton();
-                    break;
-                case DisplayState.weldError :
-                    _editorErrorDial = GUILayout.Window(1, _editorErrorDial, OnErrorDisplay, Constants.weldManufacturer);
-                    break;
-                case DisplayState.weldWarning :
-                    _editorWarningDial = GUILayout.Window(2, _editorWarningDial, OnWarningDisplay, Constants.weldManufacturer);
-                    break;
-                case DisplayState.infoWindow :
-                    _editorInfoWindow = GUI.Window(3, _editorInfoWindow, OnInfoWindow, Constants.weldManufacturer);
-                    break;
-                case DisplayState.savedWindow :
-                    _editorSavedDial = GUILayout.Window(4, _editorSavedDial, OnSavedDisplay, Constants.weldManufacturer);
-                    break;
-                case DisplayState.overwriteDial :
-                    _editorOverwriteDial = GUILayout.Window(5, _editorOverwriteDial, OnOverwriteDisplay, Constants.weldManufacturer);
-                    break;
-            }
+                switch (_state)
+                {
+                    case DisplayState.none :
+                        if (!_config.useStockToolbar)
+                        {
+                            OnWeldButton();
+                        }
+                        break;
+                    case DisplayState.weldError :
+                        _editorErrorDial = GUILayout.Window(1, _editorErrorDial, OnErrorDisplay, Constants.weldManufacturer);
+                        break;
+                    case DisplayState.weldWarning :
+                        _editorWarningDial = GUILayout.Window(2, _editorWarningDial, OnWarningDisplay, Constants.weldManufacturer);
+                        break;
+                    case DisplayState.infoWindow :
+                        _editorInfoWindow = GUI.Window(3, _editorInfoWindow, OnInfoWindow, Constants.weldManufacturer);
+                        break;
+                    case DisplayState.savedWindow :
+                        _editorSavedDial = GUILayout.Window(4, _editorSavedDial, OnSavedDisplay, Constants.weldManufacturer);
+                        break;
+                    case DisplayState.overwriteDial :
+                        _editorOverwriteDial = GUILayout.Window(5, _editorOverwriteDial, OnOverwriteDisplay, Constants.weldManufacturer);
+                        break;
+                }
+            } //if (_guiVisible)
         } //private void OnDraw()
 
 
-        /*
-         * Editor Button Draw
-         */
-        private void OnWeldButton()
+        private void weldPart(Part partToWeld)
         {
-            //Making sure the editor is not on softlock or no parts are selected
-            if (EditorLogic.softLock || null == EditorLogic.SelectedPart)
+            //Lock editor
+            EditorLogic.fetch.Lock(true, true, true, "UBILOCK9213");
+
+            //process the welding
+#if (DEBUG)
+            Debug.ClearDeveloperConsole();
+
+            Debug.Log(string.Format("{0}{1}", Constants.logPrefix, Constants.logVersion));
+            Debug.Log(string.Format("{0}{1}", Constants.logPrefix, Constants.logStartWeld));
+
+#endif
+            bool warning = false;
+            _welder = new Welder();
+
+            WeldingReturn ret = _welder.weldThisPart(partToWeld);
+
+            if (ret < 0)
             {
-                GUI.Box(_editorButton, Constants.guiWeldLabel);
+#if (DEBUG)
+                Debug.Log(string.Format("{0}{1}", Constants.logPrefix, Constants.logEndWeld));
+#endif
+                _state = DisplayState.weldError;
+                return;
             }
             else
             {
-                if (GUI.Button(_editorButton, Constants.guiWeldLabel))
+                warning = warning || (0 < ret);
+            }
+
+            Part[] children = partToWeld.FindChildParts<Part>(true);
+
+            if (children != null)
+            {
+                foreach (Part child in children)
                 {
-                    //Lock editor
-                    EditorLogic.fetch.Lock(true, true, true,"UBILOCK9213");
-                    
-                    //process the welding
-#if (DEBUG)
-                    Debug.ClearDeveloperConsole();
-#endif
-                    Debug.Log(string.Format("{0}{1}", Constants.logPrefix, Constants.logVersion));
-                    Debug.Log(string.Format("{0}{1}", Constants.logPrefix, Constants.logStartWeld));
-                    Part selectedPart = EditorLogic.fetch.PartSelected;
-                    bool warning = false;
-                    _welder = new Welder();
-                    
-                    WeldingReturn ret = _welder.weldThisPart(selectedPart);
-                    if (0 > ret)
+                    ret = _welder.weldThisPart(child);
+
+                    if (ret< 0)
                     {
+#if (DEBUG)
                         Debug.Log(string.Format("{0}{1}", Constants.logPrefix, Constants.logEndWeld));
+#endif
                         _state = DisplayState.weldError;
                         return;
                     }
@@ -179,43 +218,46 @@ namespace UbioWeldingLtd
                     {
                         warning = warning || (0 < ret);
                     }
-                    
-                    Part[] children = selectedPart.FindChildParts<Part>(true);
-                    if (null != children)
-                    {
-                        foreach (Part child in children)
-                        {
-                            ret = _welder.weldThisPart(child);
-                            if (0 > ret)
-                            {
-                                Debug.Log(string.Format("{0}{1}", Constants.logPrefix, Constants.logEndWeld));
-                                _state = DisplayState.weldError;
-                                return;
-                            }
-                            else
-                            {
-                                warning = warning || (0 < ret);
-                            }
-                        }
-                    }
-                    _welder.processNewCoM();
-                    _scrollMod = Vector2.zero;
-                    _scrollRes = Vector2.zero;
-                    Debug.Log(string.Format("{0} {1}{2}", Constants.logPrefix, _welder.NbParts, Constants.logEndWeld));
-                    Debug.Log(string.Format("{0}{1}", Constants.logPrefix, Constants.logEndWeld));
-                    if (warning)
-                    {
-                        _state = DisplayState.weldWarning;
-                    }
-                    else
-                    {
-                        _catDropdown.SelectedItemIndex = (int)_welder.Category;
-                        _state = DisplayState.infoWindow;
-                    }
+                }
+            }
+            _welder.processNewCoM();
+            _scrollMod = Vector2.zero;
+            _scrollRes = Vector2.zero;
+#if (DEBUG)
+            Debug.Log(string.Format("{0} {1} | {2} Parts welded", Constants.logPrefix, Constants.logEndWeld, _welder.NbParts));
+
+#endif
+            if (warning)
+            {
+                Debug.Log(string.Format("{0} {1} | Warning", Constants.logPrefix, Constants.logEndWeld));
+                _state = DisplayState.weldWarning;
+            }
+            else
+            {
+                _catDropdown.SelectedItemIndex = (int)_welder.Category;
+                _state = DisplayState.infoWindow;
+            }
+        }
+
+        /*
+         * Editor Button Draw
+         */
+        private void OnWeldButton()
+        {
+            //Making sure the editor is not on softlock or no parts are selected
+            if (EditorLogic.softLock || EditorLogic.SelectedPart == null)
+            {
+                GUI.Box(_editorButton, Constants.guiWeldLabel);
+            }
+            else
+            {
+                if (GUI.Button(_editorButton, Constants.guiWeldLabel))
+                {
+                    weldPart(EditorLogic.fetch.PartSelected);
                 } // if (GUI.Button(_editorButton, Constants.guiWeldLabel))
             } // elsef if (EditorLogic.softLock || null == EditorLogic.SelectedPart)
         } //private void OnWeldButton()
-
+        
         /*
          * Error Message
          */
@@ -408,14 +450,14 @@ namespace UbioWeldingLtd
                     //check if the file exist
                     string dirpath = string.Format("{0}{1}/{2}", Constants.weldPartPath, _welder.Category.ToString(), _welder.Name);
                     string filepath = dirpath + Constants.weldPartFile;
-                    if (!File.Exists(filepath))
+                    if (!System.IO.File.Exists(filepath))
                     {
                         if (!Directory.Exists(dirpath))
                         {
                             Directory.CreateDirectory(dirpath);
                         }
                         //create the file
-                        StreamWriter partfile = File.CreateText(filepath);
+                        StreamWriter partfile = System.IO.File.CreateText(filepath);
                         partfile.Close();
                         WriteCfg(filepath);
                         _state = DisplayState.savedWindow;
@@ -484,6 +526,10 @@ namespace UbioWeldingLtd
          */
         private void ClearEditor()
         {
+            if (_config.useStockToolbar || EditorLogic.SelectedPart == null)
+            {
+                EditorLogic.fetch.PartSelected = EditorLogic.startPod;
+            }
             EditorLogic.fetch.DestroySelectedPart();
             EditorLogic.fetch.Unlock("UBILOCK9213");
             EditorPartList.Instance.Refresh();

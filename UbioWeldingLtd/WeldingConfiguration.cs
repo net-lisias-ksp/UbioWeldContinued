@@ -18,6 +18,7 @@ namespace UbioWeldingLtd
         private bool _includeAllNodes = false;
         private bool _allowCareerMode = true;
         private bool _dontProcessMasslessParts = true;
+		private bool _useStockToolbar = true;
 
         public int editorButtonX
         {
@@ -54,5 +55,11 @@ namespace UbioWeldingLtd
             get { return _dontProcessMasslessParts; }
             set { _dontProcessMasslessParts = value; }
         }
+
+		public bool useStockToolbar
+		{
+			get { return _useStockToolbar; }
+			set { _useStockToolbar = value; }
+		}
     }
 }
