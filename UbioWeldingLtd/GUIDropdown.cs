@@ -7,7 +7,7 @@
 
 namespace UbioWeldingLtd
 {
-    class GUIDropdown
+    public class GUIDropdown
     {
         private static bool forceToUnShow = false; 
         private static int useControlID = -1;

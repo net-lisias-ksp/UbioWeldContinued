@@ -29,9 +29,9 @@ namespace UbioWeldingLtd
         private Rect _editorSavedDial;
         private Welder _welder;
         private DisplayState _state;
-        private List<GUIContent> _catNames;
+		private List<GUIContent> _catNames = new List<GUIContent>();
         private GUIDropdown _catDropdown;
-        private GUIStyle _catListStyle;
+		private GUIStyle _catListStyle = new GUIStyle();
         private Vector2 _scrollRes = Vector2.zero;
         private Vector2 _scrollMod = Vector2.zero;
 
@@ -65,6 +65,10 @@ namespace UbioWeldingLtd
             _editorInfoWindow = new Rect(Screen.width / 2 - Constants.guiInfoWindowX, Screen.height / 2 - Constants.guiInfoWindowY, Constants.guiInfoWindowW, Constants.guiInfoWindowH);
             _editorOverwriteDial = new Rect(Screen.width / 2 - Constants.guiDialogX, Screen.height / 2 - Constants.guiDialogY, Constants.guiDialogW, Constants.guiDialogH);
             _editorSavedDial = new Rect(Screen.width / 2 - Constants.guiDialogX, Screen.height / 2 - Constants.guiDialogY, Constants.guiDialogW, Constants.guiDialogH);
+
+			_catNames = WeldingHelpers.initPartCategories(_catNames);
+			_catListStyle = WeldingHelpers.initGuiStyle(_catListStyle);
+			_catDropdown = WeldingHelpers.initDropDown(_catNames, _catListStyle, _catDropdown);
         }
 
         /// <summary>
@@ -90,6 +94,13 @@ namespace UbioWeldingLtd
             {
                 _config = new WeldingConfiguration();
                 FileManager.saveConfig(_config);
+				_config.vector2CurveModules = Constants.basicVector2CurveModules;
+				_config.vector4CurveModules = Constants.basicVector4CurveModules;
+				_config.subModules = Constants.basicSubModules;
+				_config.modulesToIgnore = Constants.basicModulesToIgnore;
+				_config.averagedModuleAttributes = Constants.basicAveragedModuleAttributes;
+				_config.unchangedModuleAttributes = Constants.basicUnchangedModuleAttributes;
+				_config.breakingModuleAttributes = Constants.basicBreakingModuleAttributes;
             }
             else
             {
@@ -97,6 +108,7 @@ namespace UbioWeldingLtd
             }
             Welder.includeAllNodes = _config.includeAllNodes;
             Welder.dontProcessMasslessParts = _config.dontProcessMasslessParts;
+			Welder.runInTestMode = _config.runInTestMode;
         }
 
         /// <summary>
@@ -497,13 +509,15 @@ namespace UbioWeldingLtd
          */
         private void WriteCfg( string filepath)
         {
+#if (DEBUG)
             Debug.Log(string.Format("{0}{1}{2}", Constants.logPrefix, Constants.logWritingFile, filepath));
+#endif
 
             _welder.CreateFullConfigNode();
 
             _welder.FullConfigNode.Save(filepath);
 
-            if (config.dataBaseAutoReload)
+            if (_config.dataBaseAutoReload)
             {
                 ReloadDatabase();
             }

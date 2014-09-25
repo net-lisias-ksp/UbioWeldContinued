@@ -18,7 +18,15 @@ namespace UbioWeldingLtd
         private bool _includeAllNodes = false;
         private bool _allowCareerMode = true;
         private bool _dontProcessMasslessParts = true;
+		private bool _runInTestMode = true;
 		private bool _useStockToolbar = true;
+        private string[] _vector2CurveModules;
+        private string[] _vector4CurveModules;
+        private string[] _subModules;
+        private string[] _modulesToIgnore;
+        private string[] _averagedModuleAttributes;
+        private string[] _unchangedModuleAttributes;
+        private string[] _breakingModuleAttributes;
 
         public int editorButtonX
         {
@@ -56,10 +64,58 @@ namespace UbioWeldingLtd
             set { _dontProcessMasslessParts = value; }
         }
 
+		public bool runInTestMode
+		{
+			get { return _runInTestMode; }
+			set { _runInTestMode = value; }
+		}
+
 		public bool useStockToolbar
 		{
 			get { return _useStockToolbar; }
 			set { _useStockToolbar = value; }
 		}
+
+        public string[] vector2CurveModules
+        {
+            get { return _vector2CurveModules; }
+            set { _vector2CurveModules = value; }
+        }
+
+        public string[] vector4CurveModules
+        {
+            get { return _vector4CurveModules; }
+            set { _vector4CurveModules = value; }
+        }
+
+        public string[] subModules
+        {
+            get { return _subModules; }
+            set { _subModules = value; }
+        }
+
+        public string[] modulesToIgnore
+        {
+            get { return _modulesToIgnore; }
+            set { _modulesToIgnore = value; }
+        }
+
+        public string[] averagedModuleAttributes
+        {
+            get { return _averagedModuleAttributes; }
+            set { _averagedModuleAttributes = value; }
+        }
+
+        public string[] unchangedModuleAttributes
+        {
+            get { return _unchangedModuleAttributes; }
+            set { _unchangedModuleAttributes = value; }
+        }
+
+        public string[] breakingModuleAttributes
+        {
+            get { return _breakingModuleAttributes; }
+            set { _breakingModuleAttributes = value; }
+        }
     }
 }

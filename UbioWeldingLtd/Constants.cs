@@ -61,6 +61,8 @@ namespace UbioWeldingLtd
 		public const string settingIconGetPath = "UbioWeldingLtd/Textures/ToolbarIcon";
 		public const string settingXmlFilePath = "/PluginData/UbioWeldingLtd/";
 		public const string settingXmlConfigFileName = "config.xml";
+		public const string settingXmlListFileName = "moduleAttributeList.xml";
+		public const string underline = "_";
 		public static readonly string settingRuntimeDirectory = Assembly.GetExecutingAssembly().Location.Replace(new FileInfo(Assembly.GetExecutingAssembly().Location).Name, "");
         
         //Messages
@@ -160,5 +162,57 @@ namespace UbioWeldingLtd
         public const string rdNodeExpMotors     = "experimentalsMotors"; //Experimental Motors
         public const string rdNodeByPass        = "advRocketry"; // bypass to make welding show up early
         public const string rdNodeSandboxWeld   = "sandboxWeld"; //For sandbox
+
+		public const string curveKey = "key";
+
+		public static string[] basicVector2CurveModules =
+		{
+			"atmosphereCurve"
+		};
+
+		public static string[] basicVector4CurveModules =
+		{
+			"velocityCurve"
+		};
+
+		public static string[] basicSubModules =
+		{
+			"RESOURCE",
+			"OUTPUT_RESOURCE",
+			"PROPELLANT"
+		};
+
+		public static string[] basicModulesToIgnore =
+		{
+			"TweakScale"
+		};
+
+		public static string[] basicAveragedModuleAttributes =
+        {
+            "FNAntimatterReactor_ReactorTemp",
+            "FNAntimatterReactor_upgradedReactorTemp",
+            "FNAntimatterReactor_radius",
+            "ModuleScienceExperiment_interactionRange",
+            "ModuleScienceExperiment_xmitDataScalar",
+            "ModuleScienceLab_interactionRange",
+            "ModuleScienceLab_dataTransmissionBoost",
+            "ModuleScienceContainer_storageRange",
+            "ModuleCommand_minimumCrew",
+			"ModuleRCS_thrusterPower"
+        };
+
+		public static string[] basicUnchangedModuleAttributes =
+        {
+            "ModuleScienceLab_crewsRequired",
+            "ModuleScienceLab_containerModuleIndex",
+            "ModuleTestSubject_environments"
+        };
+
+		public static string[] basicBreakingModuleAttributes = 
+        {
+			"FNAntimatterReactor_radius",
+            "ModuleScienceExperiment_experimentID"
+        };
+
     }
 }
