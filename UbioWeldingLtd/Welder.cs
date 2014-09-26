@@ -969,7 +969,17 @@ namespace UbioWeldingLtd
 #if (DEBUG)
 			//Debug.LogWarning(string.Format("{0}| {1} - {2} is bool", Constants.logPrefix, newModuleName, ModuleAttribute));
 #endif
-			existingNewModule.SetValue(ModuleAttribute, (bool.Parse(newModule.GetValue(ModuleAttribute)) || bool.Parse(existingNewModule.GetValue(ModuleAttribute))).ToString());
+			if(newModule.HasValue(ModuleAttribute))
+			{
+				if (existingNewModule.HasValue(ModuleAttribute))
+				{
+					existingNewModule.SetValue(ModuleAttribute, (bool.Parse(newModule.GetValue(ModuleAttribute)) || bool.Parse(existingNewModule.GetValue(ModuleAttribute))).ToString());
+				}
+				else
+				{
+					existingNewModule.SetValue(ModuleAttribute, bool.Parse(newModule.GetValue(ModuleAttribute)).ToString());
+				}
+			}
 			Debug.Log(string.Format("{0}| {1} - {2} is merged with value {3}", Constants.logPrefix, newModuleName, ModuleAttribute, bool.Parse(existingNewModule.GetValue(ModuleAttribute))));
 		}
 
@@ -1547,9 +1557,9 @@ namespace UbioWeldingLtd
 			{
 				//Make sure the orintation is an int
 				Vector3 orientation = Vector3.zero;
-				orientation.x = (int)Mathf.FloorToInt(node.orientation.x + 0.5f);
-				orientation.y = (int)Mathf.FloorToInt(node.orientation.y + 0.5f);
-				orientation.z = (int)Mathf.FloorToInt(node.orientation.z + 0.5f);
+				orientation.x = node.orientation.x;// (int)Mathf.FloorToInt(node.orientation.x + 0.5f);
+				orientation.y = node.orientation.y;// (int)Mathf.FloorToInt(node.orientation.y + 0.5f);
+				orientation.z = node.orientation.z;// (int)Mathf.FloorToInt(node.orientation.z + 0.5f);
 				if (orientation == Vector3.zero)
 				{
 					orientation = Vector3.up;
