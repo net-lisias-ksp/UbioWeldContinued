@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.IO;
+using System.Reflection;
 using System.Collections.Generic;
 
 namespace UbioWeldingLtd
@@ -16,7 +17,6 @@ namespace UbioWeldingLtd
 			infoWindow,
 			savedWindow,
 			overwriteDial
-
 		}
 
 		public static UbioZurWeldingLtd instance { get; private set; }
@@ -64,6 +64,8 @@ namespace UbioWeldingLtd
 		 */
 		public void Awake()
 		{
+			Debug.Log(string.Format("{0}{1}", Constants.logPrefix, Constants.logVersion));
+
 			instance = this;
 			initConfig();
 			_state = DisplayState.none;
@@ -98,6 +100,7 @@ namespace UbioWeldingLtd
 			}
 			//_stockToolbarButton.SetFalse();
 		}
+
 		/// <summary>
 		/// Loads the config for the Welding or prepares default values and generates a new config
 		/// </summary>
@@ -533,20 +536,15 @@ namespace UbioWeldingLtd
 
 			if (_config.dataBaseAutoReload)
 			{
-				ReloadDatabase();
+				if (WeldingHelpers.isModuleManagerInstalled())
+				{
+					DatabaseHandler.ReloadDatabase();
+				}
+				else
+				{
+					StartCoroutine(DatabaseHandler.DatabaseReloadWithMM());
+				}
 			}
-		}
-
-		/*
-		 * Reload the Database
-		 */
-		private void ReloadDatabase()
-		{
-			//reload database Big thanks to AncientGammoner (KSP Forum)
-			GameDatabase.Instance.Recompile = true;
-			GameDatabase.Instance.StartLoad();
-			PartLoader.Instance.Recompile = true;
-			PartLoader.Instance.StartLoad();
 		}
 
 		/*
