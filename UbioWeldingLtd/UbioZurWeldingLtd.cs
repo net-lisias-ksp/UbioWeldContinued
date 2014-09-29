@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using System.IO;
-using System.Reflection;
 using System.Collections.Generic;
 
 namespace UbioWeldingLtd
@@ -37,7 +36,8 @@ namespace UbioWeldingLtd
 
 		private WeldingConfiguration _config;
 		private bool _guiVisible = false;
-		private string filepath {
+		private string filepath
+		{
 			get
 			{
 				if (_config.useNamedCfgFile)
@@ -201,7 +201,7 @@ namespace UbioWeldingLtd
 		private void weldPart(Part partToWeld)
 		{
 			//Lock editor
-			EditorLogic.fetch.Lock(true, true, true, "UBILOCK9213");
+			EditorLogic.fetch.Lock(true, true, true, Constants.settingWeldingLock);
 
 			//process the welding
 #if (DEBUG)
@@ -303,7 +303,7 @@ namespace UbioWeldingLtd
 			GUILayout.FlexibleSpace();
 			if (GUILayout.Button(Constants.guiOK))
 			{
-				EditorLogic.fetch.Unlock("UBILOCK9213");
+				EditorLogic.fetch.Unlock(Constants.settingWeldingLock);
 				_state = DisplayState.none;
 			}
 			GUILayout.EndVertical();
@@ -557,7 +557,7 @@ namespace UbioWeldingLtd
 				EditorLogic.fetch.PartSelected = EditorLogic.startPod;
 			}
 			EditorLogic.fetch.DestroySelectedPart();
-			EditorLogic.fetch.Unlock("UBILOCK9213");
+			EditorLogic.fetch.Unlock(Constants.settingWeldingLock);
 			EditorPartList.Instance.Refresh();
 		}
 	} //public class UbioZurWeldingLtd : MonoBehaviour

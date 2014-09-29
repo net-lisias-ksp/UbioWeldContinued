@@ -52,6 +52,7 @@ namespace UbioWeldingLtd
 		public const string guiDialSaved		= "New part saved and shipped!";
 
 		//Settings
+		public const string settingWeldingLock = "UBILOCK9213";
 		public const string settingEdiButX	  = "editorButtonXPosition";
 		public const string settingEdiButY	  = "editorButtonYPosition";
 		public const string settingDbAutoReload = "dataBaseAutoReload";
