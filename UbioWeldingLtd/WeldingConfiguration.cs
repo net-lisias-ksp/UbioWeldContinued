@@ -8,6 +8,18 @@ using System.Linq;
 
 namespace UbioWeldingLtd
 {
+	public enum StrengthParamsCalcMethod
+	{
+		Legacy,
+		ArithmeticMean,
+		WeightedAverage
+	}
+	public enum MaxTempCalcMethod
+	{
+		ArithmeticMean,
+		WeightedAverage,
+		Lowest
+	}
 
 	[XmlRootAttribute("WeldingConfiguration", Namespace = "KSP-Forum", IsNullable = false)]
 	public class WeldingConfiguration
@@ -21,6 +33,8 @@ namespace UbioWeldingLtd
 		private bool _runInTestMode = true;
 		private bool _useStockToolbar = true;
 		private bool _useNamedCfgFile = true; //save the part in the named file like "WeldedPod.cfg", not "part.cfg"
+		private StrengthParamsCalcMethod _StrengthCalcMethod = StrengthParamsCalcMethod.WeightedAverage;
+		private MaxTempCalcMethod _MaxTempCalcMethod = MaxTempCalcMethod.Lowest;
 		private string[] _vector2CurveModules;
 		private string[] _vector4CurveModules;
 		private string[] _subModules;
@@ -81,6 +95,18 @@ namespace UbioWeldingLtd
 		{
 			get { return _useNamedCfgFile; }
 			set { _useNamedCfgFile = value; }
+		}
+
+		public StrengthParamsCalcMethod StrengthCalcMethod
+		{
+			get { return _StrengthCalcMethod; }
+			set { _StrengthCalcMethod = value; }
+		}
+
+		public MaxTempCalcMethod MaxTempCalcMethod
+		{
+			get { return _MaxTempCalcMethod; }
+			set { _MaxTempCalcMethod = value; }
 		}
 
 		public string[] vector2CurveModules

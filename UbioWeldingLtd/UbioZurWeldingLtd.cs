@@ -122,6 +122,9 @@ namespace UbioWeldingLtd
 			Welder.includeAllNodes = _config.includeAllNodes;
 			Welder.dontProcessMasslessParts = _config.dontProcessMasslessParts;
 			Welder.runInTestMode = _config.runInTestMode;
+			Welder.StrengthCalcMethod = _config.StrengthCalcMethod;
+			Welder.MaxTempCalcMethod = _config.MaxTempCalcMethod;
+			Welder.runInTestMode = _config.runInTestMode;
 		}
 
 		/// <summary>

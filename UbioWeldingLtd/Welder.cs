@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -95,6 +96,8 @@ namespace UbioWeldingLtd
 		private static bool _includeAllNodes = false;
 		private static bool _dontProcessMasslessParts = false;
 		private static bool _runInTestMode = false;
+		private static StrengthParamsCalcMethod _StrengthCalcMethod = StrengthParamsCalcMethod.WeightedAverage;
+		private static MaxTempCalcMethod _MaxTempCalcMethod = MaxTempCalcMethod.Lowest;
 
 		public static bool includeAllNodes
 		{
@@ -112,6 +115,18 @@ namespace UbioWeldingLtd
 		{
 			get { return _runInTestMode; }
 			set { _runInTestMode = value; }
+		}
+
+		public static StrengthParamsCalcMethod StrengthCalcMethod
+		{
+			get { return _StrengthCalcMethod; }
+			set { _StrengthCalcMethod = value; }
+		}
+
+		public static MaxTempCalcMethod MaxTempCalcMethod
+		{
+			get { return _MaxTempCalcMethod; }
+			set { _MaxTempCalcMethod = value; }
 		}
 
 		public string Name
@@ -637,6 +652,7 @@ namespace UbioWeldingLtd
 
 			//mass
 			float oldmass = _fullmass;
+			float olddrymass = _mass;
 			float partdrymass = 0.0f;
 			// if part's PhysicsSignificance = 1, then this part is "massless" and its mass would be ignored in stock KSP
 			if ((!dontProcessMasslessParts) || (newpart.PhysicsSignificance != 1))
@@ -661,10 +677,36 @@ namespace UbioWeldingLtd
 			_dragModel = newpart.dragModelType;
 
 			//average crash, breaking and temp
-			_crashTolerance = (_partNumber == 0) ? newpart.crashTolerance : (_crashTolerance + newpart.crashTolerance) * 0.75f;
-			_breakingForce = (_partNumber == 0) ? newpart.breakingForce : (_breakingForce + newpart.breakingForce) * 0.75f;
-			_breakingTorque = (_partNumber == 0) ? newpart.breakingTorque : (_breakingTorque + newpart.breakingTorque) * 0.75f;
-			_maxTemp = (_partNumber ==0) ? newpart.maxTemp : (_maxTemp + newpart.maxTemp) * 0.5f;
+			switch (_StrengthCalcMethod)
+			{
+				case StrengthParamsCalcMethod.Legacy:
+					_crashTolerance = (_partNumber == 0) ? newpart.crashTolerance : (_crashTolerance + newpart.crashTolerance) * 0.75f;
+					_breakingForce = (_partNumber == 0) ? newpart.breakingForce : (_breakingForce + newpart.breakingForce) * 0.75f;
+					_breakingTorque = (_partNumber == 0) ? newpart.breakingTorque : (_breakingTorque + newpart.breakingTorque) * 0.75f;
+					break;
+				case StrengthParamsCalcMethod.WeightedAverage:
+					_crashTolerance = (_partNumber == 0) ? newpart.crashTolerance : (_crashTolerance * olddrymass + newpart.crashTolerance * newpart.mass) / (olddrymass + newpart.mass);
+					_breakingForce = (_partNumber == 0) ? newpart.breakingForce : (_breakingForce * olddrymass + newpart.breakingForce * olddrymass) / (olddrymass + newpart.mass);
+					_breakingTorque = (_partNumber == 0) ? newpart.breakingTorque : (_breakingTorque * olddrymass + newpart.breakingTorque * newpart.mass) / (olddrymass + newpart.mass);
+					break;
+				case StrengthParamsCalcMethod.ArithmeticMean:
+					_crashTolerance = (_partNumber == 0) ? newpart.crashTolerance : (_crashTolerance + newpart.crashTolerance) * 0.5f;
+					_breakingForce = (_partNumber == 0) ? newpart.breakingForce : (_breakingForce + newpart.breakingForce) * 0.5f;
+					_breakingTorque = (_partNumber == 0) ? newpart.breakingTorque : (_breakingTorque + newpart.breakingTorque) * 0.5f;
+					break;
+			}
+			switch (_MaxTempCalcMethod)
+			{
+				case MaxTempCalcMethod.ArithmeticMean:
+					_maxTemp = (_partNumber == 0) ? newpart.maxTemp : (_maxTemp + newpart.maxTemp) * 0.5f;
+					break;
+				case MaxTempCalcMethod.Lowest:
+					_maxTemp = (_partNumber == 0) ? newpart.maxTemp : Math.Min(_maxTemp, newpart.maxTemp);
+					break;
+				case MaxTempCalcMethod.WeightedAverage:
+					_maxTemp = (_partNumber == 0) ? newpart.maxTemp : (_maxTemp * olddrymass + newpart.maxTemp * olddrymass) / (olddrymass + newpart.mass);
+					break;
+			}
 
 			//Phisics signifance
 			if (newpart.PhysicsSignificance != 0 && _physicsSignificance != -1)
