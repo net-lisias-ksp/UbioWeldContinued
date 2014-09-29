@@ -20,6 +20,7 @@ namespace UbioWeldingLtd
 		private bool _dontProcessMasslessParts = true;
 		private bool _runInTestMode = true;
 		private bool _useStockToolbar = true;
+		private bool _useNamedCfgFile = true; //save the part in the named file like "WeldedPod.cfg", not "part.cfg"
 		private string[] _vector2CurveModules;
 		private string[] _vector4CurveModules;
 		private string[] _subModules;
@@ -74,6 +75,12 @@ namespace UbioWeldingLtd
 		{
 			get { return _useStockToolbar; }
 			set { _useStockToolbar = value; }
+		}
+
+		public bool useNamedCfgFile
+		{
+			get { return _useNamedCfgFile; }
+			set { _useNamedCfgFile = value; }
 		}
 
 		public string[] vector2CurveModules
