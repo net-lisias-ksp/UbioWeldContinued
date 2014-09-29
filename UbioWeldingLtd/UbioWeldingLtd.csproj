@@ -9,14 +9,15 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>UbioWeldingLtd</RootNamespace>
     <AssemblyName>UbioWeldingLtd</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\..\..\..\..\kerbal\Kerbal Space Program\GameData\UbioWeldingLtd\</OutputPath>
+    <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -34,12 +35,16 @@
       <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Kerbal Space Program\KSP_Data\Managed\Assembly-CSharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Assembly-CSharp-firstpass" />
+    <Reference Include="Assembly-CSharp-firstpass">
+      <HintPath>..\..\..\Kerbal Space Program 0.24\KSP_Data\Managed\Assembly-CSharp-firstpass.dll</HintPath>
+    </Reference>
+    <Reference Include="ModuleManager.2.3.5">
+      <HintPath>..\..\..\Kerbal Space Program 0.24 Interstellar Lite\GameData\ModuleManager.2.3.5.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="UnityEngine">
@@ -52,6 +57,7 @@
     <Compile Include="EditorToolbar.cs" />
     <Compile Include="FileManager.cs" />
     <Compile Include="GUIDropdown.cs" />
+    <Compile Include="DatabaseHandler.cs" />
     <Compile Include="ModuleLists.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UbioZurWeldingLtd.cs" />
