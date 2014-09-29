@@ -37,6 +37,19 @@ namespace UbioWeldingLtd
 
 		private WeldingConfiguration _config;
 		private bool _guiVisible = false;
+		private string filepath {
+			get
+			{
+				if (_config.useNamedCfgFile)
+				{
+					return string.Format("{0}{1}/{2}/{3}.cfg", Constants.weldPartPath, _welder.Category.ToString(), _welder.Name, _welder.Name);
+				}
+				else
+				{
+					return string.Format("{0}{1}/{2}{3}", Constants.weldPartPath, _welder.Category.ToString(), _welder.Name, Constants.weldPartDefaultFile);
+				}
+			}
+		}
 
 		/// <summary>
 		/// access to the config of the whole tool
@@ -111,6 +124,9 @@ namespace UbioWeldingLtd
 			}
 			Welder.includeAllNodes = _config.includeAllNodes;
 			Welder.dontProcessMasslessParts = _config.dontProcessMasslessParts;
+			Welder.runInTestMode = _config.runInTestMode;
+			Welder.StrengthCalcMethod = _config.StrengthCalcMethod;
+			Welder.MaxTempCalcMethod = _config.MaxTempCalcMethod;
 			Welder.runInTestMode = _config.runInTestMode;
 		}
 
@@ -321,7 +337,6 @@ namespace UbioWeldingLtd
 		 */
 		private void OnOverwriteDisplay(int windowID)
 		{
-			string filepath = string.Format("{0}{1}/{2}{3}", Constants.weldPartPath, _welder.Category.ToString(), _welder.Name, Constants.weldPartFile);
 			GUILayout.BeginVertical();
 			GUILayout.BeginHorizontal();
 			GUILayout.Label(Constants.guiDialOverwrite);
@@ -464,7 +479,6 @@ namespace UbioWeldingLtd
 				{
 					//check if the file exist
 					string dirpath = string.Format("{0}{1}/{2}", Constants.weldPartPath, _welder.Category.ToString(), _welder.Name);
-					string filepath = dirpath + Constants.weldPartFile;
 					if (!System.IO.File.Exists(filepath))
 					{
 						if (!Directory.Exists(dirpath))

@@ -98,7 +98,7 @@ namespace UbioWeldingLtd
 
 		//Weld
 		public const string weldPartPath		= "GameData/UbioWeldingLtd/Parts/";
-		public const string weldPartFile		= "/part.cfg";
+		public const string weldPartDefaultFile	= "/part.cfg";
 		public const string weldAuthor		  = "UbioZurWeldingLtd";
 		public const string weldManufacturer	= "UbioZur Welding Ltd";
 		public const string weldDefaultName	 = "weldedpart";
