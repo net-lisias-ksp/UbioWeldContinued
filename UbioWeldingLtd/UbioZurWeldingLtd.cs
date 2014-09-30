@@ -106,6 +106,16 @@ namespace UbioWeldingLtd
 		/// </summary>
 		private void initConfig()
 		{
+			KSP.IO.PluginConfiguration oldConfig = KSP.IO.PluginConfiguration.CreateForType<OldWeldingPluginConfig>();
+			bool oldConfigFound = System.IO.File.Exists(string.Concat(Constants.settingRuntimeDirectory, Constants.settingXmlFilePath, Constants.settingXmlOldConfigFileName));
+			if (oldConfigFound)
+			{
+				oldConfig = KSP.IO.PluginConfiguration.CreateForType<OldWeldingPluginConfig>();
+				oldConfig.load();
+				System.IO.File.Delete(string.Concat(Constants.settingRuntimeDirectory, Constants.settingXmlFilePath, Constants.settingXmlOldConfigFileName));
+				Debug.Log(string.Format("{0}old configfile found and deleted", Constants.logPrefix));
+			}
+
 			if (!System.IO.File.Exists(string.Concat(Constants.settingRuntimeDirectory, Constants.settingXmlFilePath, Constants.settingXmlConfigFileName)))
 			{
 				_config = new WeldingConfiguration();
@@ -122,12 +132,17 @@ namespace UbioWeldingLtd
 			{
 				_config = FileManager.loadConfig();
 			}
-			Welder.includeAllNodes = _config.includeAllNodes;
-			Welder.dontProcessMasslessParts = _config.dontProcessMasslessParts;
-			Welder.runInTestMode = _config.runInTestMode;
-			Welder.StrengthCalcMethod = _config.StrengthCalcMethod;
-			Welder.MaxTempCalcMethod = _config.MaxTempCalcMethod;
-			Welder.runInTestMode = _config.runInTestMode;
+
+			_config.editorButtonX = oldConfigFound ? oldConfig.GetValue<int>(Constants.settingEdiButX) : _config.editorButtonX;
+			_config.editorButtonY = oldConfigFound ? oldConfig.GetValue<int>(Constants.settingEdiButY) : _config.editorButtonY;
+			_config.dataBaseAutoReload = oldConfigFound ? oldConfig.GetValue<bool>(Constants.settingDbAutoReload) : _config.dataBaseAutoReload;
+			_config.allowCareerMode = oldConfigFound ? oldConfig.GetValue<bool>(Constants.settingAllowCareer) : _config.allowCareerMode;
+			Welder.includeAllNodes = oldConfigFound ? oldConfig.GetValue<bool>(Constants.settingAllNodes) : _config.includeAllNodes;
+			Welder.dontProcessMasslessParts = oldConfigFound ? oldConfig.GetValue<bool>(Constants.settingDontProcessMasslessParts) : _config.dontProcessMasslessParts;
+
+			Welder.StrengthCalcMethod = oldConfigFound ? StrengthParamsCalcMethod.ArithmeticMean : _config.StrengthCalcMethod;
+			Welder.MaxTempCalcMethod = oldConfigFound ? MaxTempCalcMethod.ArithmeticMean : _config.MaxTempCalcMethod;
+			Welder.runInTestMode = oldConfigFound ? false : _config.runInTestMode;
 		}
 
 		/// <summary>

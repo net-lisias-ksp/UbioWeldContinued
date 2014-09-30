@@ -61,7 +61,8 @@ namespace UbioWeldingLtd
 		public const string settingDontProcessMasslessParts = "dontProcessMasslessParts";
 		public const string settingIconGetPath = "UbioWeldingLtd/Textures/ToolbarIcon";
 		public const string settingXmlFilePath = "/PluginData/UbioWeldingLtd/";
-		public const string settingXmlConfigFileName = "config.xml";
+		public const string settingXmlConfigFileName = "new-config.xml";
+		public const string settingXmlOldConfigFileName = "config.xml";
 		public const string settingXmlListFileName = "moduleAttributeList.xml";
 		public const string underline = "_";
 		public static readonly string settingRuntimeDirectory = Assembly.GetExecutingAssembly().Location.Replace(new FileInfo(Assembly.GetExecutingAssembly().Location).Name, "");
