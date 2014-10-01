@@ -64,7 +64,7 @@ namespace UbioWeldingLtd
 		 */
 		public void Awake()
 		{
-			Debug.Log(string.Format("{0}{1}", Constants.logPrefix, Constants.logVersion));
+			Debug.Log(string.Format("{0}- {1} => Awake", Constants.logPrefix, instance.GetType()));
 
 			instance = this;
 			initConfig();
