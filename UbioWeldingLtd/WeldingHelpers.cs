@@ -1,5 +1,7 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
+using System.Reflection;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using UnityEngine;
@@ -165,20 +167,14 @@ namespace UbioWeldingLtd
 		/// <returns></returns>
 		public static bool isModuleManagerInstalled()
 		{
-			string[] files = Directory.GetFiles(Constants.settingRuntimeDirectory.Replace(@"UbioWeldingLtd\", ""), "*.dll");
-			Regex regularExpression = new Regex("ModuleManager", RegexOptions.IgnoreCase);
-			if (files.Length > 0)
+
+			if (AssemblyLoader.loadedAssemblies.Any(activeMod => activeMod.assembly.GetName().Name.StartsWith("ModuleManager") && activeMod.url == ""))
 			{
-				foreach (string s in files)
-				{
-					if (regularExpression.IsMatch(s.Replace(Constants.settingRuntimeDirectory.Replace(@"UbioWeldingLtd\", ""), "")))
-					{
-						return true;
-					}
-				}
+				return true;
 			}
 			return false;
 		}
+
 
 	}
 }

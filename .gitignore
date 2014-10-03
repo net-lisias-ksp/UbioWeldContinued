@@ -2,3 +2,6 @@
 [Bb]in/
 [Oo]bj/
 
+# files that should be ignores as they cause problems with different versions of IDE
+*.sln
+*.suo

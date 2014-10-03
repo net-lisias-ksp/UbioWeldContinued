@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using System.IO;
-using System.Reflection;
 using System.Collections.Generic;
 
 namespace UbioWeldingLtd
@@ -37,7 +36,8 @@ namespace UbioWeldingLtd
 
 		private WeldingConfiguration _config;
 		private bool _guiVisible = false;
-		private string filepath {
+		private string filepath
+		{
 			get
 			{
 				if (_config.useNamedCfgFile)
@@ -64,7 +64,7 @@ namespace UbioWeldingLtd
 		 */
 		public void Awake()
 		{
-			Debug.Log(string.Format("{0}{1}", Constants.logPrefix, Constants.logVersion));
+			Debug.Log(string.Format("{0}- {1} => Awake", Constants.logPrefix, instance.GetType()));
 
 			instance = this;
 			initConfig();
@@ -106,6 +106,16 @@ namespace UbioWeldingLtd
 		/// </summary>
 		private void initConfig()
 		{
+			KSP.IO.PluginConfiguration oldConfig = KSP.IO.PluginConfiguration.CreateForType<OldWeldingPluginConfig>();
+			bool oldConfigFound = System.IO.File.Exists(string.Concat(Constants.settingRuntimeDirectory, Constants.settingXmlFilePath, Constants.settingXmlOldConfigFileName));
+			if (oldConfigFound)
+			{
+				oldConfig = KSP.IO.PluginConfiguration.CreateForType<OldWeldingPluginConfig>();
+				oldConfig.load();
+				System.IO.File.Delete(string.Concat(Constants.settingRuntimeDirectory, Constants.settingXmlFilePath, Constants.settingXmlOldConfigFileName));
+				Debug.Log(string.Format("{0}old configfile found and deleted", Constants.logPrefix));
+			}
+
 			if (!System.IO.File.Exists(string.Concat(Constants.settingRuntimeDirectory, Constants.settingXmlFilePath, Constants.settingXmlConfigFileName)))
 			{
 				_config = new WeldingConfiguration();
@@ -122,12 +132,17 @@ namespace UbioWeldingLtd
 			{
 				_config = FileManager.loadConfig();
 			}
-			Welder.includeAllNodes = _config.includeAllNodes;
-			Welder.dontProcessMasslessParts = _config.dontProcessMasslessParts;
-			Welder.runInTestMode = _config.runInTestMode;
-			Welder.StrengthCalcMethod = _config.StrengthCalcMethod;
-			Welder.MaxTempCalcMethod = _config.MaxTempCalcMethod;
-			Welder.runInTestMode = _config.runInTestMode;
+
+			_config.editorButtonX = oldConfigFound ? oldConfig.GetValue<int>(Constants.settingEdiButX) : _config.editorButtonX;
+			_config.editorButtonY = oldConfigFound ? oldConfig.GetValue<int>(Constants.settingEdiButY) : _config.editorButtonY;
+			_config.dataBaseAutoReload = oldConfigFound ? oldConfig.GetValue<bool>(Constants.settingDbAutoReload) : _config.dataBaseAutoReload;
+			_config.allowCareerMode = oldConfigFound ? oldConfig.GetValue<bool>(Constants.settingAllowCareer) : _config.allowCareerMode;
+			Welder.includeAllNodes = oldConfigFound ? oldConfig.GetValue<bool>(Constants.settingAllNodes) : _config.includeAllNodes;
+			Welder.dontProcessMasslessParts = oldConfigFound ? oldConfig.GetValue<bool>(Constants.settingDontProcessMasslessParts) : _config.dontProcessMasslessParts;
+
+			Welder.StrengthCalcMethod = oldConfigFound ? StrengthParamsCalcMethod.ArithmeticMean : _config.StrengthCalcMethod;
+			Welder.MaxTempCalcMethod = oldConfigFound ? MaxTempCalcMethod.ArithmeticMean : _config.MaxTempCalcMethod;
+			Welder.runInTestMode = oldConfigFound ? false : _config.runInTestMode;
 		}
 
 		/// <summary>
@@ -201,7 +216,7 @@ namespace UbioWeldingLtd
 		private void weldPart(Part partToWeld)
 		{
 			//Lock editor
-			EditorLogic.fetch.Lock(true, true, true, "UBILOCK9213");
+			EditorLogic.fetch.Lock(true, true, true, Constants.settingWeldingLock);
 
 			//process the welding
 #if (DEBUG)
@@ -303,7 +318,7 @@ namespace UbioWeldingLtd
 			GUILayout.FlexibleSpace();
 			if (GUILayout.Button(Constants.guiOK))
 			{
-				EditorLogic.fetch.Unlock("UBILOCK9213");
+				EditorLogic.fetch.Unlock(Constants.settingWeldingLock);
 				_state = DisplayState.none;
 			}
 			GUILayout.EndVertical();
@@ -557,7 +572,7 @@ namespace UbioWeldingLtd
 				EditorLogic.fetch.PartSelected = EditorLogic.startPod;
 			}
 			EditorLogic.fetch.DestroySelectedPart();
-			EditorLogic.fetch.Unlock("UBILOCK9213");
+			EditorLogic.fetch.Unlock(Constants.settingWeldingLock);
 			EditorPartList.Instance.Refresh();
 		}
 	} //public class UbioZurWeldingLtd : MonoBehaviour
