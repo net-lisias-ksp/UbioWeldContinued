@@ -95,7 +95,14 @@ namespace UbioWeldingLtd
 			{
 				if (EditorLogic.startPod != null)
 				{
-                    _state = DisplayState.mainWindow;                    
+					if (_state != DisplayState.mainWindow)
+					{
+						_state = DisplayState.mainWindow;
+					}
+					else
+					{
+						_state = DisplayState.none;
+					}
 				}
 			}
 			//_stockToolbarButton.SetFalse();
@@ -294,7 +301,7 @@ namespace UbioWeldingLtd
             GUILayout.BeginVertical();
 			//Settings
 			GUILayout.Label("Settings");
-            _config.includeAllNodes = GUILayout.Toggle(_config.includeAllNodes, new GUIContent(Constants.guiDbAutoReloadLabel, Constants.guiDbAutoReloadTip));
+			_config.includeAllNodes = GUILayout.Toggle(_config.includeAllNodes, new GUIContent(Constants.guiAllNodesLabel, Constants.guiAllNodesTip));
             _config.dontProcessMasslessParts = GUILayout.Toggle(_config.dontProcessMasslessParts, new GUIContent(Constants.guiDontProcessMasslessPartsLabel, Constants.guiDontProcessMasslessPartsTip));
             _config.dataBaseAutoReload = GUILayout.Toggle(_config.dataBaseAutoReload, new GUIContent(Constants.guiDbAutoReloadLabel, Constants.guiDbAutoReloadTip));
             _config.useNamedCfgFile = GUILayout.Toggle(_config.useNamedCfgFile, new GUIContent(Constants.guiUseNamedCfgFileLabel, Constants.guiUseNamedCfgFileTip));
