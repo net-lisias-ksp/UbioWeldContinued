@@ -43,14 +43,31 @@ namespace UbioWeldingLtd
 		public const int guiDialogH			 = 200;
 		public const int guiInfoWindowX		 = 300;
 		public const int guiInfoWindowY		 = 150;
-		public const int guiInfoWindowW		 = 600;
+		public const int guiInfoWindowW		 = 700;
 		public const int guiInfoWindowH		 = 300;
+        public const int guiMainWindowW     = 300;
+        public const int guiMainWindowH     = 400;
 		public const string guiDialFail		 = "We are sorry to announce that our engineer could not perform this weld.\n Please read the report (ALt+F2 or ksp.log) for more details)";
 		public const string guiDialWarn		 = "After welding everything, out Engineer had some extra feature that they didn't knew where to put.\n Please read the report (ALt+F2 or ksp.log) for more details)";
 		public const string guiNameUsed		 = "Name already used by another part!";
 		public const string guiDialOverwrite	= "File already exist, Do you want to overwrite it?";
 		public const string guiDialSaved		= "New part saved and shipped!";
 
+        //Main&settings window GUI labels
+//        public const string guiMainWindowDescription = "Press \"" + guiWeldItButtonLabel + "\" button to weld all craft selected part of it";
+        public const string guiDbAutoReloadLabel = "Database autoreload";
+        public const string guiDbAutoReloadTip = "Auto reload game Database after welding";
+        public const string guiAllNodesLabel = "Include all nodes";
+        public const string guiAllNodesTip = "Create all attach node, included those already attached";
+        public const string guiDontProcessMasslessPartsLabel = "Don't process massless parts";
+        public const string guiDontProcessMasslessPartsTip = "Don't take into account mass of massless parts (with PhysicsSignificance = 1)";
+        public const string guiUseNamedCfgFileLabel = "Use named part's file";
+        public const string guiUseNamedCfgFileTip = "Use for welded part name of file like \"BigPod.cfg\", not \"part.cfg\"";
+        public const string guiSaveSettingsButtonLabel = "Save settings";
+        public const string guiSaveSettingsButtonTip = "Save settings to config file";
+        public const string guiWeldItButtonLabel = "Weld it";
+        public const string guiWeldItButtonTip = "Press \"" + guiWeldItButtonLabel + "\" button to weld whole craft or selected part of it";
+        
 		//Settings
 		public const string settingWeldingLock = "UBILOCK9213";
 		public const string settingEdiButX	  = "editorButtonXPosition";

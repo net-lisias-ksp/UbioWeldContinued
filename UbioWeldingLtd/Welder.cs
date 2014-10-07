@@ -232,6 +232,11 @@ namespace UbioWeldingLtd
 			}
 		}
 		
+        public string techRequire
+        {
+            get {return _techRequire;   }
+            set { _techRequire = value; }
+        }
 		
 		/*
 		 * Constructor
