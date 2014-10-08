@@ -47,6 +47,7 @@ namespace UbioWeldingLtd
 		public const int guiInfoWindowH		 = 300;
         public const int guiMainWindowW     = 300;
         public const int guiMainWindowH     = 400;
+		public const int guiScreenEdgeClearance	= 80;
 		public const string guiDialFail		 = "We are sorry to announce that our engineer could not perform this weld.\n Please read the report (ALt+F2 or ksp.log) for more details)";
 		public const string guiDialWarn		 = "After welding everything, out Engineer had some extra feature that they didn't knew where to put.\n Please read the report (ALt+F2 or ksp.log) for more details)";
 		public const string guiNameUsed		 = "Name already used by another part!";

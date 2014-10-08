@@ -21,14 +21,12 @@ namespace UbioWeldingLtd
 
 		public static UbioZurWeldingLtd instance { get; private set; }
 		
-//		private Rect _editorButton;
 		private Rect _editorErrorDial;
 		private Rect _editorWarningDial;
 		private Rect _editorInfoWindow;
 		private Rect _editorOverwriteDial;
 		private Rect _editorSavedDial;
         private Rect _editorMainWindow;
-        private Rect _editorInProgressWindow;
 		private Welder _welder;
 		private DisplayState _state;
 		private List<GUIContent> _catNames = new List<GUIContent>();
@@ -78,8 +76,7 @@ namespace UbioWeldingLtd
 			_editorInfoWindow = new Rect(Screen.width / 2 - Constants.guiInfoWindowX, Screen.height / 2 - Constants.guiInfoWindowY, Constants.guiInfoWindowW, Constants.guiInfoWindowH);
 			_editorOverwriteDial = new Rect(Screen.width / 2 - Constants.guiDialogX, Screen.height / 2 - Constants.guiDialogY, Constants.guiDialogW, Constants.guiDialogH);
 			_editorSavedDial = new Rect(Screen.width / 2 - Constants.guiDialogX, Screen.height / 2 - Constants.guiDialogY, Constants.guiDialogW, Constants.guiDialogH);
-            _editorMainWindow = new Rect((Screen.width - Constants.guiMainWindowW) / 2, (Screen.height - Constants.guiMainWindowH) / 2, Constants.guiMainWindowW, Constants.guiMainWindowH);
-            _editorInProgressWindow = new Rect(Screen.width / 2 - Constants.guiDialogX / 2, Screen.height / 2 - Constants.guiDialogY / 2, Constants.guiDialogW, Constants.guiDialogH);
+            _editorMainWindow = new Rect(_config.MainWindowXPosition, _config.MainWindowYPosition, Constants.guiMainWindowW, Constants.guiMainWindowH);
 
 			_catNames = WeldingHelpers.initPartCategories(_catNames);
 			_catListStyle = WeldingHelpers.initGuiStyle(_catListStyle);
@@ -140,8 +137,6 @@ namespace UbioWeldingLtd
 				_config = FileManager.loadConfig();
 			}
 
-			_config.editorButtonX = oldConfigFound ? oldConfig.GetValue<int>(Constants.settingEdiButX) : _config.editorButtonX;
-			_config.editorButtonY = oldConfigFound ? oldConfig.GetValue<int>(Constants.settingEdiButY) : _config.editorButtonY;
 			_config.dataBaseAutoReload = oldConfigFound ? oldConfig.GetValue<bool>(Constants.settingDbAutoReload) : _config.dataBaseAutoReload;
 			_config.allowCareerMode = oldConfigFound ? oldConfig.GetValue<bool>(Constants.settingAllowCareer) : _config.allowCareerMode;
 			Welder.includeAllNodes = oldConfigFound ? oldConfig.GetValue<bool>(Constants.settingAllNodes) : _config.includeAllNodes;
@@ -299,6 +294,10 @@ namespace UbioWeldingLtd
             GUILayout.BeginVertical();
             GUILayout.EndVertical();
             GUILayout.BeginVertical();
+
+			//save Window Position
+			_config.MainWindowXPosition = (int)_editorMainWindow.xMin;
+			_config.MainWindowYPosition = (int)_editorMainWindow.yMin;
 			//Settings
 			GUILayout.Label("Settings");
 			_config.includeAllNodes = GUILayout.Toggle(_config.includeAllNodes, new GUIContent(Constants.guiAllNodesLabel, Constants.guiAllNodesTip));

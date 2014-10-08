@@ -59,6 +59,15 @@ namespace UbioWeldingLtd
 				configSerializer.UnknownAttribute += new XmlAttributeEventHandler(serializer_UnknownAttribute);
 				FileStream = new FileStream(_configFile, FileMode.Open);
 				configuration = (WeldingConfiguration)configSerializer.Deserialize(FileStream);
+
+				if (configuration.MainWindowXPosition > (Screen.width - Constants.guiScreenEdgeClearance))
+				{
+					configuration.MainWindowXPosition = Screen.width - Constants.guiScreenEdgeClearance;
+				}
+				if (configuration.MainWindowYPosition > (Screen.height - Constants.guiScreenEdgeClearance))
+				{
+					configuration.MainWindowYPosition = Screen.height - Constants.guiScreenEdgeClearance;
+				}
 			}
 
 			if (System.IO.File.Exists(_moduleListFile))
