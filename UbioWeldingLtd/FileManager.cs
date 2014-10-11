@@ -13,6 +13,21 @@ namespace UbioWeldingLtd
 		private static string _configFile = string.Concat(Constants.settingRuntimeDirectory, Constants.settingXmlFilePath, Constants.settingXmlConfigFileName);
 		private static string _moduleListFile = string.Concat(Constants.settingRuntimeDirectory, Constants.settingXmlFilePath, Constants.settingXmlListFileName);
 
+		private static string[] comments =
+			{
+				Constants.CommentOutText(Constants.setupGeneralLine1),
+				Constants.CommentOutText(Constants.setupGeneralLine2),
+				Constants.CommentOutText(Constants.setupGeneralLine3),
+				
+				Constants.CommentOutText(Constants.setupVector2Line1),
+				Constants.CommentOutText(Constants.setupVector4Line1),
+				Constants.CommentOutText(Constants.setupSubmoduleLine1),
+				Constants.CommentOutText(Constants.setupModulesToIgnoreLine1),
+				Constants.CommentOutText(Constants.setupAveragedAttribtesLine1),
+				Constants.CommentOutText(Constants.setupUnchangedAttribtesLine1),
+				Constants.CommentOutText(Constants.setupBreakingAttribtesLine1),
+				Constants.CommentOutText(Constants.setupAddingAttributeEntryLine1),
+			};
 
 
 		/// <summary>
@@ -129,6 +144,11 @@ namespace UbioWeldingLtd
 			XmlSerializer moduleListSerializer = new XmlSerializer(typeof(ModuleLists));
 			fileStreamWriter = new StreamWriter(_moduleListFile);
 			moduleListSerializer.Serialize(fileStreamWriter, moduleList);
+			
+			foreach(string s in comments)
+			{
+				fileStreamWriter.WriteLine(s);
+			}
 			fileStreamWriter.Close();
 		}
 
