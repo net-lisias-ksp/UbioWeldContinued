@@ -646,6 +646,7 @@ namespace UbioWeldingLtd
 
 			//Cost
 			_cost += (int)newpart.partInfo.cost;
+			_entryCost += (int)newpart.partInfo.entryCost;
 			_crewCapacity += newpart.CrewCapacity;
 
 			// srfAttachNode Rules
