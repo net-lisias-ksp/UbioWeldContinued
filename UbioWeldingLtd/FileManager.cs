@@ -127,6 +127,13 @@ namespace UbioWeldingLtd
 			{
 				configuration = new WeldingConfiguration();
 			}
+			configuration.vector2CurveModules = null;
+			configuration.vector4CurveModules = null;
+			configuration.subModules = null;
+			configuration.modulesToIgnore = null;
+			configuration.averagedModuleAttributes = null;
+			configuration.unchangedModuleAttributes = null;
+			configuration.breakingModuleAttributes = null;
 
 			moduleList.vector2CurveModules = WeldingHelpers.convertStringFromToArray(Constants.basicVector2CurveModules);
 			moduleList.vector4CurveModules = WeldingHelpers.convertStringFromToArray(Constants.basicVector4CurveModules);
