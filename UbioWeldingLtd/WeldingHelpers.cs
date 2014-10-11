@@ -167,12 +167,9 @@ namespace UbioWeldingLtd
 		/// <returns></returns>
 		public static bool isModuleManagerInstalled()
 		{
-
-			if (AssemblyLoader.loadedAssemblies.Any(activeMod => activeMod.assembly.GetName().Name.StartsWith("ModuleManager") && activeMod.url == ""))
-			{
-				return true;
-			}
-			return false;
+			bool mmInstalled = AssemblyLoader.loadedAssemblies.Any(activeMod => activeMod.assembly.GetName().Name.StartsWith("ModuleManager") && activeMod.url == "");
+			Debug.Log(string.Format("{0} MM installed = {1}", Constants.logPrefix, mmInstalled));
+			return mmInstalled;
 		}
 
 

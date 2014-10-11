@@ -585,11 +585,11 @@ namespace UbioWeldingLtd
 			{
 				if (WeldingHelpers.isModuleManagerInstalled())
 				{
-					DatabaseHandler.ReloadDatabase();
+					StartCoroutine(DatabaseHandler.DatabaseReloadWithMM());
 				}
 				else
 				{
-					StartCoroutine(DatabaseHandler.DatabaseReloadWithMM());
+					DatabaseHandler.ReloadDatabase();
 				}
 			}
 		}
