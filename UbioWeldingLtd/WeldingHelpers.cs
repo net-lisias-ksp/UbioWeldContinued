@@ -31,6 +31,26 @@ namespace UbioWeldingLtd
 
 
 		/// <summary>
+		/// creates a new dropdownmenu list for the techs that are required for the current welding part.
+		/// </summary>
+		/// <param name="techList"></param>
+		/// <param name="guiStyle"></param>
+		/// <param name="dropDown"></param>
+		/// <returns></returns>
+		public static GUIDropdown initTechDropDown(List<string> techList, GUIStyle guiStyle, GUIDropdown dropDown)
+		{
+			List<GUIContent> contentList = new List<GUIContent>();
+
+			foreach (string tech in techList)
+			{
+				contentList.Add(new GUIContent(tech));
+			}
+			dropDown = new GUIDropdown(contentList[0], contentList.ToArray(), "button", "box", guiStyle);
+			return dropDown;
+		}
+
+
+		/// <summary>
 		/// prepares the given Huistyle with the default values of the tool
 		/// </summary>
 		/// <param name="inputGUIStyle"></param>

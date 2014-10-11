@@ -70,6 +70,7 @@ namespace UbioWeldingLtd
 		private string _description = Constants.weldDefaultDesc;
 		private AttachRules _attachrules = new AttachRules();
 		private string _techRequire = string.Empty;
+		private List<string> _listedTechs = new List<string>();
 		private int _entryCost = Constants.weldDefaultEntryCost;
 
 		private float _mass = 0.0f;
@@ -237,6 +238,11 @@ namespace UbioWeldingLtd
             get {return _techRequire;   }
             set { _techRequire = value; }
         }
+
+		public List<string> techList
+		{
+			get { return _listedTechs; }
+		}
 		
 		/*
 		 * Constructor
@@ -642,7 +648,10 @@ namespace UbioWeldingLtd
 			} //foreach (AttachNode node in newpart.attachNodes)
 
 			//TODO: Tech tree stuff
-			//newpart.partInfo.TechRequired
+			if(!_listedTechs.Contains(newpart.partInfo.TechRequired))
+			{
+				_listedTechs.Add(newpart.partInfo.TechRequired);
+			}
 
 			//Cost
 			_cost += (int)newpart.partInfo.cost;
