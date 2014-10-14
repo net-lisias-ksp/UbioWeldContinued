@@ -1,5 +1,9 @@
 ﻿using System;
+using System.IO;
+using System.Linq;
+using System.Reflection;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using UnityEngine;
 
 namespace UbioWeldingLtd
@@ -153,6 +157,22 @@ namespace UbioWeldingLtd
 				genericArray[i] = new ModuleAttribute(stringArray[i]);
 			}
 			return genericArray;
+		}
+
+
+		/// <summary>
+		/// this will check for an installed module manager for a cleaner reload of the database
+		/// remember that this is still bound to a specific version of ModuleManager
+		/// </summary>
+		/// <returns></returns>
+		public static bool isModuleManagerInstalled()
+		{
+
+			if (AssemblyLoader.loadedAssemblies.Any(activeMod => activeMod.assembly.GetName().Name.StartsWith("ModuleManager") && activeMod.url == ""))
+			{
+				return true;
+			}
+			return false;
 		}
 
 

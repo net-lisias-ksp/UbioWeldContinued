@@ -1,7 +1,0 @@
-C:\Users\Danny\Documents\Visual Studio 2012\Projects\UbioWeldingLtd\UbioWeldingLtd\bin\Debug\UbioWeldingLtd.dll
-C:\Users\Danny\Documents\Visual Studio 2012\Projects\UbioWeldingLtd\UbioWeldingLtd\bin\Debug\UbioWeldingLtd.pdb
-C:\Users\Danny\Documents\Visual Studio 2012\Projects\UbioWeldingLtd\UbioWeldingLtd\obj\Debug\UbioWeldingLtd.dll
-C:\Users\Danny\Documents\Visual Studio 2012\Projects\UbioWeldingLtd\UbioWeldingLtd\obj\Debug\UbioWeldingLtd.pdb
-C:\Users\Danny\Documents\Visual Studio 2012\Projects\UbioWeldingLtd\UbioWeldingLtd\obj\Debug\UbioWeldingLtd.csprojResolveAssemblyReference.cache
-C:\kerbal\Kerbal Space Program\GameData\UbioWeldingLtd\PluginData\UbioWeldingLtd.dll
-C:\kerbal\Kerbal Space Program\GameData\UbioWeldingLtd\PluginData\UbioWeldingLtd.pdb

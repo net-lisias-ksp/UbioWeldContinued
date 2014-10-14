@@ -5,6 +5,7 @@ using System.Xml.Serialization;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 namespace UbioWeldingLtd
 {
@@ -24,8 +25,8 @@ namespace UbioWeldingLtd
 	[XmlRootAttribute("WeldingConfiguration", Namespace = "KSP-Forum", IsNullable = false)]
 	public class WeldingConfiguration
 	{
-		private int _editorButtonXPosition = 190;
-		private int _editorButtonYPosition = 100;
+		private int _MainWindowXPosition = (Screen.width - Constants.guiMainWindowW) / 2;
+		private int _MainWindowYPosition = (Screen.height - Constants.guiMainWindowH) / 2;
 		private bool _dataBaseAutoReload = false;
 		private bool _includeAllNodes = false;
 		private bool _allowCareerMode = true;
@@ -43,16 +44,16 @@ namespace UbioWeldingLtd
 		private string[] _unchangedModuleAttributes;
 		private string[] _breakingModuleAttributes;
 
-		public int editorButtonX
+		public int MainWindowXPosition
 		{
-			get { return _editorButtonXPosition; }
-			set { _editorButtonXPosition = value; }
+			get { return _MainWindowXPosition; }
+			set { _MainWindowXPosition = value; }
 		}
 
-		public int editorButtonY
+		public int MainWindowYPosition
 		{
-			get { return _editorButtonYPosition; }
-			set { _editorButtonYPosition = value; }
+			get { return _MainWindowYPosition; }
+			set { _MainWindowYPosition = value; }
 		}
 
 		public bool dataBaseAutoReload
