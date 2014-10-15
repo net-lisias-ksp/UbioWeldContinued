@@ -333,6 +333,9 @@ namespace UbioWeldingLtd
 			GUILayout.Space(20.0f);
 			//Hints area
 			GUILayout.TextArea(GUI.tooltip, GUILayout.ExpandHeight(true), GUILayout.MaxHeight(60));
+			GUIStyle VersionLabelGUIStyle = new GUIStyle();
+			VersionLabelGUIStyle.fontSize = 12;
+			GUILayout.Label(Constants.logVersion, VersionLabelGUIStyle);
             GUILayout.EndVertical();
 
 			GUI.DragWindow();
