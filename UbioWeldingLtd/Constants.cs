@@ -71,6 +71,7 @@ namespace UbioWeldingLtd
         
 		//Settings
 		public const string settingWeldingLock = "UBILOCK9213";
+        public const string settingPreventClickThroughLock = "UBILOCKClick";
 		public const string settingEdiButX	  = "editorButtonXPosition";
 		public const string settingEdiButY	  = "editorButtonYPosition";
 		public const string settingDbAutoReload = "dataBaseAutoReload";

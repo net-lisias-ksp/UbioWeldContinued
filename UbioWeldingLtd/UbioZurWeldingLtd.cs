@@ -191,6 +191,7 @@ namespace UbioWeldingLtd
 				switch (_state)
 				{
 					case DisplayState.none :
+						EditorLogic.fetch.Unlock(Constants.settingPreventClickThroughLock);
 						break;
 					case DisplayState.weldError :
                         _editorErrorDial = GUILayout.Window((int)_state, _editorErrorDial, OnErrorDisplay, Constants.weldManufacturer);
@@ -200,6 +201,7 @@ namespace UbioWeldingLtd
 						break;
 					case DisplayState.infoWindow :
                         _editorInfoWindow = GUI.Window((int)_state, _editorInfoWindow, OnInfoWindow, Constants.weldManufacturer);
+						PreventClickThrough(_editorInfoWindow);
 						break;
 					case DisplayState.savedWindow :
                         _editorSavedDial = GUILayout.Window((int)_state, _editorSavedDial, OnSavedDisplay, Constants.weldManufacturer);
@@ -209,6 +211,7 @@ namespace UbioWeldingLtd
 						break;
                     case DisplayState.mainWindow :
                         _editorMainWindow = GUI.Window((int)_state, _editorMainWindow, OnMainWindow, Constants.weldManufacturer);
+						PreventClickThrough(_editorMainWindow);
                         break;
 				}
 			} //if (_guiVisible)
@@ -619,6 +622,26 @@ namespace UbioWeldingLtd
 			EditorLogic.fetch.DestroySelectedPart();
 			EditorLogic.fetch.Unlock(Constants.settingWeldingLock);
 			EditorPartList.Instance.Refresh();
+		}
+
+		/*
+		 * Lock editor if mouse pointer is inside window rect
+		 */
+		private void PreventClickThrough(Rect rect)
+		{
+			Vector2 pointerPos = Input.mousePosition;
+
+			pointerPos.y = Screen.height - pointerPos.y;
+			//            if (rect.Contains(pointerPos) && !EditorLogic.softLock)
+			if (rect.Contains(pointerPos))
+			{
+				EditorLogic.fetch.Lock(true, true, true, Constants.settingPreventClickThroughLock);
+			}
+			//            else if (!rect.Contains(pointerPos) && EditorLogic.softLock)
+			else if (!rect.Contains(pointerPos))
+			{
+				EditorLogic.fetch.Unlock(Constants.settingPreventClickThroughLock);
+			}
 		}
 	} //public class UbioZurWeldingLtd : MonoBehaviour
 } //namespace UbioWeldingLtd
