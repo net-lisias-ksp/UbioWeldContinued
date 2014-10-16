@@ -122,13 +122,14 @@ namespace UbioWeldingLtd
 		/// <param name="configToSave"></param>
 		public static void saveConfig(WeldingConfiguration configToSave)
 		{
-			WeldingConfiguration configuration = configToSave;
+			WeldingConfiguration configuration = configToSave; //this is not object copy but reference TO object copy operation
 			ModuleLists moduleList = new ModuleLists();
 			TextWriter fileStreamWriter;
 			if (configuration == null)
 			{
 				configuration = new WeldingConfiguration();
 			}
+/*
 			configuration.vector2CurveModules = null;
 			configuration.vector4CurveModules = null;
 			configuration.subModules = null;
@@ -136,7 +137,7 @@ namespace UbioWeldingLtd
 			configuration.averagedModuleAttributes = null;
 			configuration.unchangedModuleAttributes = null;
 			configuration.breakingModuleAttributes = null;
-
+*/
 			moduleList.vector2CurveModules = WeldingHelpers.convertStringFromToArray(Constants.basicVector2CurveModules);
 			moduleList.vector4CurveModules = WeldingHelpers.convertStringFromToArray(Constants.basicVector4CurveModules);
 			moduleList.subModules = WeldingHelpers.convertStringFromToArray(Constants.basicSubModules);
