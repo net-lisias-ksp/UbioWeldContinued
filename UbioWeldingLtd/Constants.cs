@@ -11,7 +11,7 @@ namespace UbioWeldingLtd
 	static class Constants
 	{
 		//Logs/debug constants
-		public const string logVersion		  = "v2.0pt5";
+		public const string logVersion		  = "v2.0pt5-0.24.2";
 		public const string logWarning		  = "WARNING ";
 		public const string logError			= "ERROR ";
 		public const string logPrefix		   = "[WeldingTool] ";
@@ -84,7 +84,22 @@ namespace UbioWeldingLtd
 		public const string settingXmlListFileName = "moduleAttributeList.xml";
 		public const string underline = "_";
 		public static readonly string settingRuntimeDirectory = Assembly.GetExecutingAssembly().Location.Replace(new FileInfo(Assembly.GetExecutingAssembly().Location).Name, "");
-		
+
+		//Readme
+		public const string setupGeneralLine1 = "The ModuleAttributeList.xml gives you the ability to edit how the Weldingtool will process the merging of certain modules and their attributes.";
+		public const string setupGeneralLine2 = "Caution editing this file may result in broken welded parts or even not welded parts at all.";
+		public const string setupGeneralLine3 = "If you delete this file and the config.xml, then the welding tool will provide you with fresh generated files that contain the default values.";
+		public const string setupVector2Line1 = "This is the list of modules that have to be read as vector2 curves, as an example the ISP of an RCS thruster.";
+		public const string setupVector4Line1 = "In this list are modules that will be read as vector4Curves that means they will create curves from floatpoints and tangents. There is a thread in the forum just about the magic of floatpoint tangents.";
+		public const string setupSubmoduleLine1 = "This list contains the Submodules that otherwise would be ignored and not merged, Adding an entry here will give the tool the ability to merge the attributes in it.";
+		public const string setupModulesToIgnoreLine1 = "Modules in this list will be completly ignored from the tool and not get added to the new part.";
+		public const string setupAveragedAttribtesLine1 = "Entries here will make sure that the tool will not simply add the values of this attribute from the different parts and modules up, but will calculate it as aritmetric mean (average).";
+		public const string setupUnchangedAttribtesLine1 = "Entries in this list will give the tool the order to not merge the values for this attribute.";
+		public const string setupBreakingAttribtesLine1 = "This might be the most important list of Attributes, the entries here will give the tool the order to check if the values of these attributes are equal, and only allow then the merging or the module, otherwise a new module would be added.";
+		public const string setupAddingAttributeEntryLine1 = "To add a new entry to the list so that the welding process will make use of it, you need to name it the way the toll can read, currently that means 'name of the module'+'_'+'name of the attribute'.";
+		public const string setupCommentBegin = "<!-- ";
+		public const string setupCommentEnd = " -->";
+
 		//Messages
 		public const string msgSuccess		  = "Welding is a success";
 		public const string msgFail			 = "Welding is a failure";
@@ -233,6 +248,12 @@ namespace UbioWeldingLtd
 			"FNAntimatterReactor_radius",
 			"ModuleScienceExperiment_experimentID"
 		};
+
+		public static string CommentOutText(string text)
+		{
+			return string.Concat(setupCommentBegin, text, setupCommentEnd);
+		}
+
 
 	}
 }

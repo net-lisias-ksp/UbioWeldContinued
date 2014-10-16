@@ -31,6 +31,7 @@ namespace UbioWeldingLtd
 		private DisplayState _state;
 		private List<GUIContent> _catNames = new List<GUIContent>();
 		private GUIDropdown _catDropdown;
+		private GUIDropdown _techDropdown;
 		private GUIStyle _catListStyle = new GUIStyle();
 		private Vector2 _scrollRes = Vector2.zero;
 		private Vector2 _scrollMod = Vector2.zero;
@@ -268,6 +269,9 @@ namespace UbioWeldingLtd
 				}
 			}
 			_welder.processNewCoM();
+
+			_techDropdown = WeldingHelpers.initTechDropDown(_welder.techList, _catListStyle, _techDropdown);
+
 			_scrollMod = Vector2.zero;
 			_scrollRes = Vector2.zero;
 #if (DEBUG)
@@ -329,6 +333,9 @@ namespace UbioWeldingLtd
 			GUILayout.Space(20.0f);
 			//Hints area
 			GUILayout.TextArea(GUI.tooltip, GUILayout.ExpandHeight(true), GUILayout.MaxHeight(60));
+			GUIStyle VersionLabelGUIStyle = new GUIStyle();
+			VersionLabelGUIStyle.fontSize = 12;
+			GUILayout.Label(Constants.logVersion, VersionLabelGUIStyle);
             GUILayout.EndVertical();
 
 			GUI.DragWindow();
@@ -449,7 +456,7 @@ namespace UbioWeldingLtd
 			posh += height;
 			GUI.Label(new Rect(margin, posh, quarterwidth, height), "Description");
 			posh += height;
-			_welder.Description = GUI.TextArea(new Rect(margin, posh, quarterwidth, 6 * height), _welder.Description, 200);
+			_welder.Description = GUI.TextArea(new Rect(margin, posh, quarterwidth, 6 * height), _welder.Description, 400);
 			posh += 6 * height;
 
 			//Second
@@ -463,21 +470,27 @@ namespace UbioWeldingLtd
 			if (!_catDropdown.IsOpen)
 			{
 				posh += height;
-                GUI.Label(new Rect(posw, posh, quarterwidth, height), string.Format("techRequire: {0}", _welder.techRequire));
-                posh += height * 2;
-				GUI.Label(new Rect(posw, posh, quarterwidth, height), string.Format("Nb Parts: {0}", _welder.NbParts));
+				GUI.Label(new Rect(posw, posh, quarterwidth, height), "RequiredTech");
 				posh += height;
-                GUI.Label(new Rect(posw, posh, quarterwidth, height), string.Format("Cost: {0:F2}", _welder.Cost));
-				posh += height;
-                GUI.Label(new Rect(posw, posh, quarterwidth, height), string.Format("Mass: {0:F3} / {1:F3}", _welder.Mass, _welder.WetMass));
-                posh += height;
-                GUI.Label(new Rect(posw, posh, quarterwidth, height), string.Format("T: {0:F1}", _welder.MaxTemp));
-				posh += height;
-                GUI.Label(new Rect(posw, posh, quarterwidth, height), string.Format("F: {0:F3}", _welder.BreakingForce));
-				posh += height;
-                GUI.Label(new Rect(posw, posh, quarterwidth, height), string.Format("T: {0:F3}", _welder.BreakingTorque));
-				posh += height;
-                GUI.Label(new Rect(posw, posh, quarterwidth, height), string.Format("Drag: {0:F3} / {1:F3}", _welder.MinDrag, _welder.MaxDrag));
+				int selectedTech = _techDropdown.Show(new Rect(posw, posh, quarterwidth, height));
+				_welder.techRequire = _welder.techList[selectedTech];
+				if (!_techDropdown.IsOpen)
+				{
+					posh += height;
+					GUI.Label(new Rect(posw, posh, quarterwidth, height), string.Format("Nb Parts: {0}", _welder.NbParts));
+					posh += height;
+					GUI.Label(new Rect(posw, posh, quarterwidth, height), string.Format("Cost: {0:F2}", _welder.Cost));
+					posh += height;
+					GUI.Label(new Rect(posw, posh, quarterwidth, height), string.Format("Mass: {0:F3} / {1:F3}", _welder.Mass, _welder.WetMass));
+					posh += height;
+					GUI.Label(new Rect(posw, posh, quarterwidth, height), string.Format("T: {0:F1}", _welder.MaxTemp));
+					posh += height;
+					GUI.Label(new Rect(posw, posh, quarterwidth, height), string.Format("F: {0:F3}", _welder.BreakingForce));
+					posh += height;
+					GUI.Label(new Rect(posw, posh, quarterwidth, height), string.Format("T: {0:F3}", _welder.BreakingTorque));
+					posh += height;
+					GUI.Label(new Rect(posw, posh, quarterwidth, height), string.Format("Drag: {0:F3} / {1:F3}", _welder.MinDrag, _welder.MaxDrag));
+				}
 			}
 
 			//Module
@@ -585,11 +598,11 @@ namespace UbioWeldingLtd
 			{
 				if (WeldingHelpers.isModuleManagerInstalled())
 				{
-					DatabaseHandler.ReloadDatabase();
+					StartCoroutine(DatabaseHandler.DatabaseReloadWithMM());
 				}
 				else
 				{
-					StartCoroutine(DatabaseHandler.DatabaseReloadWithMM());
+					DatabaseHandler.ReloadDatabase();
 				}
 			}
 		}
