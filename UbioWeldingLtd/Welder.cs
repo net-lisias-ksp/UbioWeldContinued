@@ -702,7 +702,7 @@ namespace UbioWeldingLtd
 					break;
 				case StrengthParamsCalcMethod.WeightedAverage:
 					_crashTolerance = (_partNumber == 0) ? newpart.crashTolerance : (_crashTolerance * olddrymass + newpart.crashTolerance * newpart.mass) / (olddrymass + newpart.mass);
-					_breakingForce = (_partNumber == 0) ? newpart.breakingForce : (_breakingForce * olddrymass + newpart.breakingForce * olddrymass) / (olddrymass + newpart.mass);
+					_breakingForce = (_partNumber == 0) ? newpart.breakingForce : (_breakingForce * olddrymass + newpart.breakingForce * newpart.mass) / (olddrymass + newpart.mass);
 					_breakingTorque = (_partNumber == 0) ? newpart.breakingTorque : (_breakingTorque * olddrymass + newpart.breakingTorque * newpart.mass) / (olddrymass + newpart.mass);
 					break;
 				case StrengthParamsCalcMethod.ArithmeticMean:
