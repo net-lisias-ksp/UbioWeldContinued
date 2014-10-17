@@ -350,7 +350,7 @@ namespace UbioWeldingLtd
 //				GUILayout.Space(10.0f);
 				if (GUILayout.Button(new GUIContent(Constants.guiSaveSettingsButtonLabel, Constants.guiSaveSettingsButtonTip), GUILayout.MaxWidth(100)))
 				{
-					FileManager.saveConfig(_config);
+					FileManager.saveConfig(_config, true);
 				}
 			}
 			else
