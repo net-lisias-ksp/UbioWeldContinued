@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 using System.IO;
 using System.Collections.Generic;
 
@@ -35,9 +36,11 @@ namespace UbioWeldingLtd
 		private GUIStyle _catListStyle = new GUIStyle();
 		private Vector2 _scrollRes = Vector2.zero;
 		private Vector2 _scrollMod = Vector2.zero;
+		private Vector2 _settingsScrollPosition = Vector2.zero;
 
 		private WeldingConfiguration _config;
 		private bool _guiVisible = false;
+		private bool _mainWindowsSettingsMode = false;
 		private string filepath
 		{
 			get
@@ -298,25 +301,63 @@ namespace UbioWeldingLtd
 		 */
         private void OnMainWindow(int windowID)
         {
-            GUILayout.BeginVertical();
-            GUILayout.EndVertical();
-            GUILayout.BeginVertical();
+			GUIStyle _settingsToggleGroupStyle = new GUIStyle(GUI.skin.toggle);
+			_settingsToggleGroupStyle.margin.left += 40;
 
 			//save Window Position
 			_config.MainWindowXPosition = (int)_editorMainWindow.xMin;
 			_config.MainWindowYPosition = (int)_editorMainWindow.yMin;
+
+			GUILayout.BeginVertical();
+            GUILayout.EndVertical();
+            GUILayout.BeginVertical();
+
+			if (GUILayout.Button(new GUIContent("Settings", "Show/hide settings"), GUILayout.MaxWidth(100)))
+			{
+				_mainWindowsSettingsMode = !_mainWindowsSettingsMode;
+			}
 			//Settings
-			GUILayout.Label("Settings");
-			_config.includeAllNodes = GUILayout.Toggle(_config.includeAllNodes, new GUIContent(Constants.guiAllNodesLabel, Constants.guiAllNodesTip));
-            _config.dontProcessMasslessParts = GUILayout.Toggle(_config.dontProcessMasslessParts, new GUIContent(Constants.guiDontProcessMasslessPartsLabel, Constants.guiDontProcessMasslessPartsTip));
-            _config.dataBaseAutoReload = GUILayout.Toggle(_config.dataBaseAutoReload, new GUIContent(Constants.guiDbAutoReloadLabel, Constants.guiDbAutoReloadTip));
-            _config.useNamedCfgFile = GUILayout.Toggle(_config.useNamedCfgFile, new GUIContent(Constants.guiUseNamedCfgFileLabel, Constants.guiUseNamedCfgFileTip));
-			GUILayout.Space(20.0f);
-			if (GUILayout.Button(new GUIContent(Constants.guiSaveSettingsButtonLabel, Constants.guiSaveSettingsButtonTip), GUILayout.MaxWidth(100)))
-            {
-                FileManager.saveConfig(_config);
-            }
-			GUILayout.Space(20.0f);
+			if (_mainWindowsSettingsMode)
+			{
+				_editorMainWindow.height = Constants.guiMainWindowHSettingsExpanded;
+				_settingsScrollPosition = GUILayout.BeginScrollView(_settingsScrollPosition);
+				_config.includeAllNodes = GUILayout.Toggle(_config.includeAllNodes, new GUIContent(Constants.guiAllNodesLabel, Constants.guiAllNodesTip));
+				_config.dontProcessMasslessParts = GUILayout.Toggle(_config.dontProcessMasslessParts, new GUIContent(Constants.guiDontProcessMasslessPartsLabel, Constants.guiDontProcessMasslessPartsTip));
+				_config.dataBaseAutoReload = GUILayout.Toggle(_config.dataBaseAutoReload, new GUIContent(Constants.guiDbAutoReloadLabel, Constants.guiDbAutoReloadTip));
+				_config.useNamedCfgFile = GUILayout.Toggle(_config.useNamedCfgFile, new GUIContent(Constants.guiUseNamedCfgFileLabel, Constants.guiUseNamedCfgFileTip));
+				GUILayout.Space(10.0f);
+				GUILayout.Label("Strength params calculation method");
+//				_config.StrengthCalcMethod = (StrengthParamsCalcMethod)GUILayout.SelectionGrid((int)_config.StrengthCalcMethod, Constants.StrengthParamsCalcMethodsGUIContent, 1, GUILayout.MaxWidth(140));
+				foreach (StrengthParamsCalcMethod Method in Enum.GetValues(typeof(StrengthParamsCalcMethod)))
+				{
+					if (GUILayout.Toggle((_config.StrengthCalcMethod == Method), Constants.StrengthParamsCalcMethodsGUIContent[(int)Method], _settingsToggleGroupStyle))
+					{
+						_config.StrengthCalcMethod = Method;
+					}
+				}
+				GUILayout.Space(10.0f);
+				GUILayout.Label("MaxTemp calculation method");
+//				_config.MaxTempCalcMethod = (MaxTempCalcMethod)GUILayout.SelectionGrid((int)_config.MaxTempCalcMethod, Constants.MaxTempCalcMethodsGUIContent, 1, GUILayout.MaxWidth(140));
+				foreach (MaxTempCalcMethod Method in Enum.GetValues(typeof(MaxTempCalcMethod)))
+				{
+					if (GUILayout.Toggle((_config.MaxTempCalcMethod == Method), Constants.MaxTempCalcMethodsGUIContent[(int)Method], _settingsToggleGroupStyle))
+					{
+						_config.MaxTempCalcMethod = Method;
+					}
+				}
+				GUILayout.EndScrollView();
+
+//				GUILayout.Space(10.0f);
+				if (GUILayout.Button(new GUIContent(Constants.guiSaveSettingsButtonLabel, Constants.guiSaveSettingsButtonTip), GUILayout.MaxWidth(100)))
+				{
+					FileManager.saveConfig(_config);
+				}
+			}
+			else
+			{
+				_editorMainWindow.height = Constants.guiMainWindowH;
+				GUILayout.Space(20.0f);
+			}
 			//Weld button
 			if (GUILayout.Button(new GUIContent(Constants.guiWeldItButtonLabel, Constants.guiWeldItButtonTip), GUILayout.MaxWidth(100)))
 			{
@@ -333,10 +374,9 @@ namespace UbioWeldingLtd
 					}
 				}
 			}
-			GUILayout.Space(20.0f);
 			//Hints area
 			GUILayout.TextArea(GUI.tooltip, GUILayout.ExpandHeight(true), GUILayout.MaxHeight(60));
-			GUIStyle VersionLabelGUIStyle = new GUIStyle();
+			GUIStyle VersionLabelGUIStyle = new GUIStyle(GUI.skin.label);
 			VersionLabelGUIStyle.fontSize = 12;
 			GUILayout.Label(Constants.logVersion, VersionLabelGUIStyle);
             GUILayout.EndVertical();

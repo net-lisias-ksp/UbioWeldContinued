@@ -46,8 +46,9 @@ namespace UbioWeldingLtd
 		public const int guiInfoWindowW		 = 700;
 		public const int guiInfoWindowH		 = 300;
         public const int guiMainWindowW     = 300;
-        public const int guiMainWindowH     = 400;
-		public const int guiScreenEdgeClearance	= 80;
+		public const int guiMainWindowH		= 200;
+		public const int guiMainWindowHSettingsExpanded = 620;
+		public const int guiScreenEdgeClearance = 80;
 		public const string guiDialFail		 = "We are sorry to announce that our engineer could not perform this weld.\n Please read the report (ALt+F2 or ksp.log) for more details)";
 		public const string guiDialWarn		 = "After welding everything, out Engineer had some extra feature that they didn't knew where to put.\n Please read the report (ALt+F2 or ksp.log) for more details)";
 		public const string guiNameUsed		 = "Name already used by another part!";
@@ -255,6 +256,18 @@ namespace UbioWeldingLtd
 			return string.Concat(setupCommentBegin, text, setupCommentEnd);
 		}
 
+		public static GUIContent[] StrengthParamsCalcMethodsGUIContent = 
+		{
+			new GUIContent("Legacy", "Use UbioZur's method"),
+			new GUIContent("Arithmetic mean", "Arithmetic mean between values of all parts"),
+			new GUIContent("Weighted average", "Weighted average by mass of parts")
+		};
 
+		public static GUIContent[] MaxTempCalcMethodsGUIContent = 
+		{
+			new GUIContent("Arithmetic mean", "Arithmetic mean between values of all parts"),
+			new GUIContent("Weighted average", "Weighted average by mass of parts"),
+			new GUIContent("Lowest", "Lowest between MaxTemp values of parts")
+		};
 	}
 }
