@@ -83,6 +83,7 @@ namespace UbioWeldingLtd
 				{
 					configuration.MainWindowYPosition = Screen.height - Constants.guiScreenEdgeClearance;
 				}
+				FileStream.Close();
 			}
 
 			if (System.IO.File.Exists(_moduleListFile))
@@ -100,6 +101,7 @@ namespace UbioWeldingLtd
 				configuration.averagedModuleAttributes = WeldingHelpers.convertFromToStringArray(moduleList.averagedModuleAttributes);
 				configuration.unchangedModuleAttributes = WeldingHelpers.convertFromToStringArray(moduleList.unchangedModuleAttributes);
 				configuration.breakingModuleAttributes = WeldingHelpers.convertFromToStringArray(moduleList.breakingModuleAttributes);
+				FileStream.Close();
 			}
 			else
 			{
@@ -118,44 +120,50 @@ namespace UbioWeldingLtd
 		/// saves the config file and the modulelist file so that it is possible to change them without the need to recompile
 		/// </summary>
 		/// <param name="configToSave"></param>
-		public static void saveConfig(WeldingConfiguration configToSave)
+		public static void saveConfig(WeldingConfiguration configToSave, bool clearModuleListConfig)
 		{
-			WeldingConfiguration configuration = configToSave;
+			WeldingConfiguration configuration = (WeldingConfiguration)configToSave.clone();
 			ModuleLists moduleList = new ModuleLists();
 			TextWriter fileStreamWriter;
 			if (configuration == null)
 			{
 				configuration = new WeldingConfiguration();
 			}
-			configuration.vector2CurveModules = null;
-			configuration.vector4CurveModules = null;
-			configuration.subModules = null;
-			configuration.modulesToIgnore = null;
-			configuration.averagedModuleAttributes = null;
-			configuration.unchangedModuleAttributes = null;
-			configuration.breakingModuleAttributes = null;
 
-			moduleList.vector2CurveModules = WeldingHelpers.convertStringFromToArray(Constants.basicVector2CurveModules);
-			moduleList.vector4CurveModules = WeldingHelpers.convertStringFromToArray(Constants.basicVector4CurveModules);
-			moduleList.subModules = WeldingHelpers.convertStringFromToArray(Constants.basicSubModules);
-			moduleList.modulesToIgnore = WeldingHelpers.convertStringFromToArray(Constants.basicModulesToIgnore);
-			moduleList.averagedModuleAttributes = WeldingHelpers.convertStringFromToArray(Constants.basicAveragedModuleAttributes);
-			moduleList.unchangedModuleAttributes = WeldingHelpers.convertStringFromToArray(Constants.basicUnchangedModuleAttributes);
-			moduleList.breakingModuleAttributes = WeldingHelpers.convertStringFromToArray(Constants.basicBreakingModuleAttributes);
+			if (clearModuleListConfig)
+			{
+				configuration.vector2CurveModules = null;
+				configuration.vector4CurveModules = null;
+				configuration.subModules = null;
+				configuration.modulesToIgnore = null;
+				configuration.averagedModuleAttributes = null;
+				configuration.unchangedModuleAttributes = null;
+				configuration.breakingModuleAttributes = null;
+			}
+			else
+			{
+				moduleList.vector2CurveModules = WeldingHelpers.convertStringFromToArray(Constants.basicVector2CurveModules);
+				moduleList.vector4CurveModules = WeldingHelpers.convertStringFromToArray(Constants.basicVector4CurveModules);
+				moduleList.subModules = WeldingHelpers.convertStringFromToArray(Constants.basicSubModules);
+				moduleList.modulesToIgnore = WeldingHelpers.convertStringFromToArray(Constants.basicModulesToIgnore);
+				moduleList.averagedModuleAttributes = WeldingHelpers.convertStringFromToArray(Constants.basicAveragedModuleAttributes);
+				moduleList.unchangedModuleAttributes = WeldingHelpers.convertStringFromToArray(Constants.basicUnchangedModuleAttributes);
+				moduleList.breakingModuleAttributes = WeldingHelpers.convertStringFromToArray(Constants.basicBreakingModuleAttributes);
+
+				XmlSerializer moduleListSerializer = new XmlSerializer(typeof(ModuleLists));
+				fileStreamWriter = new StreamWriter(_moduleListFile);
+				moduleListSerializer.Serialize(fileStreamWriter, moduleList);
+
+				foreach (string s in comments)
+				{
+					fileStreamWriter.WriteLine(s);
+				}
+				fileStreamWriter.Close();
+			}
 
 			XmlSerializer configSerializer = new XmlSerializer(typeof(WeldingConfiguration));
 			fileStreamWriter = new StreamWriter(_configFile);
 			configSerializer.Serialize(fileStreamWriter, configuration);
-			fileStreamWriter.Close();
-
-			XmlSerializer moduleListSerializer = new XmlSerializer(typeof(ModuleLists));
-			fileStreamWriter = new StreamWriter(_moduleListFile);
-			moduleListSerializer.Serialize(fileStreamWriter, moduleList);
-			
-			foreach(string s in comments)
-			{
-				fileStreamWriter.WriteLine(s);
-			}
 			fileStreamWriter.Close();
 		}
 
