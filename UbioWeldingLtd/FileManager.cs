@@ -74,6 +74,7 @@ namespace UbioWeldingLtd
 				configSerializer.UnknownAttribute += new XmlAttributeEventHandler(serializer_UnknownAttribute);
 				FileStream = new FileStream(_configFile, FileMode.Open);
 				configuration = (WeldingConfiguration)configSerializer.Deserialize(FileStream);
+				FileStream.Close();
 
 				if (configuration.MainWindowXPosition > (Screen.width - Constants.guiScreenEdgeClearance))
 				{
@@ -93,6 +94,7 @@ namespace UbioWeldingLtd
 				moduleListSerializer.UnknownAttribute += new XmlAttributeEventHandler(serializer_UnknownAttribute);
 				FileStream = new FileStream(_moduleListFile, FileMode.Open);
 				moduleList = (ModuleLists)moduleListSerializer.Deserialize(FileStream);
+				FileStream.Close();
 
 				configuration.vector2CurveModules = WeldingHelpers.convertFromToStringArray(moduleList.vector2CurveModules);
 				configuration.vector4CurveModules = WeldingHelpers.convertFromToStringArray(moduleList.vector4CurveModules);
