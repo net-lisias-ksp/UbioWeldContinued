@@ -25,6 +25,12 @@ namespace UbioWeldingLtd
 	[XmlRootAttribute("WeldingConfiguration", Namespace = "KSP-Forum", IsNullable = false)]
 	public class WeldingConfiguration
 	{
+
+		public object clone()
+		{
+			return this.MemberwiseClone();
+		}
+
 		private int _MainWindowXPosition = (Screen.width - Constants.guiMainWindowW) / 2;
 		private int _MainWindowYPosition = (Screen.height - Constants.guiMainWindowH) / 2;
 		private bool _dataBaseAutoReload = false;
