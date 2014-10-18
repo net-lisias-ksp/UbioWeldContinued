@@ -122,7 +122,7 @@ namespace UbioWeldingLtd
 		/// saves the config file and the modulelist file so that it is possible to change them without the need to recompile
 		/// </summary>
 		/// <param name="configToSave"></param>
-		public static void saveConfig(WeldingConfiguration configToSave, bool clearModuleListConfig)
+		public static void saveConfig(WeldingConfiguration configToSave)
 		{
 			WeldingConfiguration configuration = (WeldingConfiguration)configToSave.clone();
 			ModuleLists moduleList = new ModuleLists();
@@ -131,41 +131,37 @@ namespace UbioWeldingLtd
 			{
 				configuration = new WeldingConfiguration();
 			}
-
-			if (clearModuleListConfig)
-			{
-				configuration.vector2CurveModules = null;
-				configuration.vector4CurveModules = null;
-				configuration.subModules = null;
-				configuration.modulesToIgnore = null;
-				configuration.averagedModuleAttributes = null;
-				configuration.unchangedModuleAttributes = null;
-				configuration.breakingModuleAttributes = null;
-			}
-			else
-			{
-				moduleList.vector2CurveModules = WeldingHelpers.convertStringFromToArray(Constants.basicVector2CurveModules);
-				moduleList.vector4CurveModules = WeldingHelpers.convertStringFromToArray(Constants.basicVector4CurveModules);
-				moduleList.subModules = WeldingHelpers.convertStringFromToArray(Constants.basicSubModules);
-				moduleList.modulesToIgnore = WeldingHelpers.convertStringFromToArray(Constants.basicModulesToIgnore);
-				moduleList.averagedModuleAttributes = WeldingHelpers.convertStringFromToArray(Constants.basicAveragedModuleAttributes);
-				moduleList.unchangedModuleAttributes = WeldingHelpers.convertStringFromToArray(Constants.basicUnchangedModuleAttributes);
-				moduleList.breakingModuleAttributes = WeldingHelpers.convertStringFromToArray(Constants.basicBreakingModuleAttributes);
-
-				XmlSerializer moduleListSerializer = new XmlSerializer(typeof(ModuleLists));
-				fileStreamWriter = new StreamWriter(_moduleListFile);
-				moduleListSerializer.Serialize(fileStreamWriter, moduleList);
-
-				foreach (string s in comments)
-				{
-					fileStreamWriter.WriteLine(s);
-				}
-				fileStreamWriter.Close();
-			}
+			configuration.vector2CurveModules = null;
+			configuration.vector4CurveModules = null;
+			configuration.subModules = null;
+			configuration.modulesToIgnore = null;
+			configuration.averagedModuleAttributes = null;
+			configuration.unchangedModuleAttributes = null;
+			configuration.breakingModuleAttributes = null;
 
 			XmlSerializer configSerializer = new XmlSerializer(typeof(WeldingConfiguration));
 			fileStreamWriter = new StreamWriter(_configFile);
 			configSerializer.Serialize(fileStreamWriter, configuration);
+			fileStreamWriter.Close();
+
+
+			//ModuleList from the constants or the actual config, depending on length of the array, in case user did add some entries
+			moduleList.vector2CurveModules = WeldingHelpers.convertStringFromToArray(configToSave.vector2CurveModules.Length > Constants.basicVector2CurveModules.Length ? configToSave.vector2CurveModules : Constants.basicVector2CurveModules);
+			moduleList.vector4CurveModules = WeldingHelpers.convertStringFromToArray(configToSave.vector4CurveModules.Length > Constants.basicVector4CurveModules.Length ? configToSave.vector4CurveModules: Constants.basicVector4CurveModules);
+			moduleList.subModules = WeldingHelpers.convertStringFromToArray(configToSave.subModules.Length > Constants.basicSubModules.Length ?configToSave.subModules: Constants.basicSubModules);
+			moduleList.modulesToIgnore = WeldingHelpers.convertStringFromToArray(configToSave.modulesToIgnore.Length > Constants.basicModulesToIgnore.Length ? configToSave.modulesToIgnore : Constants.basicModulesToIgnore);
+			moduleList.averagedModuleAttributes = WeldingHelpers.convertStringFromToArray(configToSave.averagedModuleAttributes.Length > Constants.basicAveragedModuleAttributes.Length ? configToSave.averagedModuleAttributes:Constants.basicAveragedModuleAttributes);
+			moduleList.unchangedModuleAttributes = WeldingHelpers.convertStringFromToArray(configToSave.unchangedModuleAttributes.Length > Constants.basicUnchangedModuleAttributes.Length ? configToSave.unchangedModuleAttributes: Constants.basicUnchangedModuleAttributes);
+			moduleList.breakingModuleAttributes = WeldingHelpers.convertStringFromToArray(configToSave.breakingModuleAttributes.Length > Constants.basicBreakingModuleAttributes.Length ? configToSave.breakingModuleAttributes : Constants.basicBreakingModuleAttributes);
+
+			XmlSerializer moduleListSerializer = new XmlSerializer(typeof(ModuleLists));
+			fileStreamWriter = new StreamWriter(_moduleListFile);
+			moduleListSerializer.Serialize(fileStreamWriter, moduleList);
+
+			foreach (string s in comments)
+			{
+				fileStreamWriter.WriteLine(s);
+			}
 			fileStreamWriter.Close();
 		}
 

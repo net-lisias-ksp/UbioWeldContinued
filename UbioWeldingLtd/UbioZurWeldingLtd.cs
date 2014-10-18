@@ -127,7 +127,7 @@ namespace UbioWeldingLtd
 			if (!System.IO.File.Exists(string.Concat(Constants.settingRuntimeDirectory, Constants.settingXmlFilePath, Constants.settingXmlConfigFileName)))
 			{
 				_config = new WeldingConfiguration();
-				FileManager.saveConfig(_config, false);
+				FileManager.saveConfig(_config);
 				_config.vector2CurveModules = Constants.basicVector2CurveModules;
 				_config.vector4CurveModules = Constants.basicVector4CurveModules;
 				_config.subModules = Constants.basicSubModules;
@@ -350,7 +350,7 @@ namespace UbioWeldingLtd
 //				GUILayout.Space(10.0f);
 				if (GUILayout.Button(new GUIContent(Constants.guiSaveSettingsButtonLabel, Constants.guiSaveSettingsButtonTip), GUILayout.MaxWidth(100)))
 				{
-					FileManager.saveConfig(_config, true);
+					FileManager.saveConfig(_config);
 				}
 			}
 			else
@@ -361,7 +361,7 @@ namespace UbioWeldingLtd
 			//Weld button
 			if (GUILayout.Button(new GUIContent(Constants.guiWeldItButtonLabel, Constants.guiWeldItButtonTip), GUILayout.MaxWidth(100)))
 			{
-				FileManager.saveConfig(_config, true);
+				FileManager.saveConfig(_config);
 				if (!EditorLogic.softLock)
 				{
 					if (EditorLogic.fetch.PartSelected != null)
