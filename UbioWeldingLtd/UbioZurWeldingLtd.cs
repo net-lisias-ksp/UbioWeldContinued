@@ -607,7 +607,7 @@ namespace UbioWeldingLtd
 			}
 
 			GUI.DragWindow();
-		} //private void OnWarningDisplay(int windowID)
+		} //private void OnInfoWindow(int windowID)
 
 		/*
 		 * Test if the name is not already in use
