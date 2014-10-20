@@ -40,10 +40,19 @@ namespace UbioWeldingLtd
 		public static GUIDropdown initTechDropDown(List<string> techList, GUIStyle guiStyle, GUIDropdown dropDown)
 		{
 			List<GUIContent> contentList = new List<GUIContent>();
+			List<RDTech> rdTechs = AssetBase.RnDTechTree.GetTreeTechs().ToList();
 
-			foreach (string tech in techList)
+			Debug.Log(string.Format("{0} rdTechs.Count = {1}", Constants.logPrefix, rdTechs.Count()));
+			foreach (string techID in techList)
 			{
-				contentList.Add(new GUIContent(tech));
+				foreach (RDTech rdTech in rdTechs)
+				{
+					if (rdTech.techID == techID)
+					{
+						contentList.Add(new GUIContent(rdTech.title));
+						break;
+					}
+				}
 			}
 			dropDown = new GUIDropdown(contentList[0], contentList.ToArray(), "button", "box", guiStyle);
 			return dropDown;
