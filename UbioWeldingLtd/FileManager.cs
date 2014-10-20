@@ -158,6 +158,7 @@ namespace UbioWeldingLtd
 			fileStreamWriter = new StreamWriter(_moduleListFile);
 			moduleListSerializer.Serialize(fileStreamWriter, moduleList);
 
+			fileStreamWriter.WriteLine("");
 			foreach (string s in comments)
 			{
 				fileStreamWriter.WriteLine(s);

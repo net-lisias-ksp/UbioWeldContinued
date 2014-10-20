@@ -607,7 +607,7 @@ namespace UbioWeldingLtd
 			}
 
 			GUI.DragWindow();
-		} //private void OnWarningDisplay(int windowID)
+		} //private void OnInfoWindow(int windowID)
 
 		/*
 		 * Test if the name is not already in use
@@ -639,7 +639,7 @@ namespace UbioWeldingLtd
 
 			if (_config.dataBaseAutoReload)
 			{
-				if (WeldingHelpers.isModuleManagerInstalled())
+				if (_config.reloadDbUsingMM && WeldingHelpers.isModuleManagerInstalled())
 				{
 					StartCoroutine(DatabaseHandler.DatabaseReloadWithMM());
 				}
