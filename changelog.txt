@@ -4,7 +4,7 @@
 	Added ability for change requiredTech from GUI.
 	Improved naming of the partfiles - now welded part can be saved in file named like folder (for example "WeldedPod.cfg", not "part.cfg").
 	Tweakscale integration. Now it reads scale from scene part to include tweakscale.
-	Added the correct addition or entryCosts.
+	Added the correct addition of entryCosts.
 	The ModuleAttributeList.xml gives you the ability to edit how the tool will process the merging of certain modules and their attributes. For details, see comments in the ModuleAttributeLists.xml file.
 		<Vector2CurveModules> section is the list of modules that have to be read as vector2 curves, as an example the ISP of an RCS thruster.
 		In <Vector4CurveModules> list are modules that will be read as vector4Curves that means they will create curves from floatpoints and tangents. There is a thread in the forum just about the magic of floatpoint tangents.
