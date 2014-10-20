@@ -1,0 +1,33 @@
+2014-10-xx
+	Stock Toolbar integration.
+	Added the GUI to change most settings.
+	Added ability for change requiredTech from GUI.
+	Improved naming of the partfiles - now welded part can be saved in file named like folder (for example "WeldedPod.cfg", not "part.cfg").
+	Tweakscale integration. Now it reads scale from scene part to include tweakscale.
+	Added the correct addition or entryCosts.
+	The ModuleAttributeList.xml gives you the ability to edit how the tool will process the merging of certain modules and their attributes. For details, see comments in the ModuleAttributeLists.xml file.
+		<Vector2CurveModules> section is the list of modules that have to be read as vector2 curves, as an example the ISP of an RCS thruster.
+		In <Vector4CurveModules> list are modules that will be read as vector4Curves that means they will create curves from floatpoints and tangents. There is a thread in the forum just about the magic of floatpoint tangents.
+		<SubModules> list contains the Submodules that otherwise would be ignored and not merged, Adding an entry here will give the tool the ability to merge the attributes in it.
+		Modules in <ModulesToIgnore> list will be completly ignored from the tool and not get added to the new part.
+		Entries in <AveragedModuleAttributes> will make sure that the tool will not simply add the values of this attribute from the different parts and modules up, but will calculate it as aritmetric mean (average).
+		Entries in <UnchangedModuleAttributes> list will give the tool the order to not merge the values for this attribute.
+		<BreakingModuleAttributes> might be the most important list of Attributes, the entries here will give the tool the order to check if the values of these attributes are equal, and only allow then the merging or the module, otherwise a new module would be added.
+	Fixed crashTolerance, breakingForce and breakingTorque calculation. Improved MaxTemp calculation.
+		Now there is three methods of calculation crashTolerance, breakingForce and breakingTorque values:
+			legacy (UbioZur variant)
+			arithmetic mean value of the values of parts
+			weighted average by mass (now it's default)
+		Also it presents new ways of calculation of MaxTemp:
+			arithmetic mean value of the values of parts (UbioZur variant)
+			weighted average by mass
+			lowest between values of parts  (now it's default)
+	Changed config file format (and name).
+	Fixed miscalculation in case of resources which have not equal amount and maxAmount values.
+2014-09-02
+	Fixes incorrect rescaling of parts, containing "scale" in MODEL description.
+2014-09-01
+	Fixed incorrect calculation of COM offset.
+2014-08-12
+	KSP 0.24 compatibility.
+	Changed massless parts processing behavior.
