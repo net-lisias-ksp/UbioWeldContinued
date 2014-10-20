@@ -639,7 +639,7 @@ namespace UbioWeldingLtd
 
 			if (_config.dataBaseAutoReload)
 			{
-				if (WeldingHelpers.isModuleManagerInstalled())
+				if (_config.reloadDbUsingMM && WeldingHelpers.isModuleManagerInstalled())
 				{
 					StartCoroutine(DatabaseHandler.DatabaseReloadWithMM());
 				}
