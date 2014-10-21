@@ -325,6 +325,7 @@ namespace UbioWeldingLtd
 				_config.dontProcessMasslessParts = GUILayout.Toggle(_config.dontProcessMasslessParts, new GUIContent(Constants.guiDontProcessMasslessPartsLabel, Constants.guiDontProcessMasslessPartsTip));
 				_config.dataBaseAutoReload = GUILayout.Toggle(_config.dataBaseAutoReload, new GUIContent(Constants.guiDbAutoReloadLabel, Constants.guiDbAutoReloadTip));
 				_config.useNamedCfgFile = GUILayout.Toggle(_config.useNamedCfgFile, new GUIContent(Constants.guiUseNamedCfgFileLabel, Constants.guiUseNamedCfgFileTip));
+				_config.clearEditor = GUILayout.Toggle(_config.clearEditor, new GUIContent(Constants.guiClearEditorLabel, Constants.guiClearEditorTip));
 				GUILayout.Space(10.0f);
 				GUILayout.Label("Strength params calculation method");
 //				_config.StrengthCalcMethod = (StrengthParamsCalcMethod)GUILayout.SelectionGrid((int)_config.StrengthCalcMethod, Constants.StrengthParamsCalcMethodsGUIContent, 1, GUILayout.MaxWidth(140));
@@ -655,13 +656,16 @@ namespace UbioWeldingLtd
 		 */
 		private void ClearEditor()
 		{
-			if (_config.useStockToolbar || EditorLogic.SelectedPart == null)
+			if (_config.clearEditor)
 			{
-				EditorLogic.fetch.PartSelected = EditorLogic.startPod;
+				if (_config.useStockToolbar || EditorLogic.SelectedPart == null)
+				{
+					EditorLogic.fetch.PartSelected = EditorLogic.startPod;
+				}
+				EditorLogic.fetch.DestroySelectedPart();
+				EditorLogic.fetch.Unlock(Constants.settingWeldingLock);
+				EditorPartList.Instance.Refresh();
 			}
-			EditorLogic.fetch.DestroySelectedPart();
-			EditorLogic.fetch.Unlock(Constants.settingWeldingLock);
-			EditorPartList.Instance.Refresh();
 		}
 
 		/*

@@ -69,6 +69,8 @@ namespace UbioWeldingLtd
         public const string guiSaveSettingsButtonTip = "Save settings to config file";
         public const string guiWeldItButtonLabel = "Weld it";
         public const string guiWeldItButtonTip = "Press \"" + guiWeldItButtonLabel + "\" button to weld whole craft or selected part of it";
+		public const string guiClearEditorLabel = "Clear editor";
+		public const string guiClearEditorTip = "Clear editor after welding";
         
 		//Settings
 		public const string settingWeldingLock = "UBILOCK9213";

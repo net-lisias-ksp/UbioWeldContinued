@@ -43,6 +43,7 @@ namespace UbioWeldingLtd
 		private bool _useNamedCfgFile = true; //save the part in the named file like "WeldedPod.cfg", not "part.cfg"
 		private StrengthParamsCalcMethod _StrengthCalcMethod = StrengthParamsCalcMethod.WeightedAverage;
 		private MaxTempCalcMethod _MaxTempCalcMethod = MaxTempCalcMethod.Lowest;
+		private bool _clearEditor = true;
 		private string[] _vector2CurveModules;
 		private string[] _vector4CurveModules;
 		private string[] _subModules;
@@ -121,6 +122,12 @@ namespace UbioWeldingLtd
 		{
 			get { return _MaxTempCalcMethod; }
 			set { _MaxTempCalcMethod = value; }
+		}
+
+		public bool clearEditor
+		{
+			get { return _clearEditor; }
+			set { _clearEditor = value; }
 		}
 
 		public string[] vector2CurveModules
