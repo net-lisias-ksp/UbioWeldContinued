@@ -663,9 +663,9 @@ namespace UbioWeldingLtd
 					EditorLogic.fetch.PartSelected = EditorLogic.startPod;
 				}
 				EditorLogic.fetch.DestroySelectedPart();
-				EditorLogic.fetch.Unlock(Constants.settingWeldingLock);
 				EditorPartList.Instance.Refresh();
 			}
+			EditorLogic.fetch.Unlock(Constants.settingWeldingLock);
 		}
 
 		/*
