@@ -53,8 +53,8 @@ namespace UbioWeldingLtd
 						techTitle = rdTech.title;
 						break;
 					}
-					contentList.Add(new GUIContent(techTitle));
 				}
+				contentList.Add(new GUIContent(techTitle));
 			}
 			dropDown = new GUIDropdown(contentList[0], contentList.ToArray(), "button", "box", guiStyle);
 			return dropDown;
