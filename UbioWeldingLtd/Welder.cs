@@ -196,41 +196,7 @@ namespace UbioWeldingLtd
 		public PartCategories Category
 		{ 
 			get { return _category; }
-			set 
-			{ 
-				_category = value;
-				if (HighLogic.fetch.currentGame.Mode == Game.Modes.CAREER)
-				{
-					switch (value)
-					{
-						case PartCategories.Pods:
-							_techRequire = Constants.rdNodeByPass;
-							break;
-						case PartCategories.Propulsion:
-							_techRequire = Constants.rdNodeByPass;
-							break;
-						case PartCategories.Control:
-							_techRequire = Constants.rdNodeByPass;
-							break;
-						case PartCategories.Structural:
-							_techRequire = Constants.rdNodeByPass;
-							break;
-						case PartCategories.Aero:
-							_techRequire = Constants.rdNodeByPass;
-							break;
-						case PartCategories.Utility:
-							_techRequire = Constants.rdNodeByPass;
-							break;
-						case PartCategories.Science:
-							_techRequire = Constants.rdNodeByPass;
-							break;
-					}
-				}
-				else
-				{
-					_techRequire = Constants.rdNodeSandboxWeld;
-				}
-			}
+			set { _category = value; }
 		}
 		
         public string techRequire

@@ -45,14 +45,16 @@ namespace UbioWeldingLtd
 			Debug.Log(string.Format("{0} rdTechs.Count = {1}", Constants.logPrefix, rdTechs.Count()));
 			foreach (string techID in techList)
 			{
+				string techTitle = techID; //for case, when techID will not be found - the length of the list of titles always must match the length of the list of techID's.
 				foreach (RDTech rdTech in rdTechs)
 				{
 					if (rdTech.techID == techID)
 					{
-						contentList.Add(new GUIContent(rdTech.title));
+						techTitle = rdTech.title;
 						break;
 					}
 				}
+				contentList.Add(new GUIContent(techTitle));
 			}
 			dropDown = new GUIDropdown(contentList[0], contentList.ToArray(), "button", "box", guiStyle);
 			return dropDown;
