@@ -203,13 +203,6 @@ namespace UbioWeldingLtd
 			return mmInstalled;
 		}
 
-	
-		public static Vector3 RoundVector3(Vector3 inVector)
-		{
-			float x = (float)Math.Round(inVector.x, Constants.weldNumberOfFractionalDigits);
-			float y = (float)Math.Round(inVector.y, Constants.weldNumberOfFractionalDigits); ;
-			float z = (float)Math.Round(inVector.z, Constants.weldNumberOfFractionalDigits); ;
-			return new Vector3(x, y, z);
-		}
+
 	}
 }
