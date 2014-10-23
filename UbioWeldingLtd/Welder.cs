@@ -1577,6 +1577,32 @@ namespace UbioWeldingLtd
 			partconfig.AddValue("PhysicsSignificance", _physicsSignificance);
 
 			//add nodes stack
+			if (_attachNodes.Count() > 2)
+			{
+				float topmostMark = float.MinValue;
+				float lowestMark = float.MaxValue;
+				AttachNode topmostNode = _attachNodes[0];
+				AttachNode lowestNode = _attachNodes[1];
+				foreach (AttachNode node in _attachNodes)
+				{
+					if (node.position.y > topmostMark)
+					{
+						topmostMark = node.position.y;
+						topmostNode = node;
+					}
+					if (node.position.y < lowestMark)
+					{
+						lowestMark = node.position.y;
+						lowestNode = node;
+					}
+				}
+//				_attachNodes.Add(_attachNodes[0]);
+//				_attachNodes.Insert(_attachNodes.Count-1, _attachNodes[0]);
+				_attachNodes.Add(topmostNode);
+				_attachNodes.Add(lowestNode);
+				_attachNodes.Remove(topmostNode);
+				_attachNodes.Remove(lowestNode);
+			}
 			foreach (AttachNode node in _attachNodes)
 			{
 				//Make sure the orintation is an int
@@ -1588,6 +1614,7 @@ namespace UbioWeldingLtd
 				{
 					orientation = Vector3.up;
 				}
+				orientation.Normalize();
 				partconfig.AddValue(string.Format("node_stack_{0}", node.id), string.Format("{0},{1},{2}", ConfigNode.WriteVector(WeldingHelpers.RoundVector3(node.position)), ConfigNode.WriteVector(WeldingHelpers.RoundVector3(orientation)), node.size));
 			}
 			//add surface attach node
