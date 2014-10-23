@@ -1556,9 +1556,9 @@ namespace UbioWeldingLtd
 			{
 				ConfigNode node = new ConfigNode(Constants.weldModelNode);
 				node.AddValue("model", model.url);
-				node.AddValue("position", ConfigNode.WriteVector(model.position)); ;
-				node.AddValue("scale", ConfigNode.WriteVector(model.scale));
-				node.AddValue("rotation", ConfigNode.WriteVector(model.rotation));
+				node.AddValue("position", ConfigNode.WriteVector(WeldingHelpers.RoundVector3(model.position))); ;
+				node.AddValue("scale", ConfigNode.WriteVector(WeldingHelpers.RoundVector3(model.scale)));
+				node.AddValue("rotation", ConfigNode.WriteVector(WeldingHelpers.RoundVector3(model.rotation)));
 				foreach (string tex in model.textures)
 				{
 					node.AddValue("texture", tex);
@@ -1571,12 +1571,38 @@ namespace UbioWeldingLtd
 			}
 
 			//add rescale factor
-			partconfig.AddValue("rescaleFactor", _rescaleFactor);
+			partconfig.AddValue("rescaleFactor", WeldingHelpers.RoundFloat(_rescaleFactor));
 
 			//add PhysicsSignificance
 			partconfig.AddValue("PhysicsSignificance", _physicsSignificance);
 
 			//add nodes stack
+			if (_attachNodes.Count() > 2)
+			{
+				float topmostMark = float.MinValue;
+				float lowestMark = float.MaxValue;
+				AttachNode topmostNode = _attachNodes[0];
+				AttachNode lowestNode = _attachNodes[1];
+				foreach (AttachNode node in _attachNodes)
+				{
+					if (node.position.y > topmostMark)
+					{
+						topmostMark = node.position.y;
+						topmostNode = node;
+					}
+					if (node.position.y < lowestMark)
+					{
+						lowestMark = node.position.y;
+						lowestNode = node;
+					}
+				}
+//				_attachNodes.Add(_attachNodes[0]);
+//				_attachNodes.Insert(_attachNodes.Count-1, _attachNodes[0]);
+				_attachNodes.Add(topmostNode);
+				_attachNodes.Add(lowestNode);
+				_attachNodes.Remove(topmostNode);
+				_attachNodes.Remove(lowestNode);
+			}
 			foreach (AttachNode node in _attachNodes)
 			{
 				//Make sure the orintation is an int
@@ -1588,10 +1614,11 @@ namespace UbioWeldingLtd
 				{
 					orientation = Vector3.up;
 				}
-				partconfig.AddValue(string.Format("node_stack_{0}", node.id), string.Format("{0},{1},{2}", ConfigNode.WriteVector(node.position), ConfigNode.WriteVector(orientation), node.size));
+				orientation.Normalize();
+				partconfig.AddValue(string.Format("node_stack_{0}", node.id), string.Format("{0},{1},{2}", ConfigNode.WriteVector(WeldingHelpers.RoundVector3(node.position)), ConfigNode.WriteVector(WeldingHelpers.RoundVector3(orientation)), node.size));
 			}
 			//add surface attach node
-			partconfig.AddValue("node_attach", string.Format("{0},{1},{2}", ConfigNode.WriteVector(_srfAttachNode.originalPosition), ConfigNode.WriteVector(_srfAttachNode.originalOrientation), _srfAttachNode.size));
+			partconfig.AddValue("node_attach", string.Format("{0},{1},{2}", ConfigNode.WriteVector(WeldingHelpers.RoundVector3(_srfAttachNode.originalPosition)), ConfigNode.WriteVector(WeldingHelpers.RoundVector3(_srfAttachNode.originalOrientation)), _srfAttachNode.size));
 
 			//merge fx
 			ConfigNode.Merge(partconfig, _fxData);
@@ -1623,15 +1650,15 @@ namespace UbioWeldingLtd
 
 			//add drag
 			partconfig.AddValue("dragModelType", _dragModel);
-			partconfig.AddValue("maximum_drag", _maximumDrag);
-			partconfig.AddValue("minimum_drag", _minimumDrag);
-			partconfig.AddValue("angularDrag", _angularDrag);
+			partconfig.AddValue("maximum_drag", WeldingHelpers.RoundFloat(_maximumDrag));
+			partconfig.AddValue("minimum_drag", WeldingHelpers.RoundFloat(_minimumDrag));
+			partconfig.AddValue("angularDrag", WeldingHelpers.RoundFloat(_angularDrag));
 
 			//add crash and breaking data
-			partconfig.AddValue("crashTolerance", _crashTolerance);
-			partconfig.AddValue("breakingForce", _breakingForce);
-			partconfig.AddValue("breakingTorque", _breakingTorque);
-			partconfig.AddValue("maxTemp", _maxTemp);
+			partconfig.AddValue("crashTolerance", WeldingHelpers.RoundFloat(_crashTolerance));
+			partconfig.AddValue("breakingForce", WeldingHelpers.RoundFloat(_breakingForce));
+			partconfig.AddValue("breakingTorque", WeldingHelpers.RoundFloat(_breakingTorque));
+			partconfig.AddValue("maxTemp", WeldingHelpers.RoundFloat(_maxTemp));
 
 			//add if crossfeed
 			partconfig.AddValue("fuelCrossFeed", _fuelCrossFeed);
