@@ -204,5 +204,26 @@ namespace UbioWeldingLtd
 		}
 
 
+		/// <summary>
+		/// this rounds Vector3 coordinates to --Constants.weldNumberOfFractionalDigits-- fractional digits
+		/// </summary>
+		/// <returns></returns>
+		public static Vector3 RoundVector3(Vector3 inVector)
+		{
+			float x = (float)Math.Round(inVector.x, Constants.weldNumberOfFractionalDigits);
+			float y = (float)Math.Round(inVector.y, Constants.weldNumberOfFractionalDigits);
+			float z = (float)Math.Round(inVector.z, Constants.weldNumberOfFractionalDigits);
+			return new Vector3(x, y, z);
+		}
+
+
+		/// <summary>
+		/// this rounds float value to --Constants.weldNumberOfFractionalDigits-- fractional digits
+		/// </summary>
+		/// <returns></returns>
+		public static float RoundFloat(float inValue)
+		{
+			return (float)Math.Round(inValue, Constants.weldNumberOfFractionalDigits);
+		}
 	}
 }

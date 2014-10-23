@@ -1556,9 +1556,9 @@ namespace UbioWeldingLtd
 			{
 				ConfigNode node = new ConfigNode(Constants.weldModelNode);
 				node.AddValue("model", model.url);
-				node.AddValue("position", ConfigNode.WriteVector(model.position)); ;
-				node.AddValue("scale", ConfigNode.WriteVector(model.scale));
-				node.AddValue("rotation", ConfigNode.WriteVector(model.rotation));
+				node.AddValue("position", ConfigNode.WriteVector(WeldingHelpers.RoundVector3(model.position))); ;
+				node.AddValue("scale", ConfigNode.WriteVector(WeldingHelpers.RoundVector3(model.scale)));
+				node.AddValue("rotation", ConfigNode.WriteVector(WeldingHelpers.RoundVector3(model.rotation)));
 				foreach (string tex in model.textures)
 				{
 					node.AddValue("texture", tex);
@@ -1571,7 +1571,7 @@ namespace UbioWeldingLtd
 			}
 
 			//add rescale factor
-			partconfig.AddValue("rescaleFactor", _rescaleFactor);
+			partconfig.AddValue("rescaleFactor", WeldingHelpers.RoundFloat(_rescaleFactor));
 
 			//add PhysicsSignificance
 			partconfig.AddValue("PhysicsSignificance", _physicsSignificance);
@@ -1588,10 +1588,10 @@ namespace UbioWeldingLtd
 				{
 					orientation = Vector3.up;
 				}
-				partconfig.AddValue(string.Format("node_stack_{0}", node.id), string.Format("{0},{1},{2}", ConfigNode.WriteVector(node.position), ConfigNode.WriteVector(orientation), node.size));
+				partconfig.AddValue(string.Format("node_stack_{0}", node.id), string.Format("{0},{1},{2}", ConfigNode.WriteVector(WeldingHelpers.RoundVector3(node.position)), ConfigNode.WriteVector(WeldingHelpers.RoundVector3(orientation)), node.size));
 			}
 			//add surface attach node
-			partconfig.AddValue("node_attach", string.Format("{0},{1},{2}", ConfigNode.WriteVector(_srfAttachNode.originalPosition), ConfigNode.WriteVector(_srfAttachNode.originalOrientation), _srfAttachNode.size));
+			partconfig.AddValue("node_attach", string.Format("{0},{1},{2}", ConfigNode.WriteVector(WeldingHelpers.RoundVector3(_srfAttachNode.originalPosition)), ConfigNode.WriteVector(WeldingHelpers.RoundVector3(_srfAttachNode.originalOrientation)), _srfAttachNode.size));
 
 			//merge fx
 			ConfigNode.Merge(partconfig, _fxData);
@@ -1623,15 +1623,15 @@ namespace UbioWeldingLtd
 
 			//add drag
 			partconfig.AddValue("dragModelType", _dragModel);
-			partconfig.AddValue("maximum_drag", _maximumDrag);
-			partconfig.AddValue("minimum_drag", _minimumDrag);
-			partconfig.AddValue("angularDrag", _angularDrag);
+			partconfig.AddValue("maximum_drag", WeldingHelpers.RoundFloat(_maximumDrag));
+			partconfig.AddValue("minimum_drag", WeldingHelpers.RoundFloat(_minimumDrag));
+			partconfig.AddValue("angularDrag", WeldingHelpers.RoundFloat(_angularDrag));
 
 			//add crash and breaking data
-			partconfig.AddValue("crashTolerance", _crashTolerance);
-			partconfig.AddValue("breakingForce", _breakingForce);
-			partconfig.AddValue("breakingTorque", _breakingTorque);
-			partconfig.AddValue("maxTemp", _maxTemp);
+			partconfig.AddValue("crashTolerance", WeldingHelpers.RoundFloat(_crashTolerance));
+			partconfig.AddValue("breakingForce", WeldingHelpers.RoundFloat(_breakingForce));
+			partconfig.AddValue("breakingTorque", WeldingHelpers.RoundFloat(_breakingTorque));
+			partconfig.AddValue("maxTemp", WeldingHelpers.RoundFloat(_maxTemp));
 
 			//add if crossfeed
 			partconfig.AddValue("fuelCrossFeed", _fuelCrossFeed);
