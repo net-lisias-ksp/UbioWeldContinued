@@ -1,0 +1,77 @@
+Because [B]UbioZur[/B] has allowed to update his work for new game versions, [B]Alewx [/B]and I have released the next update for this great mod.
+
+[URL="https://github.com/girka2k/unofficailUbioWeld/releases/download/Unofficial-v.04/UbioWeldingLtd-0.24.2.0.25.0-Unofficial-v.03.zip"]Download[/URL]
+[URL="https://github.com/girka2k/unofficailUbioWeld"]Sources[/URL]
+[Spoiler=Changes]
+2014-11-01
+[LIST]
+[*]	Fixed wrong rotation of models in some cases (especially in SHP)
+[*]	Now topmost and lowest nodes are placed to the end of list for fix impossibility to attach welded part to other in VAB/SHP. (It is assumed that the topmost and lowest nodes, most likely, are stack nodes)
+[*]	Most floating-point values (excluding amount of resources) of welded part are rounded to 5 fractional digits
+[*]	Some other minor fixes
+[/LIST]
+2014-10-21
+[LIST]
+[*]	KSP 
+[*]	Stock Toolbar integration.
+[*]	Added the GUI to change most settings.
+[*]	Added ability for change requiredTech from GUI.
+[*]	Improved naming of the partfiles - now welded part can be saved in file named like folder (for example "WeldedPod.cfg", not "part.cfg").
+[*]	Tweakscale integration. Now it reads scale from scene part to include tweakscale.
+[*]	Added the correct addition of entryCosts.
+[*]	The ModuleAttributeList.xml gives you the ability to edit how the tool will process the merging of certain modules and their attributes. For details, see comments in the ModuleAttributeLists.xml file.
+[Spoiler=details]
+[LIST]
+[*]		<Vector2CurveModules> section is the list of modules that have to be read as vector2 curves, as an example the ISP of an RCS thruster.
+[*]		In <Vector4CurveModules> list are modules that will be read as vector4Curves that means they will create curves from floatpoints and tangents. There is a thread in the forum just about the magic of floatpoint tangents.
+[*]		<SubModules> list contains the Submodules that otherwise would be ignored and not merged, Adding an entry here will give the tool the ability to merge the attributes in it.
+[*]		Modules in <ModulesToIgnore> list will be completly ignored from the tool and not get added to the new part.
+[*]		Entries in <AveragedModuleAttributes> will make sure that the tool will not simply add the values of this attribute from the different parts and modules up, but will calculate it as aritmetric mean (average).
+[*]		Entries in <UnchangedModuleAttributes> list will give the tool the order to not merge the values for this attribute.
+[*]		<BreakingModuleAttributes> might be the most important list of Attributes, the entries here will give the tool the order to check if the values of these attributes are equal, and only allow then the merging or the module, otherwise a new module would be added.
+[/LIST]
+[/spoiler]
+
+[*]	Fixed crashTolerance, breakingForce and breakingTorque calculation. Improved MaxTemp calculation.
+[Spoiler=details]
+[LIST]
+[*]		Now there is three methods of calculation crashTolerance, breakingForce and breakingTorque values:
+[LIST]
+[*]			legacy (UbioZur variant)
+[*]			arithmetic mean value of the values of parts
+[*]			weighted average by mass (now it's default)
+[/LIST]
+[*]		Also it presents new ways of calculation of MaxTemp:
+[LIST]
+[*]			arithmetic mean value of the values of parts (UbioZur variant)
+[*]			weighted average by mass
+[*]			lowest between values of parts  (now it's default)
+[/LIST]
+[/LIST]
+[/spoiler]
+[*]	Changed config file format (and name).
+[*]	Fixed miscalculation in case of resources which have not equal amount and maxAmount values.
+[/LIST]
+2014-09-02
+[LIST]
+[*]	Fixes incorrect rescaling of parts, containing "scale" in MODEL description.
+[/LIST]
+2014-09-01
+[LIST]
+[*]	Fixed incorrect calculation of COM offset.
+[/LIST]
+2014-08-12
+[LIST]
+[*]	KSP 0.24 compatibility.
+[*]	Changed massless parts processing behavior.
+[/LIST]
+[/Spoiler]
+
+[B]Legal stuff:[/B]
+[I]This work based on [B]Malkuth[/B]'s [URL="http://forum.kerbalspaceprogram.com/threads/38577-0-22-UbioZur-Welding-Ltd-2-0-Playtest-5-Now-In-Game-Tool?p=1002144&viewfull=1#post1002144"]update [/URL]for [B]UbioZur[/B]'s original code.
+[COLOR="#696969"]All rights to original source code belong to [B]UbioZur[/B], the rights to subsequent code changes belong to their authors.
+These code changes may be freely used by the [B]UbioZur[/B] or persons whom he has appointed.[/COLOR][/I]
+
+Please note [B]THIS IS [COLOR="#FF0000"]NOT [/COLOR]AN OFFICAL RELEASE FROM UbioZur[/B]!!!
+
+@[B]UbioZur[/B]: We along with [B]Alewx [/B]would be delighted to receive your official blessing for the continuation of our work (or, at worst, the official ban). If you find it possible - please contact anyone of us.
