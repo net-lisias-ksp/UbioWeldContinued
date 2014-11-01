@@ -54,6 +54,8 @@ namespace UbioWeldingLtd
 		public const string guiNameUsed		 = "Name already used by another part!";
 		public const string guiDialOverwrite	= "File already exist, Do you want to overwrite it?";
 		public const string guiDialSaved		= "New part saved and shipped!";
+		public const string guiDBReloading1		= "Database reloading";
+		public const string guiDBReloading2		= "Please be patient!";
 
 		//Settings
 		public const string settingWeldingLock = "UBILOCK9213";

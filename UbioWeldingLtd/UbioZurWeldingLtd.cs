@@ -41,6 +41,7 @@ namespace UbioWeldingLtd
 		private WeldingConfiguration _config;
 		private bool _guiVisible = false;
 		private bool _mainWindowsSettingsMode = false;
+		static public bool isReloading = false;
 		private string filepath
 		{
 			get
@@ -462,16 +463,20 @@ namespace UbioWeldingLtd
 		private void OnSavedDisplay(int windowID)
 		{
 			GUILayout.BeginVertical();
-			GUILayout.BeginHorizontal();
-			GUILayout.Label(Constants.guiDialSaved);
-			GUILayout.EndHorizontal();
-			GUILayout.BeginHorizontal();
-			GUILayout.EndHorizontal();
-			GUILayout.FlexibleSpace();
-			if (GUILayout.Button(Constants.guiOK))
+			if (DatabaseHandler.isReloading)
 			{
-				ClearEditor();
-				_state = DisplayState.none;
+				GUILayout.Label(Constants.guiDBReloading1);
+				GUILayout.Label(Constants.guiDBReloading2);
+			}
+			else
+			{
+				GUILayout.Label(Constants.guiDialSaved);
+				GUILayout.FlexibleSpace();
+				if (GUILayout.Button(Constants.guiOK))
+				{
+					ClearEditor();
+					_state = DisplayState.none;
+				}
 			}
 			GUILayout.EndVertical();
 

@@ -11,6 +11,11 @@ namespace UbioWeldingLtd
 {
 	class DatabaseHandler
 	{
+		static private bool _isStartingReloading = false;
+		static public bool isReloading
+		{
+			get { return (_isStartingReloading || !(GameDatabase.Instance.IsReady()) || !(PartLoader.Instance.IsReady())); }
+		}
 		/// <summary>
 		/// reloads the gamedatabase with the modulemanager to keep the modified parts intact
 		/// </summary>
@@ -18,7 +23,7 @@ namespace UbioWeldingLtd
 		/// <returns></returns>
 		static public IEnumerator DatabaseReloadWithMM(bool dump = false)
 		{
-
+//			_isStartingReloading = true;
 			while (!GameDatabase.Instance.IsReady())
 			{
 				yield return null;
@@ -37,6 +42,7 @@ namespace UbioWeldingLtd
 			{
 				yield return null;
 			}
+//			_isStartingReloading = false;
 		}
 
 		/// <summary>
@@ -45,10 +51,12 @@ namespace UbioWeldingLtd
 		static public void ReloadDatabase()
 		{
 			//reload database Big thanks to AncientGammoner (KSP Forum)
+			_isStartingReloading = true;
 			GameDatabase.Instance.Recompile = true;
 			GameDatabase.Instance.StartLoad();
 			PartLoader.Instance.Recompile = true;
 			PartLoader.Instance.StartLoad();
+			_isStartingReloading = false;
 		}
 
 	}
