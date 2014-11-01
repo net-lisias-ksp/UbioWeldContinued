@@ -1,4 +1,9 @@
-2014-10-xx
+2014-11-01
+	Fixed wrong rotation of models in some cases (especially in SHP)
+	Now topmost and lowest nodes are placed to the end of list for fix impossibility to attach welded part to other in VAB/SHP. (It is assumed that the topmost and lowest nodes, most likely, are stack nodes)
+	Most floating-point values (excluding amount of resources) of welded part are rounded to 5 fractional digits
+	Some other minor fixes
+2014-10-21
 	Stock Toolbar integration.
 	Added the GUI to change most settings.
 	Added ability for change requiredTech from GUI.
