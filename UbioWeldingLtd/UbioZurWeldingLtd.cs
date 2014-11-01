@@ -659,7 +659,7 @@ namespace UbioWeldingLtd
 		{
 			if (_config.clearEditor)
 			{
-				if (_config.useStockToolbar || EditorLogic.SelectedPart == null)
+				if (EditorLogic.SelectedPart == null)
 				{
 					EditorLogic.fetch.PartSelected = EditorLogic.startPod;
 				}
