@@ -12,7 +12,7 @@ Because [B]UbioZur[/B] has allowed to update his work for new game versions, [B]
 [/LIST]
 2014-10-21
 [LIST]
-[*]	KSP 
+[*]	KSP 0.25 compatibility 
 [*]	Stock Toolbar integration.
 [*]	Added the GUI to change most settings.
 [*]	Added ability for change requiredTech from GUI.
