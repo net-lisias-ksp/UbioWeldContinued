@@ -86,6 +86,7 @@ namespace UbioWeldingLtd
 			_catNames = WeldingHelpers.initPartCategories(_catNames);
 			_catListStyle = WeldingHelpers.initGuiStyle(_catListStyle);
 			_catDropdown = WeldingHelpers.initDropDown(_catNames, _catListStyle, _catDropdown);
+			DatabaseHandler.initMMAssembly();
 		}
 
 		/// <summary>
@@ -646,7 +647,7 @@ namespace UbioWeldingLtd
 
 			if (_config.dataBaseAutoReload)
 			{
-				if (_config.reloadDbUsingMM && WeldingHelpers.isModuleManagerInstalled())
+				if (_config.reloadDbUsingMM && DatabaseHandler.isModuleManagerInstalled())
 				{
 					StartCoroutine(DatabaseHandler.DatabaseReloadWithMM());
 				}

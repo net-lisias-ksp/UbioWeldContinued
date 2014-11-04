@@ -73,6 +73,7 @@ namespace UbioWeldingLtd
 		public const string settingXmlListFileName = "moduleAttributeList.xml";
 		public const string underline = "_";
 		public static readonly string settingRuntimeDirectory = Assembly.GetExecutingAssembly().Location.Replace(new FileInfo(Assembly.GetExecutingAssembly().Location).Name, "");
+		public static readonly System.Version minModuleManagerVersion = new System.Version(2, 3, 1, 0);
 
 		//Readme
 		public const string setupGeneralLine1 = "The ModuleAttributeList.xml gives you the ability to edit how the Weldingtool will process the merging of certain modules and their attributes.";
