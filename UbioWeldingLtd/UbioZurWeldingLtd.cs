@@ -41,6 +41,7 @@ namespace UbioWeldingLtd
 		private WeldingConfiguration _config;
 		private bool _guiVisible = false;
 		private bool _mainWindowsSettingsMode = false;
+		static public bool isReloading = false;
 		private string filepath
 		{
 			get
@@ -85,6 +86,7 @@ namespace UbioWeldingLtd
 			_catNames = WeldingHelpers.initPartCategories(_catNames);
 			_catListStyle = WeldingHelpers.initGuiStyle(_catListStyle);
 			_catDropdown = WeldingHelpers.initDropDown(_catNames, _catListStyle, _catDropdown);
+			DatabaseHandler.initMMAssembly();
 		}
 
 		/// <summary>
@@ -195,6 +197,7 @@ namespace UbioWeldingLtd
 				{
 					case DisplayState.none :
 						EditorLogic.fetch.Unlock(Constants.settingPreventClickThroughLock);
+						EditorLogic.fetch.Unlock(Constants.settingWeldingLock);
 						break;
 					case DisplayState.weldError :
                         _editorErrorDial = GUILayout.Window((int)_state, _editorErrorDial, OnErrorDisplay, Constants.weldManufacturer);
@@ -237,6 +240,7 @@ namespace UbioWeldingLtd
 			bool warning = false;
 			_welder = new Welder();
 
+			partToWeld.transform.eulerAngles = Vector3.up;
 			WeldingReturn ret = _welder.weldThisPart(partToWeld);
 
 			if (ret < 0)
@@ -460,17 +464,27 @@ namespace UbioWeldingLtd
 		 */
 		private void OnSavedDisplay(int windowID)
 		{
+			bool MMPathLoaderIsReady = (bool)DatabaseHandler.DynaInvokeMMPatchLoaderMethod("IsReady");
 			GUILayout.BeginVertical();
-			GUILayout.BeginHorizontal();
-			GUILayout.Label(Constants.guiDialSaved);
-			GUILayout.EndHorizontal();
-			GUILayout.BeginHorizontal();
-			GUILayout.EndHorizontal();
-			GUILayout.FlexibleSpace();
-			if (GUILayout.Button(Constants.guiOK))
+			if (DatabaseHandler.isReloading)
 			{
-				ClearEditor();
-				_state = DisplayState.none;
+				GUILayout.Label(Constants.guiDBReloading1);
+				GUILayout.Label(Constants.guiDBReloading2);
+				if (!MMPathLoaderIsReady)
+				{
+					GUILayout.Label(String.Format("ModuleManager progress: {0:P0}", (float)DatabaseHandler.DynaInvokeMMPatchLoaderMethod("ProgressFraction")));
+//					GUILayout.Label(String.Format("{0}", (string)DatabaseHandler.DynaInvokeMMPatchLoaderMethod("ProgressTitle")));
+				}
+			}
+			else
+			{
+				GUILayout.Label(Constants.guiDialSaved);
+				GUILayout.FlexibleSpace();
+				if (GUILayout.Button(Constants.guiOK))
+				{
+					ClearEditor();
+					_state = DisplayState.none;
+				}
 			}
 			GUILayout.EndVertical();
 
@@ -640,14 +654,7 @@ namespace UbioWeldingLtd
 
 			if (_config.dataBaseAutoReload)
 			{
-				if (_config.reloadDbUsingMM && WeldingHelpers.isModuleManagerInstalled())
-				{
-					StartCoroutine(DatabaseHandler.DatabaseReloadWithMM());
-				}
-				else
-				{
-					DatabaseHandler.ReloadDatabase();
-				}
+				StartCoroutine(DatabaseHandler.DatabaseReloadWithMM());
 			}
 		}
 
@@ -658,7 +665,7 @@ namespace UbioWeldingLtd
 		{
 			if (_config.clearEditor)
 			{
-				if (_config.useStockToolbar || EditorLogic.SelectedPart == null)
+				if (EditorLogic.SelectedPart == null)
 				{
 					EditorLogic.fetch.PartSelected = EditorLogic.startPod;
 				}
@@ -679,7 +686,7 @@ namespace UbioWeldingLtd
 			//            if (rect.Contains(pointerPos) && !EditorLogic.softLock)
 			if (rect.Contains(pointerPos))
 			{
-				EditorLogic.fetch.Lock(true, true, true, Constants.settingPreventClickThroughLock);
+				EditorLogic.fetch.Lock(false, false, false, Constants.settingPreventClickThroughLock);
 			}
 			//            else if (!rect.Contains(pointerPos) && EditorLogic.softLock)
 			else if (!rect.Contains(pointerPos))

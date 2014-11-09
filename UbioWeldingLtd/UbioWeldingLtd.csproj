@@ -39,9 +39,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\AssemblyReferences\Assembly-CSharp-firstpass.dll</HintPath>
     </Reference>
-    <Reference Include="ModuleManager.2.3.1">
-      <HintPath>..\..\AssemblyReferences\ModuleManager.2.3.1.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />

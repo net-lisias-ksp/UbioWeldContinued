@@ -11,7 +11,7 @@ namespace UbioWeldingLtd
 	static class Constants
 	{
 		//Logs/debug constants
-		public const string logVersion		  = "v2.0pt5-0.25.0-Unofficial";
+		public const string logVersion		  = "v2.0pt5-0.24.2/0.25.0-Unofficial-v.03";
 		public const string logWarning		  = "WARNING ";
 		public const string logError			= "ERROR ";
 		public const string logPrefix		   = "[WeldingTool] ";
@@ -54,6 +54,8 @@ namespace UbioWeldingLtd
 		public const string guiNameUsed		 = "Name already used by another part!";
 		public const string guiDialOverwrite	= "File already exist, Do you want to overwrite it?";
 		public const string guiDialSaved		= "New part saved and shipped!";
+		public const string guiDBReloading1		= "Database reloading";
+		public const string guiDBReloading2		= "Please be patient!";
 
 		//Settings
 		public const string settingWeldingLock = "UBILOCK9213";
@@ -71,6 +73,7 @@ namespace UbioWeldingLtd
 		public const string settingXmlListFileName = "moduleAttributeList.xml";
 		public const string underline = "_";
 		public static readonly string settingRuntimeDirectory = Assembly.GetExecutingAssembly().Location.Replace(new FileInfo(Assembly.GetExecutingAssembly().Location).Name, "");
+		public static readonly System.Version minModuleManagerVersion = new System.Version(2, 3, 1, 0);
 
 		//Readme
 		public const string setupGeneralLine1 = "The ModuleAttributeList.xml gives you the ability to edit how the Weldingtool will process the merging of certain modules and their attributes.";

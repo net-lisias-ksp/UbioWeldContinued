@@ -192,19 +192,6 @@ namespace UbioWeldingLtd
 
 
 		/// <summary>
-		/// this will check for an installed module manager for a cleaner reload of the database
-		/// remember that this is still bound to a specific version of ModuleManager
-		/// </summary>
-		/// <returns></returns>
-		public static bool isModuleManagerInstalled()
-		{
-			bool mmInstalled = AssemblyLoader.loadedAssemblies.Any(activeMod => activeMod.assembly.GetName().Name.StartsWith("ModuleManager") && activeMod.url == "");
-			Debug.Log(string.Format("{0} MM installed = {1}", Constants.logPrefix, mmInstalled));
-			return mmInstalled;
-		}
-
-
-		/// <summary>
 		/// this rounds Vector3 coordinates to --Constants.weldNumberOfFractionalDigits-- fractional digits
 		/// </summary>
 		/// <returns></returns>
