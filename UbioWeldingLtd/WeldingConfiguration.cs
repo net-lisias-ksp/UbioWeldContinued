@@ -34,7 +34,6 @@ namespace UbioWeldingLtd
 		private int _MainWindowXPosition = (Screen.width - Constants.guiMainWindowW) / 2;
 		private int _MainWindowYPosition = (Screen.height - Constants.guiMainWindowH) / 2;
 		private bool _dataBaseAutoReload = false;
-		private bool _reloadDbUsingMM = false;
 		private bool _includeAllNodes = false;
 		private bool _allowCareerMode = true;
 		private bool _dontProcessMasslessParts = true;
@@ -68,12 +67,6 @@ namespace UbioWeldingLtd
 		{
 			get { return _dataBaseAutoReload; }
 			set { _dataBaseAutoReload = value; }
-		}
-
-		public bool reloadDbUsingMM
-		{
-			get { return _reloadDbUsingMM; }
-			set { _reloadDbUsingMM = value; }
 		}
 
 		public bool includeAllNodes

@@ -16,11 +16,11 @@ namespace UbioWeldingLtd
 		private static object _MMPatchLoader;
 		private static Type _MMPatchLoaderType;
 
-		static private bool _isStartingReloading = false;
+		static private bool _isReloading = false;
 
 		static public bool isReloading
 		{
-			get { return (_isStartingReloading || !(GameDatabase.Instance.IsReady()) || !(PartLoader.Instance.IsReady())); }
+			get { return _isReloading; }
 		}
 
 
@@ -74,7 +74,7 @@ namespace UbioWeldingLtd
 		/// this will dynamically invoke _MethodName_ method of ModuleManager.MMPatchLoader
 		/// </summary>
 		/// <returns></returns>
-		private static object DynaInvokeMMPatchLoaderMethod(string MethodName)
+		public static object DynaInvokeMMPatchLoaderMethod(string MethodName)
 		{
 			if (_MMPatchLoader != null)
 			{
@@ -96,57 +96,57 @@ namespace UbioWeldingLtd
 		/// remember that this is NOT bound to a specific version of ModuleManager
 		/// </summary>
 		/// <returns></returns>
-		public static bool isModuleManagerInstalled()
+		private static bool isModuleManagerInstalled
 		{
-			bool mmInstalled = (_MMPatchLoader != null);
-			Debug.Log(string.Format("{0} MM installed = {1}", Constants.logPrefix, mmInstalled));
-			return mmInstalled;
+			get { return (_MMPatchLoader != null); }
 		}
 
 
 		/// <summary>
-		/// reloads the gamedatabase with the modulemanager to keep the modified parts intact
-		/// remember that this is NOT bound to a specific version of ModuleManager
+		/// reloads the gamedatabase with the modulemanager (if installed) to keep the modified parts intact
+		/// this works with version of ModuleManager 2.3.1 and higher
 		/// </summary>
 		/// <param name="dump"></param>
 		/// <returns></returns>
-		static public IEnumerator DatabaseReloadWithMM(bool dump = false)
+		static public IEnumerator DatabaseReloadWithMM()
 		{
-			_isStartingReloading = true;
-			while (!GameDatabase.Instance.IsReady())
+			// this code is mostly borrowed from Sarbian's ModuleManager sources (https://github.com/sarbian/ModuleManager/blob/master/moduleManager.cs)
+			try // just in case - to waiting for the reloading was completed sometime
 			{
+				_isReloading = true;
 				yield return null;
-			}
-			DynaInvokeMMPatchLoaderMethod("StartLoad");
 
-			while (!(bool)DynaInvokeMMPatchLoaderMethod("IsReady"))
+				GameDatabase.Instance.Recompile = true;
+				GameDatabase.Instance.StartLoad();
+
+				while (!GameDatabase.Instance.IsReady())
+				{
+					yield return null;
+				}
+
+				if (isModuleManagerInstalled)
+				{
+					DynaInvokeMMPatchLoaderMethod("StartLoad");
+
+					while (!(bool)DynaInvokeMMPatchLoaderMethod("IsReady"))
+					{
+						yield return null;
+					}
+				}
+				PartResourceLibrary.Instance.LoadDefinitions();
+
+				PartLoader.Instance.Recompile = true;
+				PartLoader.Instance.StartLoad();
+
+				while (!PartLoader.Instance.IsReady())
+				{
+					yield return null;
+				}
+			}
+			finally
 			{
-				yield return null;
+				_isReloading = false;
 			}
-			PartResourceLibrary.Instance.LoadDefinitions();
-
-			PartLoader.Instance.StartLoad();
-
-			while (!PartLoader.Instance.IsReady())
-			{
-				yield return null;
-			}
-			_isStartingReloading = false;
 		}
-
-		/// <summary>
-		/// simple pure stock reloading of the gamedatabase
-		/// </summary>
-		static public void ReloadDatabase()
-		{
-			//reload database Big thanks to AncientGammoner (KSP Forum)
-			_isStartingReloading = true;
-			GameDatabase.Instance.Recompile = true;
-			GameDatabase.Instance.StartLoad();
-			PartLoader.Instance.Recompile = true;
-			PartLoader.Instance.StartLoad();
-			_isStartingReloading = false;
-		}
-
 	}
 }

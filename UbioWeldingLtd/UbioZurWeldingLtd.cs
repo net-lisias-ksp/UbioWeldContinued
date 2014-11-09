@@ -463,11 +463,17 @@ namespace UbioWeldingLtd
 		 */
 		private void OnSavedDisplay(int windowID)
 		{
+			bool MMPathLoaderIsReady = (bool)DatabaseHandler.DynaInvokeMMPatchLoaderMethod("IsReady");
 			GUILayout.BeginVertical();
 			if (DatabaseHandler.isReloading)
 			{
 				GUILayout.Label(Constants.guiDBReloading1);
 				GUILayout.Label(Constants.guiDBReloading2);
+				if (!MMPathLoaderIsReady)
+				{
+					GUILayout.Label(String.Format("ModuleManager progress: {0:P0}", (float)DatabaseHandler.DynaInvokeMMPatchLoaderMethod("ProgressFraction")));
+//					GUILayout.Label(String.Format("{0}", (string)DatabaseHandler.DynaInvokeMMPatchLoaderMethod("ProgressTitle")));
+				}
 			}
 			else
 			{
@@ -647,14 +653,7 @@ namespace UbioWeldingLtd
 
 			if (_config.dataBaseAutoReload)
 			{
-				if (_config.reloadDbUsingMM && DatabaseHandler.isModuleManagerInstalled())
-				{
-					StartCoroutine(DatabaseHandler.DatabaseReloadWithMM());
-				}
-				else
-				{
-					DatabaseHandler.ReloadDatabase();
-				}
+				StartCoroutine(DatabaseHandler.DatabaseReloadWithMM());
 			}
 		}
 
