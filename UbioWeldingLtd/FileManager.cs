@@ -115,6 +115,7 @@ namespace UbioWeldingLtd
 				configuration.unchangedModuleAttributes = Constants.basicUnchangedModuleAttributes;
 				configuration.breakingModuleAttributes = Constants.basicBreakingModuleAttributes;
 			}
+			Debug.Log(string.Format("{0} Config was loaded", Constants.logPrefix));
 			return configuration;
 		}
 
@@ -164,6 +165,7 @@ namespace UbioWeldingLtd
 				fileStreamWriter.WriteLine(s);
 			}
 			fileStreamWriter.Close();
+			Debug.Log(string.Format("{0} Config was saved", Constants.logPrefix));
 		}
 
 	}

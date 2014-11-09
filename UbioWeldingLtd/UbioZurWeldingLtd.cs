@@ -197,6 +197,7 @@ namespace UbioWeldingLtd
 				{
 					case DisplayState.none :
 						EditorLogic.fetch.Unlock(Constants.settingPreventClickThroughLock);
+						EditorLogic.fetch.Unlock(Constants.settingWeldingLock);
 						break;
 					case DisplayState.weldError :
                         _editorErrorDial = GUILayout.Window((int)_state, _editorErrorDial, OnErrorDisplay, Constants.weldManufacturer);
@@ -685,7 +686,7 @@ namespace UbioWeldingLtd
 			//            if (rect.Contains(pointerPos) && !EditorLogic.softLock)
 			if (rect.Contains(pointerPos))
 			{
-				EditorLogic.fetch.Lock(true, true, true, Constants.settingPreventClickThroughLock);
+				EditorLogic.fetch.Lock(false, false, false, Constants.settingPreventClickThroughLock);
 			}
 			//            else if (!rect.Contains(pointerPos) && EditorLogic.softLock)
 			else if (!rect.Contains(pointerPos))
