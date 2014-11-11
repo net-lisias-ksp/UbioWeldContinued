@@ -48,7 +48,7 @@ namespace UbioWeldingLtd
 		MissingCfg = -1,
 		MissingModel = -2
 	}
-	
+
 	class Welder
 	{
 		private int _partNumber = 0;
@@ -111,7 +111,7 @@ namespace UbioWeldingLtd
 			get { return _dontProcessMasslessParts; }
 			set { _dontProcessMasslessParts = value; }
 		}
-		
+
 		public static bool runInTestMode
 		{
 			get { return _runInTestMode; }
@@ -131,10 +131,10 @@ namespace UbioWeldingLtd
 		}
 
 		public string Name
-		{ 
+		{
 			get { return _name; }
-			set 
-			{ 
+			set
+			{
 				_name = value;
 				_name = _name.Replace(' ', '-');
 				_name = _name.Replace('.', '-');
@@ -147,7 +147,7 @@ namespace UbioWeldingLtd
 				_name = _name.Replace('>', '-');
 				_name = _name.Replace('|', '-');
 				_name = _name.Replace('_', '-');
-			} 
+			}
 		}
 		public string Title { get { return _title; } set { _title = value; } }
 		public string Description { get { return _description; } set { _description = value; } }
@@ -162,7 +162,7 @@ namespace UbioWeldingLtd
 		public float BreakingTorque { get { return _breakingTorque; } }
 		public float MaxTemp { get { return _maxTemp; } }
 		public float NbParts { get { return _partNumber; } }
-		
+
 		public string[] Modules
 		{
 			get
@@ -194,22 +194,22 @@ namespace UbioWeldingLtd
 		}
 
 		public PartCategories Category
-		{ 
+		{
 			get { return _category; }
 			set { _category = value; }
 		}
-		
-        public string techRequire
-        {
-            get {return _techRequire;   }
-            set { _techRequire = value; }
-        }
+
+		public string techRequire
+		{
+			get { return _techRequire; }
+			set { _techRequire = value; }
+		}
 
 		public List<string> techList
 		{
 			get { return _listedTechs; }
 		}
-		
+
 		/*
 		 * Constructor
 		 */
@@ -251,7 +251,7 @@ namespace UbioWeldingLtd
 			if (360.0f <= rotation.y) rotation.y -= 360.0f;
 			else if (0 > rotation.y) rotation.y += 360.0f;
 		} //private void setRelativeRotation(Part part, ref Vector3 rotation)
-		
+
 		/*
 		 * Process the new center of mass to the models and node
 		 */
@@ -329,7 +329,7 @@ namespace UbioWeldingLtd
 				}
 				else
 				{
-					curvevect[j].y = ( curvevect[j].y + vect.y ) * 0.5f;
+					curvevect[j].y = (curvevect[j].y + vect.y) * 0.5f;
 				}
 			}
 			return curvevect;
@@ -363,7 +363,7 @@ namespace UbioWeldingLtd
 #if (DEBUG)
 					Debug.LogWarning(string.Format("{0}{1}.New mesh name: {2}", Constants.logWarning, Constants.logPrefix, files[0]));
 #endif
-					char[] sep = { '\\','.' };
+					char[] sep = { '\\', '.' };
 					string[] words = files[0].Split(sep);
 					url = url.Replace(string.Format(@"{0}", mesh), words[1]);
 				}
@@ -388,7 +388,7 @@ namespace UbioWeldingLtd
 			string partname = (string)newpart.partInfo.partPrefab.name.Clone();
 			removecClone(ref partname);
 
-			Debug.Log(string.Format("{0}{1}{2}",Constants.logPrefix,Constants.logWeldingPart,partname));
+			Debug.Log(string.Format("{0}{1}{2}", Constants.logPrefix, Constants.logWeldingPart, partname));
 #if (DEBUG)
 			Debug.Log(string.Format("{0}..part rescaleFactor {1:F}", Constants.logPrefix, newpart.rescaleFactor));
 			Debug.Log(string.Format("{0}..part scaleFactor {1:F}", Constants.logPrefix, newpart.scaleFactor));
@@ -400,8 +400,8 @@ namespace UbioWeldingLtd
 			{
 				string newconfigname = config.name.Replace('_', '.');
 #if (DEBUG)
-//Girka2K - too many spam in LOG from here
-//				Debug.Log(string.Format("{0}.config name {1}", Constants.logPrefix, newconfigname));
+				//Girka2K - too many spam in LOG from here
+				//				Debug.Log(string.Format("{0}.config name {1}", Constants.logPrefix, newconfigname));
 #endif
 				if (System.String.Equals(partname, newconfigname, System.StringComparison.Ordinal))
 				{
@@ -415,7 +415,7 @@ namespace UbioWeldingLtd
 			if (matchingPartConfigs.Count < 1)
 			{
 				//Missing Config File: Error
-				Debug.LogError(string.Format("{0}{1}.{2} {3}",Constants.logError, Constants.logPrefix, Constants.msgCfgMissing, partname));
+				Debug.LogError(string.Format("{0}{1}.{2} {3}", Constants.logError, Constants.logPrefix, Constants.msgCfgMissing, partname));
 				return WeldingReturn.MissingCfg;
 			}
 			else // 0 < matchingPartConfigs.Count
@@ -424,15 +424,15 @@ namespace UbioWeldingLtd
 				foreach (UrlDir.UrlConfig cfg in matchingPartConfigs)
 				{
 					//MODEL
-					if ( !cfg.config.HasNode(Constants.weldModelNode) )
+					if (!cfg.config.HasNode(Constants.weldModelNode))
 					{
 						//Missing Model node
 #if (DEBUG)
-						Debug.Log(string.Format("{0}.. Config {1} has no {2} node",Constants.logPrefix,cfg.name,Constants.weldModelNode));
+						Debug.Log(string.Format("{0}.. Config {1} has no {2} node", Constants.logPrefix, cfg.name, Constants.weldModelNode));
 #endif
 						ModelInfo info = new ModelInfo();
 						info.url = GetMeshurl(cfg);
-						Debug.Log(string.Format("{0}..{1}{2}", Constants.logPrefix,Constants.logModelUrl,info.url));
+						Debug.Log(string.Format("{0}..{1}{2}", Constants.logPrefix, Constants.logModelUrl, info.url));
 
 						Vector3 position = Vector3.zero;
 						setRelativePosition(newpart, ref position);
@@ -512,7 +512,7 @@ namespace UbioWeldingLtd
 						} //foreach (ConfigNode node in modelnodes)
 						_coMOffset = _coMOffsetSum / modelnodes.Length;
 					} // else of if ( !cfg.config.HasNode(Constants.weldModelNode) )
-					
+
 					//RESSOURCE
 					ConfigNode[] ressources = cfg.config.GetNodes(Constants.weldResNode);
 #if (DEBUG)
@@ -619,7 +619,7 @@ namespace UbioWeldingLtd
 			} //foreach (AttachNode node in newpart.attachNodes)
 
 			//TODO: Tech tree stuff
-			if(!_listedTechs.Contains(newpart.partInfo.TechRequired))
+			if (!_listedTechs.Contains(newpart.partInfo.TechRequired))
 			{
 				_listedTechs.Add(newpart.partInfo.TechRequired);
 			}
@@ -781,41 +781,53 @@ namespace UbioWeldingLtd
 				{
 					if (newModuleName.Equals(existingNewModule.GetValue(existingNewModule.values.DistinctNames()[0])))
 					{
+						if (!WeldingHelpers.isArrayContaing(newModuleName, UbioZurWeldingLtd.instance.config.modulesToMultiply))
+						{
 #if (DEBUG)
-						Debug.Log(string.Format("{0}.. {1} Module already exists!!!", Constants.logPrefix, existingNewModule.GetValue(existingNewModule.values.DistinctNames()[0])));
+							Debug.Log(string.Format("{0}.. {1} Module already exists!!!", Constants.logPrefix, existingNewModule.GetValue(existingNewModule.values.DistinctNames()[0])));
 #endif
-						if (existingNewModule.values.DistinctNames().Length < 2)
-						{
-							// making shure that the MODULE gets not duplicated in case it has no attributes
-							exist = true;
-							break;
-						}
-						else
-						{
-							string[] breakingAttributes = new string[newModule.values.DistinctNames().Count()];
-							for (int i = 0; i < newModule.values.DistinctNames().Count(); i++)
+							if (existingNewModule.values.DistinctNames().Length < 2)
 							{
-								breakingAttributes[i] = string.Concat(newModuleName,Constants.underline, newModule.values.DistinctNames()[i]);
+								// making shure that the MODULE gets not duplicated in case it has no attributes
+								exist = true;
+								break;
 							}
-
-							breakingAttributes = WeldingHelpers.getSharedArrayValues(breakingAttributes, UbioZurWeldingLtd.instance.config.breakingModuleAttributes);
-							Debug.Log(string.Format("{0}- BreakingAttributes found = {1} ", Constants.logPrefix, breakingAttributes.Length));
-
-							if (breakingAttributes.Length > 0)
+							else
 							{
-								foreach (string s in breakingAttributes)
+								string[] breakingAttributes = new string[newModule.values.DistinctNames().Count()];
+								for (int i = 0; i < newModule.values.DistinctNames().Count(); i++)
 								{
-									string breakingAttribute = s.Replace(string.Concat(newModuleName, Constants.underline), "");
-									var existingValue = existingNewModule.GetValue(breakingAttribute);
-									var newValue = newModule.GetValue(breakingAttribute);
-									Debug.Log(string.Format("{0}- BreakingAttributes found | current one is {1} | ExistingValue = {2} - NewValue = {3}", Constants.logPrefix, breakingAttribute, existingValue, newValue));
-									exist = Equals(existingValue, newValue);
-									if (!exist)
+									breakingAttributes[i] = string.Concat(newModuleName, Constants.underline, newModule.values.DistinctNames()[i]);
+								}
+
+								breakingAttributes = WeldingHelpers.getSharedArrayValues(breakingAttributes, UbioZurWeldingLtd.instance.config.breakingModuleAttributes);
+								Debug.Log(string.Format("{0}- BreakingAttributes found = {1} ", Constants.logPrefix, breakingAttributes.Length));
+
+								if (breakingAttributes.Length > 0)
+								{
+									foreach (string s in breakingAttributes)
 									{
+										string breakingAttribute = s.Replace(string.Concat(newModuleName, Constants.underline), "");
+										var existingValue = existingNewModule.GetValue(breakingAttribute);
+										var newValue = newModule.GetValue(breakingAttribute);
+										Debug.Log(string.Format("{0}- BreakingAttributes found | current one is {1} | ExistingValue = {2} - NewValue = {3}", Constants.logPrefix, breakingAttribute, existingValue, newValue));
+										exist = Equals(existingValue, newValue);
+										if (!exist)
+										{
+											break;
+										}
+									}
+									if (exist)
+									{
+										mergeModuleAttributes(newModuleName, /*ref exist, ref boolResult, ref floatResult,*/ newModule, existingNewModule);
+										mergeSubModules(newModule, existingNewModule);
+										mergeVector2Modules(newModule, existingNewModule);
+										mergeVector4Modules(newModule, existingNewModule);
+										exist = true;
 										break;
 									}
 								}
-								if (exist)
+								else
 								{
 									mergeModuleAttributes(newModuleName, /*ref exist, ref boolResult, ref floatResult,*/ newModule, existingNewModule);
 									mergeSubModules(newModule, existingNewModule);
@@ -824,15 +836,6 @@ namespace UbioWeldingLtd
 									exist = true;
 									break;
 								}
-							}
-							else
-							{
-								mergeModuleAttributes(newModuleName, /*ref exist, ref boolResult, ref floatResult,*/ newModule, existingNewModule);
-								mergeSubModules(newModule, existingNewModule);
-								mergeVector2Modules(newModule, existingNewModule);
-								mergeVector4Modules(newModule, existingNewModule);
-								exist = true;
-								break;
 							}
 						}
 					}
@@ -998,7 +1001,7 @@ namespace UbioWeldingLtd
 #if (DEBUG)
 			//Debug.LogWarning(string.Format("{0}| {1} - {2} is bool", Constants.logPrefix, newModuleName, ModuleAttribute));
 #endif
-			if(newModule.HasValue(ModuleAttribute))
+			if (newModule.HasValue(ModuleAttribute))
 			{
 				if (existingNewModule.HasValue(ModuleAttribute))
 				{
@@ -1028,7 +1031,7 @@ namespace UbioWeldingLtd
 			//merge float values if they are allowed
 			if (!WeldingHelpers.isArrayContaing(string.Concat(newModuleName, Constants.underline, ModuleAttribute), UbioZurWeldingLtd.instance.config.unchangedModuleAttributes))
 			{
-				float newValue = float.TryParse(newModule.GetValue(ModuleAttribute),out newValue)? float.Parse(newModule.GetValue(ModuleAttribute)):0;
+				float newValue = float.TryParse(newModule.GetValue(ModuleAttribute), out newValue) ? float.Parse(newModule.GetValue(ModuleAttribute)) : 0;
 				float existingValue = float.TryParse(existingNewModule.GetValue(ModuleAttribute), out existingValue) ? float.Parse(existingNewModule.GetValue(ModuleAttribute)) : 0;
 
 				if (WeldingHelpers.isArrayContaing(string.Concat(newModuleName, Constants.underline, ModuleAttribute), UbioZurWeldingLtd.instance.config.averagedModuleAttributes))
@@ -1063,25 +1066,25 @@ namespace UbioWeldingLtd
 				//if the value in the config is null or empty then set it
 				existingNewModule.SetValue(ModuleAttribute, newModule.GetValue(ModuleAttribute));
 			}
-//			if (Constants.isArrayContaing(string.Concat(newModuleName, Constants.underline, ModuleAttribute), Constants.breakingModuleAttributes))
-//			{
-//#if (DEBUG)
-//				Debug.LogWarning(string.Format("{0}| {1} - {2} is of breaking category | {3}", Constants.logPrefix, newModuleName, ModuleAttribute, string.Equals(existingNewModule.GetValue(ModuleAttribute), newModule.GetValue(ModuleAttribute))));
-//#endif
-//				exist = string.Equals(existingNewModule.GetValue(ModuleAttribute), newModule.GetValue(ModuleAttribute));
-//				if (!exist)
-//				{
-//					skip = true;
-//				}
-//			}
-//			if (!skip)
-//			{
-//				if (string.IsNullOrEmpty(existingNewModule.GetValue(ModuleAttribute)))
-//				{
-//					//if the value in the config is null or empty then set it
-//					existingNewModule.SetValue(ModuleAttribute, newModule.GetValue(ModuleAttribute));
-//				}
-//			}
+			//			if (Constants.isArrayContaing(string.Concat(newModuleName, Constants.underline, ModuleAttribute), Constants.breakingModuleAttributes))
+			//			{
+			//#if (DEBUG)
+			//				Debug.LogWarning(string.Format("{0}| {1} - {2} is of breaking category | {3}", Constants.logPrefix, newModuleName, ModuleAttribute, string.Equals(existingNewModule.GetValue(ModuleAttribute), newModule.GetValue(ModuleAttribute))));
+			//#endif
+			//				exist = string.Equals(existingNewModule.GetValue(ModuleAttribute), newModule.GetValue(ModuleAttribute));
+			//				if (!exist)
+			//				{
+			//					skip = true;
+			//				}
+			//			}
+			//			if (!skip)
+			//			{
+			//				if (string.IsNullOrEmpty(existingNewModule.GetValue(ModuleAttribute)))
+			//				{
+			//					//if the value in the config is null or empty then set it
+			//					existingNewModule.SetValue(ModuleAttribute, newModule.GetValue(ModuleAttribute));
+			//				}
+			//			}
 			Debug.Log(string.Format("{0}| {1} - {2} is merged with value {3}", Constants.logPrefix, newModuleName, ModuleAttribute, existingNewModule.GetValue(ModuleAttribute)));
 		}
 
@@ -1601,8 +1604,8 @@ namespace UbioWeldingLtd
 						lowestNode = node;
 					}
 				}
-//				_attachNodes.Add(_attachNodes[0]);
-//				_attachNodes.Insert(_attachNodes.Count-1, _attachNodes[0]);
+				//				_attachNodes.Add(_attachNodes[0]);
+				//				_attachNodes.Insert(_attachNodes.Count-1, _attachNodes[0]);
 				_attachNodes.Add(topmostNode);
 				_attachNodes.Add(lowestNode);
 				_attachNodes.Remove(topmostNode);

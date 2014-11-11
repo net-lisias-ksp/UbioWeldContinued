@@ -47,6 +47,7 @@ namespace UbioWeldingLtd
 		private string[] _vector4CurveModules;
 		private string[] _subModules;
 		private string[] _modulesToIgnore;
+		private string[] _modulesToMultiply;
 		private string[] _averagedModuleAttributes;
 		private string[] _unchangedModuleAttributes;
 		private string[] _breakingModuleAttributes;
@@ -145,6 +146,12 @@ namespace UbioWeldingLtd
 		{
 			get { return _modulesToIgnore; }
 			set { _modulesToIgnore = value; }
+		}
+
+		public string[] modulesToMultiply
+		{
+			get { return _modulesToMultiply; }
+			set { _modulesToMultiply = value; }
 		}
 
 		public string[] averagedModuleAttributes
