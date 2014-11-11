@@ -485,6 +485,10 @@ namespace UbioWeldingLtd
 					ClearEditor();
 					_state = DisplayState.none;
 				}
+				else if (GUILayout.Button(Constants.guiCancel))
+				{
+					ClearEditor();
+				}
 			}
 			GUILayout.EndVertical();
 
@@ -663,15 +667,15 @@ namespace UbioWeldingLtd
 		 */
 		private void ClearEditor()
 		{
-			if (_config.clearEditor)
-			{
+			//if (_config.clearEditor)
+			//{
 				if (EditorLogic.SelectedPart == null)
 				{
 					EditorLogic.fetch.PartSelected = EditorLogic.startPod;
 				}
 				EditorLogic.fetch.DestroySelectedPart();
 				EditorPartList.Instance.Refresh();
-			}
+			//}
 			EditorLogic.fetch.Unlock(Constants.settingWeldingLock);
 		}
 
