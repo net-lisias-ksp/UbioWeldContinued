@@ -211,7 +211,24 @@ namespace UbioWeldingLtd
 
 		public static string[] basicModulesToIgnore =
 		{
-			"TweakScale"
+			"TweakScale",
+			"FMRS_PM",
+			"Variometer",
+			"TrajectoriesVesselSettings",
+			"TelemachusDataLink",
+			"TelemachusPowerDrain",
+			"ProbeControlRoomPart",
+			"RasterPropMonitorComputer",
+			"Proximity",
+			"LazorSystemDockingCamera",
+			"ModuleDockingNodeController",
+			"ModuleDockingNodeNamed",
+			"ModuleStagingToggle",
+			"GoodspeedPump",
+			"ModuleTweakableDockingNode",
+			"KASModuleGrab",
+			"ModuleTweakableRCS",
+			"ModuleTweakableSolarPanel"
 		};
 
 		public static string[] basicModulesToMultiply =
