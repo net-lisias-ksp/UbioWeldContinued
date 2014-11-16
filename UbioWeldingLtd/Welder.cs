@@ -819,7 +819,7 @@ namespace UbioWeldingLtd
 									}
 									if (exist)
 									{
-										mergeModuleAttributes(newModuleName, /*ref exist, ref boolResult, ref floatResult,*/ newModule, existingNewModule);
+										mergeModuleAttributes(newModuleName, newModule, existingNewModule);
 										mergeSubModules(newModule, existingNewModule);
 										mergeVector2Modules(newModule, existingNewModule);
 										mergeVector4Modules(newModule, existingNewModule);
@@ -829,7 +829,7 @@ namespace UbioWeldingLtd
 								}
 								else
 								{
-									mergeModuleAttributes(newModuleName, /*ref exist, ref boolResult, ref floatResult,*/ newModule, existingNewModule);
+									mergeModuleAttributes(newModuleName, newModule, existingNewModule);
 									mergeSubModules(newModule, existingNewModule);
 									mergeVector2Modules(newModule, existingNewModule);
 									mergeVector4Modules(newModule, existingNewModule);
@@ -937,7 +937,7 @@ namespace UbioWeldingLtd
 						ConfigNode existingNewSubModule = existingNewModule.GetNode(subModule);
 						ConfigNode newSubModule = newModule.GetNode(subModule);
 						string newSubmoduleName = existingNewSubModule.GetValue(existingNewSubModule.values.DistinctNames()[0]);
-						mergeModuleAttributes(newSubmoduleName, /*ref exist, ref boolResult, ref floatResult,*/ newSubModule, existingNewSubModule);
+						mergeModuleAttributes(newSubmoduleName, newSubModule, existingNewSubModule);
 					}
 					else
 					{
@@ -979,7 +979,7 @@ namespace UbioWeldingLtd
 					}
 					else
 					{
-						mergeModuleStringValues(newModuleName, /*ref exist, ref skip,*/ newModule, existingNewModule, ModuleAttribute);
+						mergeModuleStringValues(newModuleName, newModule, existingNewModule, ModuleAttribute);
 					}
 				}
 #if (DEBUG)
@@ -1066,25 +1066,6 @@ namespace UbioWeldingLtd
 				//if the value in the config is null or empty then set it
 				existingNewModule.SetValue(ModuleAttribute, newModule.GetValue(ModuleAttribute));
 			}
-			//			if (Constants.isArrayContaing(string.Concat(newModuleName, Constants.underline, ModuleAttribute), Constants.breakingModuleAttributes))
-			//			{
-			//#if (DEBUG)
-			//				Debug.LogWarning(string.Format("{0}| {1} - {2} is of breaking category | {3}", Constants.logPrefix, newModuleName, ModuleAttribute, string.Equals(existingNewModule.GetValue(ModuleAttribute), newModule.GetValue(ModuleAttribute))));
-			//#endif
-			//				exist = string.Equals(existingNewModule.GetValue(ModuleAttribute), newModule.GetValue(ModuleAttribute));
-			//				if (!exist)
-			//				{
-			//					skip = true;
-			//				}
-			//			}
-			//			if (!skip)
-			//			{
-			//				if (string.IsNullOrEmpty(existingNewModule.GetValue(ModuleAttribute)))
-			//				{
-			//					//if the value in the config is null or empty then set it
-			//					existingNewModule.SetValue(ModuleAttribute, newModule.GetValue(ModuleAttribute));
-			//				}
-			//			}
 			Debug.Log(string.Format("{0}| {1} - {2} is merged with value {3}", Constants.logPrefix, newModuleName, ModuleAttribute, existingNewModule.GetValue(ModuleAttribute)));
 		}
 
@@ -1099,10 +1080,6 @@ namespace UbioWeldingLtd
 		{
 			switch (newModule.GetValue(newModule.values.DistinctNames()[0]))
 			{
-				//case Constants.modStockDecouple:
-				//	{
-				//		break;
-				//	}
 				case Constants.modStockAnchdec:
 					{
 						//Decoupler: Change node name

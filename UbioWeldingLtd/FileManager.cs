@@ -97,14 +97,14 @@ namespace UbioWeldingLtd
 				moduleList = (ModuleLists)moduleListSerializer.Deserialize(FileStream);
 				FileStream.Close();
 
-				configuration.vector2CurveModules = WeldingHelpers.convertFromToStringArray(moduleList.vector2CurveModules);
-				configuration.vector4CurveModules = WeldingHelpers.convertFromToStringArray(moduleList.vector4CurveModules);
-				configuration.subModules = WeldingHelpers.convertFromToStringArray(moduleList.subModules);
-				configuration.modulesToIgnore = WeldingHelpers.convertFromToStringArray(moduleList.modulesToIgnore);
-				configuration.modulesToMultiply = WeldingHelpers.convertFromToStringArray(moduleList.modulesToMultiply);
-				configuration.averagedModuleAttributes = WeldingHelpers.convertFromToStringArray(moduleList.averagedModuleAttributes);
-				configuration.unchangedModuleAttributes = WeldingHelpers.convertFromToStringArray(moduleList.unchangedModuleAttributes);
-				configuration.breakingModuleAttributes = WeldingHelpers.convertFromToStringArray(moduleList.breakingModuleAttributes);
+				configuration.vector2CurveModules = moduleList.vector2CurveModules != null ? WeldingHelpers.convertFromToStringArray(moduleList.vector2CurveModules) : new string[0];
+				configuration.vector4CurveModules = moduleList.vector4CurveModules != null ? WeldingHelpers.convertFromToStringArray(moduleList.vector4CurveModules) : new string[0];
+				configuration.subModules = moduleList.subModules != null ? WeldingHelpers.convertFromToStringArray(moduleList.subModules) : new string[0];
+				configuration.modulesToIgnore = moduleList.modulesToIgnore != null ? WeldingHelpers.convertFromToStringArray(moduleList.modulesToIgnore) : new string[0];
+				configuration.modulesToMultiply = moduleList.modulesToMultiply != null ? WeldingHelpers.convertFromToStringArray(moduleList.modulesToMultiply) : new string[0];
+				configuration.averagedModuleAttributes = moduleList.averagedModuleAttributes != null ? WeldingHelpers.convertFromToStringArray(moduleList.averagedModuleAttributes) : new string[0];
+				configuration.unchangedModuleAttributes = moduleList.unchangedModuleAttributes != null ? WeldingHelpers.convertFromToStringArray(moduleList.unchangedModuleAttributes) : new string[0];
+				configuration.breakingModuleAttributes = moduleList.breakingModuleAttributes != null ? WeldingHelpers.convertFromToStringArray(moduleList.breakingModuleAttributes) : new string[0];
 				FileStream.Close();
 			}
 			else

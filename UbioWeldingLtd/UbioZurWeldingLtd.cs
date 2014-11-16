@@ -332,7 +332,6 @@ namespace UbioWeldingLtd
 				_config.clearEditor = GUILayout.Toggle(_config.clearEditor, Constants.guiClearEditorGUIContent);
 				GUILayout.Space(10.0f);
 				GUILayout.Label("Strength params calculation method");
-//				_config.StrengthCalcMethod = (StrengthParamsCalcMethod)GUILayout.SelectionGrid((int)_config.StrengthCalcMethod, Constants.StrengthParamsCalcMethodsGUIContent, 1, GUILayout.MaxWidth(140));
 				foreach (StrengthParamsCalcMethod Method in Enum.GetValues(typeof(StrengthParamsCalcMethod)))
 				{
 					if (GUILayout.Toggle((_config.StrengthCalcMethod == Method), Constants.StrengthParamsCalcMethodsGUIContent[(int)Method], _settingsToggleGroupStyle))
@@ -342,7 +341,6 @@ namespace UbioWeldingLtd
 				}
 				GUILayout.Space(10.0f);
 				GUILayout.Label("MaxTemp calculation method");
-//				_config.MaxTempCalcMethod = (MaxTempCalcMethod)GUILayout.SelectionGrid((int)_config.MaxTempCalcMethod, Constants.MaxTempCalcMethodsGUIContent, 1, GUILayout.MaxWidth(140));
 				foreach (MaxTempCalcMethod Method in Enum.GetValues(typeof(MaxTempCalcMethod)))
 				{
 					if (GUILayout.Toggle((_config.MaxTempCalcMethod == Method), Constants.MaxTempCalcMethodsGUIContent[(int)Method], _settingsToggleGroupStyle))
@@ -352,7 +350,6 @@ namespace UbioWeldingLtd
 				}
 				GUILayout.EndScrollView();
 
-//				GUILayout.Space(10.0f);
 				if (GUILayout.Button(Constants.guiSaveSettingsButtonGUIContent, GUILayout.MaxWidth(100)))
 				{
 					FileManager.saveConfig(_config);
@@ -473,7 +470,6 @@ namespace UbioWeldingLtd
 				if (!MMPathLoaderIsReady)
 				{
 					GUILayout.Label(String.Format("ModuleManager progress: {0:P0}", (float)DatabaseHandler.DynaInvokeMMPatchLoaderMethod("ProgressFraction")));
-//					GUILayout.Label(String.Format("{0}", (string)DatabaseHandler.DynaInvokeMMPatchLoaderMethod("ProgressTitle")));
 				}
 			}
 			else
@@ -667,15 +663,12 @@ namespace UbioWeldingLtd
 		 */
 		private void ClearEditor()
 		{
-			//if (_config.clearEditor)
-			//{
-				if (EditorLogic.SelectedPart == null)
-				{
-					EditorLogic.fetch.PartSelected = EditorLogic.startPod;
-				}
-				EditorLogic.fetch.DestroySelectedPart();
-				EditorPartList.Instance.Refresh();
-			//}
+			if (EditorLogic.SelectedPart == null)
+			{
+				EditorLogic.fetch.PartSelected = EditorLogic.startPod;
+			}
+			EditorLogic.fetch.DestroySelectedPart();
+			EditorPartList.Instance.Refresh();
 			EditorLogic.fetch.Unlock(Constants.settingWeldingLock);
 		}
 
@@ -687,12 +680,10 @@ namespace UbioWeldingLtd
 			Vector2 pointerPos = Input.mousePosition;
 
 			pointerPos.y = Screen.height - pointerPos.y;
-			//            if (rect.Contains(pointerPos) && !EditorLogic.softLock)
 			if (rect.Contains(pointerPos))
 			{
 				EditorLogic.fetch.Lock(false, false, false, Constants.settingPreventClickThroughLock);
 			}
-			//            else if (!rect.Contains(pointerPos) && EditorLogic.softLock)
 			else if (!rect.Contains(pointerPos))
 			{
 				EditorLogic.fetch.Unlock(Constants.settingPreventClickThroughLock);

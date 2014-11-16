@@ -165,12 +165,19 @@ namespace UbioWeldingLtd
 		/// <returns></returns>
 		public static string[] convertFromToStringArray(ModuleAttribute[] genericArray)
 		{
-			string[] stringArray = new string[genericArray.Length];
-			for (int i = 0; i < genericArray.Length; i++)
+			if (genericArray.Length > 0)
 			{
-				stringArray[i] = genericArray[i].attributeName;
+				string[] stringArray = new string[genericArray.Length];
+				for (int i = 0; i < genericArray.Length; i++)
+				{
+					stringArray[i] = genericArray[i].attributeName;
+				}
+				return stringArray;
 			}
-			return stringArray;
+			else
+			{
+				return new string[0];
+			}
 		}
 
 
