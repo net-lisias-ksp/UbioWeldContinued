@@ -13,6 +13,21 @@ namespace UbioWeldingLtd
 		private static string _configFile = string.Concat(Constants.settingRuntimeDirectory, Constants.settingXmlFilePath, Constants.settingXmlConfigFileName);
 		private static string _moduleListFile = string.Concat(Constants.settingRuntimeDirectory, Constants.settingXmlFilePath, Constants.settingXmlListFileName);
 
+		private static string[] comments =
+			{
+				Constants.CommentOutText(Constants.setupGeneralLine1),
+				Constants.CommentOutText(Constants.setupGeneralLine2),
+				Constants.CommentOutText(Constants.setupGeneralLine3),
+				
+				Constants.CommentOutText(Constants.setupVector2Line1),
+				Constants.CommentOutText(Constants.setupVector4Line1),
+				Constants.CommentOutText(Constants.setupSubmoduleLine1),
+				Constants.CommentOutText(Constants.setupModulesToIgnoreLine1),
+				Constants.CommentOutText(Constants.setupAveragedAttribtesLine1),
+				Constants.CommentOutText(Constants.setupUnchangedAttribtesLine1),
+				Constants.CommentOutText(Constants.setupBreakingAttribtesLine1),
+				Constants.CommentOutText(Constants.setupAddingAttributeEntryLine1),
+			};
 
 
 		/// <summary>
@@ -59,6 +74,17 @@ namespace UbioWeldingLtd
 				configSerializer.UnknownAttribute += new XmlAttributeEventHandler(serializer_UnknownAttribute);
 				FileStream = new FileStream(_configFile, FileMode.Open);
 				configuration = (WeldingConfiguration)configSerializer.Deserialize(FileStream);
+				FileStream.Close();
+
+				if (configuration.MainWindowXPosition > (Screen.width - Constants.guiScreenEdgeClearance))
+				{
+					configuration.MainWindowXPosition = Screen.width - Constants.guiScreenEdgeClearance;
+				}
+				if (configuration.MainWindowYPosition > (Screen.height - Constants.guiScreenEdgeClearance))
+				{
+					configuration.MainWindowYPosition = Screen.height - Constants.guiScreenEdgeClearance;
+				}
+				FileStream.Close();
 			}
 
 			if (System.IO.File.Exists(_moduleListFile))
@@ -68,6 +94,7 @@ namespace UbioWeldingLtd
 				moduleListSerializer.UnknownAttribute += new XmlAttributeEventHandler(serializer_UnknownAttribute);
 				FileStream = new FileStream(_moduleListFile, FileMode.Open);
 				moduleList = (ModuleLists)moduleListSerializer.Deserialize(FileStream);
+				FileStream.Close();
 
 				configuration.vector2CurveModules = WeldingHelpers.convertFromToStringArray(moduleList.vector2CurveModules);
 				configuration.vector4CurveModules = WeldingHelpers.convertFromToStringArray(moduleList.vector4CurveModules);
@@ -76,6 +103,7 @@ namespace UbioWeldingLtd
 				configuration.averagedModuleAttributes = WeldingHelpers.convertFromToStringArray(moduleList.averagedModuleAttributes);
 				configuration.unchangedModuleAttributes = WeldingHelpers.convertFromToStringArray(moduleList.unchangedModuleAttributes);
 				configuration.breakingModuleAttributes = WeldingHelpers.convertFromToStringArray(moduleList.breakingModuleAttributes);
+				FileStream.Close();
 			}
 			else
 			{
@@ -87,6 +115,7 @@ namespace UbioWeldingLtd
 				configuration.unchangedModuleAttributes = Constants.basicUnchangedModuleAttributes;
 				configuration.breakingModuleAttributes = Constants.basicBreakingModuleAttributes;
 			}
+			Debug.Log(string.Format("{0} Config was loaded", Constants.logPrefix));
 			return configuration;
 		}
 
@@ -96,31 +125,47 @@ namespace UbioWeldingLtd
 		/// <param name="configToSave"></param>
 		public static void saveConfig(WeldingConfiguration configToSave)
 		{
-			WeldingConfiguration configuration = configToSave;
+			WeldingConfiguration configuration = (WeldingConfiguration)configToSave.clone();
 			ModuleLists moduleList = new ModuleLists();
 			TextWriter fileStreamWriter;
 			if (configuration == null)
 			{
 				configuration = new WeldingConfiguration();
 			}
-
-			moduleList.vector2CurveModules = WeldingHelpers.convertStringFromToArray(Constants.basicVector2CurveModules);
-			moduleList.vector4CurveModules = WeldingHelpers.convertStringFromToArray(Constants.basicVector4CurveModules);
-			moduleList.subModules = WeldingHelpers.convertStringFromToArray(Constants.basicSubModules);
-			moduleList.modulesToIgnore = WeldingHelpers.convertStringFromToArray(Constants.basicModulesToIgnore);
-			moduleList.averagedModuleAttributes = WeldingHelpers.convertStringFromToArray(Constants.basicAveragedModuleAttributes);
-			moduleList.unchangedModuleAttributes = WeldingHelpers.convertStringFromToArray(Constants.basicUnchangedModuleAttributes);
-			moduleList.breakingModuleAttributes = WeldingHelpers.convertStringFromToArray(Constants.basicBreakingModuleAttributes);
+			configuration.vector2CurveModules = null;
+			configuration.vector4CurveModules = null;
+			configuration.subModules = null;
+			configuration.modulesToIgnore = null;
+			configuration.averagedModuleAttributes = null;
+			configuration.unchangedModuleAttributes = null;
+			configuration.breakingModuleAttributes = null;
 
 			XmlSerializer configSerializer = new XmlSerializer(typeof(WeldingConfiguration));
 			fileStreamWriter = new StreamWriter(_configFile);
 			configSerializer.Serialize(fileStreamWriter, configuration);
 			fileStreamWriter.Close();
 
+
+			//ModuleList from the constants or the actual config, depending on length of the array, in case user did add some entries
+			moduleList.vector2CurveModules = WeldingHelpers.convertStringFromToArray(configToSave.vector2CurveModules.Length > Constants.basicVector2CurveModules.Length ? configToSave.vector2CurveModules : Constants.basicVector2CurveModules);
+			moduleList.vector4CurveModules = WeldingHelpers.convertStringFromToArray(configToSave.vector4CurveModules.Length > Constants.basicVector4CurveModules.Length ? configToSave.vector4CurveModules: Constants.basicVector4CurveModules);
+			moduleList.subModules = WeldingHelpers.convertStringFromToArray(configToSave.subModules.Length > Constants.basicSubModules.Length ?configToSave.subModules: Constants.basicSubModules);
+			moduleList.modulesToIgnore = WeldingHelpers.convertStringFromToArray(configToSave.modulesToIgnore.Length > Constants.basicModulesToIgnore.Length ? configToSave.modulesToIgnore : Constants.basicModulesToIgnore);
+			moduleList.averagedModuleAttributes = WeldingHelpers.convertStringFromToArray(configToSave.averagedModuleAttributes.Length > Constants.basicAveragedModuleAttributes.Length ? configToSave.averagedModuleAttributes:Constants.basicAveragedModuleAttributes);
+			moduleList.unchangedModuleAttributes = WeldingHelpers.convertStringFromToArray(configToSave.unchangedModuleAttributes.Length > Constants.basicUnchangedModuleAttributes.Length ? configToSave.unchangedModuleAttributes: Constants.basicUnchangedModuleAttributes);
+			moduleList.breakingModuleAttributes = WeldingHelpers.convertStringFromToArray(configToSave.breakingModuleAttributes.Length > Constants.basicBreakingModuleAttributes.Length ? configToSave.breakingModuleAttributes : Constants.basicBreakingModuleAttributes);
+
 			XmlSerializer moduleListSerializer = new XmlSerializer(typeof(ModuleLists));
 			fileStreamWriter = new StreamWriter(_moduleListFile);
 			moduleListSerializer.Serialize(fileStreamWriter, moduleList);
+
+			fileStreamWriter.WriteLine("");
+			foreach (string s in comments)
+			{
+				fileStreamWriter.WriteLine(s);
+			}
 			fileStreamWriter.Close();
+			Debug.Log(string.Format("{0} Config was saved", Constants.logPrefix));
 		}
 
 	}

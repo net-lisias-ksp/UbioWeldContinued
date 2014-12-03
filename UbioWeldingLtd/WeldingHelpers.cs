@@ -1,5 +1,9 @@
 ﻿using System;
+using System.IO;
+using System.Linq;
+using System.Reflection;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using UnityEngine;
 
 namespace UbioWeldingLtd
@@ -23,6 +27,37 @@ namespace UbioWeldingLtd
 				inputList.Add(new GUIContent(cat));
 			}
 			return inputList;
+		}
+
+
+		/// <summary>
+		/// creates a new dropdownmenu list for the techs that are required for the current welding part.
+		/// </summary>
+		/// <param name="techList"></param>
+		/// <param name="guiStyle"></param>
+		/// <param name="dropDown"></param>
+		/// <returns></returns>
+		public static GUIDropdown initTechDropDown(List<string> techList, GUIStyle guiStyle, GUIDropdown dropDown)
+		{
+			List<GUIContent> contentList = new List<GUIContent>();
+			List<RDTech> rdTechs = AssetBase.RnDTechTree.GetTreeTechs().ToList();
+
+			Debug.Log(string.Format("{0} rdTechs.Count = {1}", Constants.logPrefix, rdTechs.Count()));
+			foreach (string techID in techList)
+			{
+				string techTitle = techID; //for case, when techID will not be found - the length of the list of titles always must match the length of the list of techID's.
+				foreach (RDTech rdTech in rdTechs)
+				{
+					if (rdTech.techID == techID)
+					{
+						techTitle = rdTech.title;
+						break;
+					}
+				}
+				contentList.Add(new GUIContent(techTitle));
+			}
+			dropDown = new GUIDropdown(contentList[0], contentList.ToArray(), "button", "box", guiStyle);
+			return dropDown;
 		}
 
 
@@ -156,5 +191,26 @@ namespace UbioWeldingLtd
 		}
 
 
+		/// <summary>
+		/// this rounds Vector3 coordinates to --Constants.weldNumberOfFractionalDigits-- fractional digits
+		/// </summary>
+		/// <returns></returns>
+		public static Vector3 RoundVector3(Vector3 inVector)
+		{
+			float x = (float)Math.Round(inVector.x, Constants.weldNumberOfFractionalDigits);
+			float y = (float)Math.Round(inVector.y, Constants.weldNumberOfFractionalDigits);
+			float z = (float)Math.Round(inVector.z, Constants.weldNumberOfFractionalDigits);
+			return new Vector3(x, y, z);
+		}
+
+
+		/// <summary>
+		/// this rounds float value to --Constants.weldNumberOfFractionalDigits-- fractional digits
+		/// </summary>
+		/// <returns></returns>
+		public static float RoundFloat(float inValue)
+		{
+			return (float)Math.Round(inValue, Constants.weldNumberOfFractionalDigits);
+		}
 	}
 }

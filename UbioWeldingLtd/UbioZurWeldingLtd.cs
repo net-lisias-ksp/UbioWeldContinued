@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 using System.IO;
 using System.Collections.Generic;
 
@@ -15,28 +16,46 @@ namespace UbioWeldingLtd
 			weldWarning,
 			infoWindow,
 			savedWindow,
-			overwriteDial
-
+			overwriteDial,
+            mainWindow
 		}
 
 		public static UbioZurWeldingLtd instance { get; private set; }
 		
-		private Rect _editorButton;
 		private Rect _editorErrorDial;
 		private Rect _editorWarningDial;
 		private Rect _editorInfoWindow;
 		private Rect _editorOverwriteDial;
 		private Rect _editorSavedDial;
+        private Rect _editorMainWindow;
 		private Welder _welder;
 		private DisplayState _state;
 		private List<GUIContent> _catNames = new List<GUIContent>();
 		private GUIDropdown _catDropdown;
+		private GUIDropdown _techDropdown;
 		private GUIStyle _catListStyle = new GUIStyle();
 		private Vector2 _scrollRes = Vector2.zero;
 		private Vector2 _scrollMod = Vector2.zero;
+		private Vector2 _settingsScrollPosition = Vector2.zero;
 
 		private WeldingConfiguration _config;
 		private bool _guiVisible = false;
+		private bool _mainWindowsSettingsMode = false;
+		static public bool isReloading = false;
+		private string filepath
+		{
+			get
+			{
+				if (_config.useNamedCfgFile)
+				{
+					return string.Format("{0}{1}/{2}/{3}.cfg", Constants.weldPartPath, _welder.Category.ToString(), _welder.Name, _welder.Name);
+				}
+				else
+				{
+					return string.Format("{0}{1}/{2}{3}", Constants.weldPartPath, _welder.Category.ToString(), _welder.Name, Constants.weldPartDefaultFile);
+				}
+			}
+		}
 
 		/// <summary>
 		/// access to the config of the whole tool
@@ -52,23 +71,22 @@ namespace UbioWeldingLtd
 		public void Awake()
 		{
 			instance = this;
+			Debug.Log(string.Format("{0}- {1} => Awake", Constants.logPrefix, instance.GetType()));
+
 			initConfig();
 			_state = DisplayState.none;
 			RenderingManager.AddToPostDrawQueue(0, OnDraw);
-			if (!_config.useStockToolbar)
-			{
-				_editorButton = new Rect(Screen.width - _config.editorButtonX, _config.editorButtonY, Constants.guiWeldButWidth, Constants.guiWeldButHeight);
-			}
-			_editorButton = new Rect(Screen.width - _config.editorButtonX, _config.editorButtonY, Constants.guiWeldButWidth, Constants.guiWeldButHeight);
 			_editorErrorDial = new Rect(Screen.width / 2 - Constants.guiDialogX, Screen.height / 2 - Constants.guiDialogY, Constants.guiDialogW, Constants.guiDialogH);
 			_editorWarningDial = new Rect(Screen.width / 2 - Constants.guiDialogX, Screen.height / 2 - Constants.guiDialogY, Constants.guiDialogW, Constants.guiDialogH);
 			_editorInfoWindow = new Rect(Screen.width / 2 - Constants.guiInfoWindowX, Screen.height / 2 - Constants.guiInfoWindowY, Constants.guiInfoWindowW, Constants.guiInfoWindowH);
 			_editorOverwriteDial = new Rect(Screen.width / 2 - Constants.guiDialogX, Screen.height / 2 - Constants.guiDialogY, Constants.guiDialogW, Constants.guiDialogH);
 			_editorSavedDial = new Rect(Screen.width / 2 - Constants.guiDialogX, Screen.height / 2 - Constants.guiDialogY, Constants.guiDialogW, Constants.guiDialogH);
+            _editorMainWindow = new Rect(_config.MainWindowXPosition, _config.MainWindowYPosition, Constants.guiMainWindowW, Constants.guiMainWindowH);
 
 			_catNames = WeldingHelpers.initPartCategories(_catNames);
 			_catListStyle = WeldingHelpers.initGuiStyle(_catListStyle);
 			_catDropdown = WeldingHelpers.initDropDown(_catNames, _catListStyle, _catDropdown);
+			DatabaseHandler.initMMAssembly();
 		}
 
 		/// <summary>
@@ -80,16 +98,34 @@ namespace UbioWeldingLtd
 			{
 				if (EditorLogic.startPod != null)
 				{
-					weldPart(EditorLogic.startPod);
+					if (_state != DisplayState.mainWindow)
+					{
+						_state = DisplayState.mainWindow;
+					}
+					else
+					{
+						_state = DisplayState.none;
+					}
 				}
 			}
 			//_stockToolbarButton.SetFalse();
 		}
+
 		/// <summary>
 		/// Loads the config for the Welding or prepares default values and generates a new config
 		/// </summary>
 		private void initConfig()
 		{
+			KSP.IO.PluginConfiguration oldConfig = KSP.IO.PluginConfiguration.CreateForType<OldWeldingPluginConfig>();
+			bool oldConfigFound = System.IO.File.Exists(string.Concat(Constants.settingRuntimeDirectory, Constants.settingXmlFilePath, Constants.settingXmlOldConfigFileName));
+			if (oldConfigFound)
+			{
+				oldConfig = KSP.IO.PluginConfiguration.CreateForType<OldWeldingPluginConfig>();
+				oldConfig.load();
+				System.IO.File.Delete(string.Concat(Constants.settingRuntimeDirectory, Constants.settingXmlFilePath, Constants.settingXmlOldConfigFileName));
+				Debug.Log(string.Format("{0}old configfile found and deleted", Constants.logPrefix));
+			}
+
 			if (!System.IO.File.Exists(string.Concat(Constants.settingRuntimeDirectory, Constants.settingXmlFilePath, Constants.settingXmlConfigFileName)))
 			{
 				_config = new WeldingConfiguration();
@@ -106,9 +142,15 @@ namespace UbioWeldingLtd
 			{
 				_config = FileManager.loadConfig();
 			}
-			Welder.includeAllNodes = _config.includeAllNodes;
-			Welder.dontProcessMasslessParts = _config.dontProcessMasslessParts;
-			Welder.runInTestMode = _config.runInTestMode;
+
+			_config.dataBaseAutoReload = oldConfigFound ? oldConfig.GetValue<bool>(Constants.settingDbAutoReload) : _config.dataBaseAutoReload;
+			_config.allowCareerMode = oldConfigFound ? oldConfig.GetValue<bool>(Constants.settingAllowCareer) : _config.allowCareerMode;
+			Welder.includeAllNodes = oldConfigFound ? oldConfig.GetValue<bool>(Constants.settingAllNodes) : _config.includeAllNodes;
+			Welder.dontProcessMasslessParts = oldConfigFound ? oldConfig.GetValue<bool>(Constants.settingDontProcessMasslessParts) : _config.dontProcessMasslessParts;
+
+			Welder.StrengthCalcMethod = oldConfigFound ? StrengthParamsCalcMethod.ArithmeticMean : _config.StrengthCalcMethod;
+			Welder.MaxTempCalcMethod = oldConfigFound ? MaxTempCalcMethod.ArithmeticMean : _config.MaxTempCalcMethod;
+			Welder.runInTestMode = oldConfigFound ? false : _config.runInTestMode;
 		}
 
 		/// <summary>
@@ -154,26 +196,29 @@ namespace UbioWeldingLtd
 				switch (_state)
 				{
 					case DisplayState.none :
-						if (!_config.useStockToolbar)
-						{
-							OnWeldButton();
-						}
+						EditorLogic.fetch.Unlock(Constants.settingPreventClickThroughLock);
+						EditorLogic.fetch.Unlock(Constants.settingWeldingLock);
 						break;
 					case DisplayState.weldError :
-						_editorErrorDial = GUILayout.Window(1, _editorErrorDial, OnErrorDisplay, Constants.weldManufacturer);
+                        _editorErrorDial = GUILayout.Window((int)_state, _editorErrorDial, OnErrorDisplay, Constants.weldManufacturer);
 						break;
 					case DisplayState.weldWarning :
-						_editorWarningDial = GUILayout.Window(2, _editorWarningDial, OnWarningDisplay, Constants.weldManufacturer);
+                        _editorWarningDial = GUILayout.Window((int)_state, _editorWarningDial, OnWarningDisplay, Constants.weldManufacturer);
 						break;
 					case DisplayState.infoWindow :
-						_editorInfoWindow = GUI.Window(3, _editorInfoWindow, OnInfoWindow, Constants.weldManufacturer);
+                        _editorInfoWindow = GUI.Window((int)_state, _editorInfoWindow, OnInfoWindow, Constants.weldManufacturer);
+						PreventClickThrough(_editorInfoWindow);
 						break;
 					case DisplayState.savedWindow :
-						_editorSavedDial = GUILayout.Window(4, _editorSavedDial, OnSavedDisplay, Constants.weldManufacturer);
+                        _editorSavedDial = GUILayout.Window((int)_state, _editorSavedDial, OnSavedDisplay, Constants.weldManufacturer);
 						break;
 					case DisplayState.overwriteDial :
-						_editorOverwriteDial = GUILayout.Window(5, _editorOverwriteDial, OnOverwriteDisplay, Constants.weldManufacturer);
+                        _editorOverwriteDial = GUILayout.Window((int)_state, _editorOverwriteDial, OnOverwriteDisplay, Constants.weldManufacturer);
 						break;
+                    case DisplayState.mainWindow :
+                        _editorMainWindow = GUI.Window((int)_state, _editorMainWindow, OnMainWindow, Constants.weldManufacturer);
+						PreventClickThrough(_editorMainWindow);
+                        break;
 				}
 			} //if (_guiVisible)
 		} //private void OnDraw()
@@ -182,7 +227,7 @@ namespace UbioWeldingLtd
 		private void weldPart(Part partToWeld)
 		{
 			//Lock editor
-			EditorLogic.fetch.Lock(true, true, true, "UBILOCK9213");
+			EditorLogic.fetch.Lock(true, true, true, Constants.settingWeldingLock);
 
 			//process the welding
 #if (DEBUG)
@@ -195,6 +240,7 @@ namespace UbioWeldingLtd
 			bool warning = false;
 			_welder = new Welder();
 
+			partToWeld.transform.eulerAngles = Vector3.up;
 			WeldingReturn ret = _welder.weldThisPart(partToWeld);
 
 			if (ret < 0)
@@ -233,6 +279,9 @@ namespace UbioWeldingLtd
 				}
 			}
 			_welder.processNewCoM();
+
+			_techDropdown = WeldingHelpers.initTechDropDown(_welder.techList, _catListStyle, _techDropdown);
+
 			_scrollMod = Vector2.zero;
 			_scrollRes = Vector2.zero;
 #if (DEBUG)
@@ -252,24 +301,94 @@ namespace UbioWeldingLtd
 		}
 
 		/*
-		 * Editor Button Draw
+		 * Main window
 		 */
-		private void OnWeldButton()
-		{
-			//Making sure the editor is not on softlock or no parts are selected
-			if (EditorLogic.softLock || EditorLogic.SelectedPart == null)
+        private void OnMainWindow(int windowID)
+        {
+			GUIStyle _settingsToggleGroupStyle = new GUIStyle(GUI.skin.toggle);
+			_settingsToggleGroupStyle.margin.left += 40;
+
+			//save Window Position
+			_config.MainWindowXPosition = (int)_editorMainWindow.xMin;
+			_config.MainWindowYPosition = (int)_editorMainWindow.yMin;
+
+			GUILayout.BeginVertical();
+            GUILayout.EndVertical();
+            GUILayout.BeginVertical();
+
+			if (GUILayout.Button(new GUIContent("Settings", "Show/hide settings"), GUILayout.MaxWidth(100)))
 			{
-				GUI.Box(_editorButton, Constants.guiWeldLabel);
+				_mainWindowsSettingsMode = !_mainWindowsSettingsMode;
+			}
+			//Settings
+			if (_mainWindowsSettingsMode)
+			{
+				_editorMainWindow.height = Constants.guiMainWindowHSettingsExpanded;
+				_settingsScrollPosition = GUILayout.BeginScrollView(_settingsScrollPosition);
+				_config.includeAllNodes = GUILayout.Toggle(_config.includeAllNodes, Constants.guiAllNodesGUIContent);
+				_config.dontProcessMasslessParts = GUILayout.Toggle(_config.dontProcessMasslessParts, Constants.guiDontProcessMasslessPartsGUIContent);
+				_config.dataBaseAutoReload = GUILayout.Toggle(_config.dataBaseAutoReload, Constants.guiDbAutoReloadGUIContent);
+				_config.useNamedCfgFile = GUILayout.Toggle(_config.useNamedCfgFile, Constants.guiUseNamedCfgFileGUIContent);
+				_config.clearEditor = GUILayout.Toggle(_config.clearEditor, Constants.guiClearEditorGUIContent);
+				GUILayout.Space(10.0f);
+				GUILayout.Label("Strength params calculation method");
+//				_config.StrengthCalcMethod = (StrengthParamsCalcMethod)GUILayout.SelectionGrid((int)_config.StrengthCalcMethod, Constants.StrengthParamsCalcMethodsGUIContent, 1, GUILayout.MaxWidth(140));
+				foreach (StrengthParamsCalcMethod Method in Enum.GetValues(typeof(StrengthParamsCalcMethod)))
+				{
+					if (GUILayout.Toggle((_config.StrengthCalcMethod == Method), Constants.StrengthParamsCalcMethodsGUIContent[(int)Method], _settingsToggleGroupStyle))
+					{
+						_config.StrengthCalcMethod = Method;
+					}
+				}
+				GUILayout.Space(10.0f);
+				GUILayout.Label("MaxTemp calculation method");
+//				_config.MaxTempCalcMethod = (MaxTempCalcMethod)GUILayout.SelectionGrid((int)_config.MaxTempCalcMethod, Constants.MaxTempCalcMethodsGUIContent, 1, GUILayout.MaxWidth(140));
+				foreach (MaxTempCalcMethod Method in Enum.GetValues(typeof(MaxTempCalcMethod)))
+				{
+					if (GUILayout.Toggle((_config.MaxTempCalcMethod == Method), Constants.MaxTempCalcMethodsGUIContent[(int)Method], _settingsToggleGroupStyle))
+					{
+						_config.MaxTempCalcMethod = Method;
+					}
+				}
+				GUILayout.EndScrollView();
+
+//				GUILayout.Space(10.0f);
+				if (GUILayout.Button(Constants.guiSaveSettingsButtonGUIContent, GUILayout.MaxWidth(100)))
+				{
+					FileManager.saveConfig(_config);
+				}
 			}
 			else
 			{
-				if (GUI.Button(_editorButton, Constants.guiWeldLabel))
+				_editorMainWindow.height = Constants.guiMainWindowH;
+				GUILayout.Space(20.0f);
+			}
+			//Weld button
+			if (GUILayout.Button(Constants.guiWeldItButtonGUIContent, GUILayout.MaxWidth(100)))
+			{
+				FileManager.saveConfig(_config);
+				if (!EditorLogic.softLock)
 				{
-					weldPart(EditorLogic.fetch.PartSelected);
-				} // if (GUI.Button(_editorButton, Constants.guiWeldLabel))
-			} // elsef if (EditorLogic.softLock || null == EditorLogic.SelectedPart)
-		} //private void OnWeldButton()
-		
+					if (EditorLogic.fetch.PartSelected != null)
+					{
+						weldPart(EditorLogic.fetch.PartSelected);
+					}
+					else if (EditorLogic.startPod != null)
+					{
+						weldPart(EditorLogic.startPod);
+					}
+				}
+			}
+			//Hints area
+			GUILayout.TextArea(GUI.tooltip, GUILayout.ExpandHeight(true), GUILayout.MaxHeight(60));
+			GUIStyle VersionLabelGUIStyle = new GUIStyle(GUI.skin.label);
+			VersionLabelGUIStyle.fontSize = 12;
+			GUILayout.Label(Constants.logVersion, VersionLabelGUIStyle);
+            GUILayout.EndVertical();
+
+			GUI.DragWindow();
+        } //private void OnMainWindow()
+
 		/*
 		 * Error Message
 		 */
@@ -284,7 +403,7 @@ namespace UbioWeldingLtd
 			GUILayout.FlexibleSpace();
 			if (GUILayout.Button(Constants.guiOK))
 			{
-				EditorLogic.fetch.Unlock("UBILOCK9213");
+				EditorLogic.fetch.Unlock(Constants.settingWeldingLock);
 				_state = DisplayState.none;
 			}
 			GUILayout.EndVertical();
@@ -318,7 +437,6 @@ namespace UbioWeldingLtd
 		 */
 		private void OnOverwriteDisplay(int windowID)
 		{
-			string filepath = string.Format("{0}{1}/{2}{3}", Constants.weldPartPath, _welder.Category.ToString(), _welder.Name, Constants.weldPartFile);
 			GUILayout.BeginVertical();
 			GUILayout.BeginHorizontal();
 			GUILayout.Label(Constants.guiDialOverwrite);
@@ -346,17 +464,27 @@ namespace UbioWeldingLtd
 		 */
 		private void OnSavedDisplay(int windowID)
 		{
+			bool MMPathLoaderIsReady = (bool)DatabaseHandler.DynaInvokeMMPatchLoaderMethod("IsReady");
 			GUILayout.BeginVertical();
-			GUILayout.BeginHorizontal();
-			GUILayout.Label(Constants.guiDialSaved);
-			GUILayout.EndHorizontal();
-			GUILayout.BeginHorizontal();
-			GUILayout.EndHorizontal();
-			GUILayout.FlexibleSpace();
-			if (GUILayout.Button(Constants.guiOK))
+			if (DatabaseHandler.isReloading)
 			{
-				ClearEditor();
-				_state = DisplayState.none;
+				GUILayout.Label(Constants.guiDBReloading1);
+				GUILayout.Label(Constants.guiDBReloading2);
+				if (!MMPathLoaderIsReady)
+				{
+					GUILayout.Label(String.Format("ModuleManager progress: {0:P0}", (float)DatabaseHandler.DynaInvokeMMPatchLoaderMethod("ProgressFraction")));
+//					GUILayout.Label(String.Format("{0}", (string)DatabaseHandler.DynaInvokeMMPatchLoaderMethod("ProgressTitle")));
+				}
+			}
+			else
+			{
+				GUILayout.Label(Constants.guiDialSaved);
+				GUILayout.FlexibleSpace();
+				if (GUILayout.Button(Constants.guiOK))
+				{
+					ClearEditor();
+					_state = DisplayState.none;
+				}
 			}
 			GUILayout.EndVertical();
 
@@ -386,7 +514,7 @@ namespace UbioWeldingLtd
 			posh += height;
 			GUI.Label(new Rect(margin, posh, quarterwidth, height), "Description");
 			posh += height;
-			_welder.Description = GUI.TextArea(new Rect(margin, posh, quarterwidth, 6 * height), _welder.Description, 200);
+			_welder.Description = GUI.TextArea(new Rect(margin, posh, quarterwidth, 6 * height), _welder.Description, 400);
 			posh += 6 * height;
 
 			//Second
@@ -400,19 +528,27 @@ namespace UbioWeldingLtd
 			if (!_catDropdown.IsOpen)
 			{
 				posh += height;
-				GUI.Label(new Rect(posw, posh, quarterwidth, height), string.Format("Nb Parts: {0}", _welder.NbParts));
+				GUI.Label(new Rect(posw, posh, quarterwidth, height), "RequiredTech");
 				posh += height;
-				GUI.Label(new Rect(posw, posh, quarterwidth, height), string.Format("Cost: {0}", _welder.Cost));
-				posh += height;
-				GUI.Label(new Rect(posw, posh, quarterwidth, height), string.Format("Mass: {0} / {1}", _welder.Mass, _welder.WetMass));
-				posh += height;
-				GUI.Label(new Rect(posw, posh, quarterwidth, height), string.Format("T: {0}", _welder.MaxTemp));
-				posh += height;
-				GUI.Label(new Rect(posw, posh, quarterwidth, height), string.Format("F: {0}", _welder.BreakingForce));
-				posh += height;
-				GUI.Label(new Rect(posw, posh, quarterwidth, height), string.Format("T: {0}", _welder.BreakingTorque));
-				posh += height;
-				GUI.Label(new Rect(posw, posh, quarterwidth, height), string.Format("Drag: {0} / {1}", _welder.MinDrag, _welder.MaxDrag));
+				int selectedTech = _techDropdown.Show(new Rect(posw, posh, quarterwidth, height));
+				_welder.techRequire = _welder.techList[selectedTech];
+				if (!_techDropdown.IsOpen)
+				{
+					posh += height;
+					GUI.Label(new Rect(posw, posh, quarterwidth, height), string.Format("Nb Parts: {0}", _welder.NbParts));
+					posh += height;
+					GUI.Label(new Rect(posw, posh, quarterwidth, height), string.Format("Cost: {0:F2}", _welder.Cost));
+					posh += height;
+					GUI.Label(new Rect(posw, posh, quarterwidth, height), string.Format("Mass: {0:F3} / {1:F3}", _welder.Mass, _welder.WetMass));
+					posh += height;
+					GUI.Label(new Rect(posw, posh, quarterwidth, height), string.Format("T: {0:F1}", _welder.MaxTemp));
+					posh += height;
+					GUI.Label(new Rect(posw, posh, quarterwidth, height), string.Format("F: {0:F3}", _welder.BreakingForce));
+					posh += height;
+					GUI.Label(new Rect(posw, posh, quarterwidth, height), string.Format("T: {0:F3}", _welder.BreakingTorque));
+					posh += height;
+					GUI.Label(new Rect(posw, posh, quarterwidth, height), string.Format("Drag: {0:F3} / {1:F3}", _welder.MinDrag, _welder.MaxDrag));
+				}
 			}
 
 			//Module
@@ -461,7 +597,6 @@ namespace UbioWeldingLtd
 				{
 					//check if the file exist
 					string dirpath = string.Format("{0}{1}/{2}", Constants.weldPartPath, _welder.Category.ToString(), _welder.Name);
-					string filepath = dirpath + Constants.weldPartFile;
 					if (!System.IO.File.Exists(filepath))
 					{
 						if (!Directory.Exists(dirpath))
@@ -487,7 +622,7 @@ namespace UbioWeldingLtd
 			}
 
 			GUI.DragWindow();
-		} //private void OnWarningDisplay(int windowID)
+		} //private void OnInfoWindow(int windowID)
 
 		/*
 		 * Test if the name is not already in use
@@ -519,20 +654,8 @@ namespace UbioWeldingLtd
 
 			if (_config.dataBaseAutoReload)
 			{
-				ReloadDatabase();
+				StartCoroutine(DatabaseHandler.DatabaseReloadWithMM());
 			}
-		}
-
-		/*
-		 * Reload the Database
-		 */
-		private void ReloadDatabase()
-		{
-			//reload database Big thanks to AncientGammoner (KSP Forum)
-			GameDatabase.Instance.Recompile = true;
-			GameDatabase.Instance.StartLoad();
-			PartLoader.Instance.Recompile = true;
-			PartLoader.Instance.StartLoad();
 		}
 
 		/*
@@ -540,13 +663,36 @@ namespace UbioWeldingLtd
 		 */
 		private void ClearEditor()
 		{
-			if (_config.useStockToolbar || EditorLogic.SelectedPart == null)
+			if (_config.clearEditor)
 			{
-				EditorLogic.fetch.PartSelected = EditorLogic.startPod;
+				if (EditorLogic.SelectedPart == null)
+				{
+					EditorLogic.fetch.PartSelected = EditorLogic.startPod;
+				}
+				EditorLogic.fetch.DestroySelectedPart();
+				EditorPartList.Instance.Refresh();
 			}
-			EditorLogic.fetch.DestroySelectedPart();
-			EditorLogic.fetch.Unlock("UBILOCK9213");
-			EditorPartList.Instance.Refresh();
+			EditorLogic.fetch.Unlock(Constants.settingWeldingLock);
+		}
+
+		/*
+		 * Lock editor if mouse pointer is inside window rect
+		 */
+		private void PreventClickThrough(Rect rect)
+		{
+			Vector2 pointerPos = Input.mousePosition;
+
+			pointerPos.y = Screen.height - pointerPos.y;
+			//            if (rect.Contains(pointerPos) && !EditorLogic.softLock)
+			if (rect.Contains(pointerPos))
+			{
+				EditorLogic.fetch.Lock(false, false, false, Constants.settingPreventClickThroughLock);
+			}
+			//            else if (!rect.Contains(pointerPos) && EditorLogic.softLock)
+			else if (!rect.Contains(pointerPos))
+			{
+				EditorLogic.fetch.Unlock(Constants.settingPreventClickThroughLock);
+			}
 		}
 	} //public class UbioZurWeldingLtd : MonoBehaviour
 } //namespace UbioWeldingLtd

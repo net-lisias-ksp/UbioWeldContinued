@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -69,6 +70,7 @@ namespace UbioWeldingLtd
 		private string _description = Constants.weldDefaultDesc;
 		private AttachRules _attachrules = new AttachRules();
 		private string _techRequire = string.Empty;
+		private List<string> _listedTechs = new List<string>();
 		private int _entryCost = Constants.weldDefaultEntryCost;
 
 		private float _mass = 0.0f;
@@ -95,6 +97,8 @@ namespace UbioWeldingLtd
 		private static bool _includeAllNodes = false;
 		private static bool _dontProcessMasslessParts = false;
 		private static bool _runInTestMode = false;
+		private static StrengthParamsCalcMethod _StrengthCalcMethod = StrengthParamsCalcMethod.WeightedAverage;
+		private static MaxTempCalcMethod _MaxTempCalcMethod = MaxTempCalcMethod.Lowest;
 
 		public static bool includeAllNodes
 		{
@@ -112,6 +116,18 @@ namespace UbioWeldingLtd
 		{
 			get { return _runInTestMode; }
 			set { _runInTestMode = value; }
+		}
+
+		public static StrengthParamsCalcMethod StrengthCalcMethod
+		{
+			get { return _StrengthCalcMethod; }
+			set { _StrengthCalcMethod = value; }
+		}
+
+		public static MaxTempCalcMethod MaxTempCalcMethod
+		{
+			get { return _MaxTempCalcMethod; }
+			set { _MaxTempCalcMethod = value; }
 		}
 
 		public string Name
@@ -180,43 +196,19 @@ namespace UbioWeldingLtd
 		public PartCategories Category
 		{ 
 			get { return _category; }
-			set 
-			{ 
-				_category = value;
-				if (HighLogic.fetch.currentGame.Mode == Game.Modes.CAREER)
-				{
-					switch (value)
-					{
-						case PartCategories.Pods:
-							_techRequire = Constants.rdNodeByPass;
-							break;
-						case PartCategories.Propulsion:
-							_techRequire = Constants.rdNodeByPass;
-							break;
-						case PartCategories.Control:
-							_techRequire = Constants.rdNodeByPass;
-							break;
-						case PartCategories.Structural:
-							_techRequire = Constants.rdNodeByPass;
-							break;
-						case PartCategories.Aero:
-							_techRequire = Constants.rdNodeByPass;
-							break;
-						case PartCategories.Utility:
-							_techRequire = Constants.rdNodeByPass;
-							break;
-						case PartCategories.Science:
-							_techRequire = Constants.rdNodeByPass;
-							break;
-					}
-				}
-				else
-				{
-					_techRequire = Constants.rdNodeSandboxWeld;
-				}
-			}
+			set { _category = value; }
 		}
 		
+        public string techRequire
+        {
+            get {return _techRequire;   }
+            set { _techRequire = value; }
+        }
+
+		public List<string> techList
+		{
+			get { return _listedTechs; }
+		}
 		
 		/*
 		 * Constructor
@@ -450,7 +442,7 @@ namespace UbioWeldingLtd
 						setRelativeRotation(newpart, ref rotation);
 						info.rotation = rotation;
 
-						info.scale = new Vector3(newpart.rescaleFactor, newpart.rescaleFactor, newpart.rescaleFactor);
+						info.scale = newpart.transform.GetChild(0).localScale;
 
 #if (DEBUG)
 						Debug.Log(string.Format("{0}..position {1:F3}", Constants.logPrefix, info.position));
@@ -489,7 +481,13 @@ namespace UbioWeldingLtd
 							Vector3 rotation = (node.HasValue("rotation")) ? ConfigNode.ParseVector3(node.GetValue("rotation")) : Vector3.zero;
 							setRelativeRotation(newpart, ref rotation);
 							info.rotation = rotation;
-							info.scale = (node.HasValue("scale")) ? (ConfigNode.ParseVector3(node.GetValue("scale")) * newpart.rescaleFactor * (newpart.rescaleFactor / _rescaleFactor)) : new Vector3((newpart.rescaleFactor / _rescaleFactor), (newpart.rescaleFactor / _rescaleFactor), (newpart.rescaleFactor / _rescaleFactor));
+
+							info.scale = (node.HasValue("scale")) ?
+											(ConfigNode.ParseVector3(node.GetValue("scale")) * (newpart.rescaleFactor / _rescaleFactor)) :
+											new Vector3(newpart.transform.GetChild(0).localScale.x,
+														newpart.transform.GetChild(0).localScale.y,
+														newpart.transform.GetChild(0).localScale.z) * (newpart.rescaleFactor / _rescaleFactor);
+
 #if (DEBUG)
 							Debug.Log(string.Format("{0}..position {1:F3}", Constants.logPrefix, info.position));
 							Debug.Log(string.Format("{0}..rotation {1:F3}", Constants.logPrefix, info.rotation));
@@ -621,10 +619,14 @@ namespace UbioWeldingLtd
 			} //foreach (AttachNode node in newpart.attachNodes)
 
 			//TODO: Tech tree stuff
-			//newpart.partInfo.TechRequired
+			if(!_listedTechs.Contains(newpart.partInfo.TechRequired))
+			{
+				_listedTechs.Add(newpart.partInfo.TechRequired);
+			}
 
 			//Cost
 			_cost += (int)newpart.partInfo.cost;
+			_entryCost += (int)newpart.partInfo.entryCost;
 			_crewCapacity += newpart.CrewCapacity;
 
 			// srfAttachNode Rules
@@ -637,6 +639,7 @@ namespace UbioWeldingLtd
 
 			//mass
 			float oldmass = _fullmass;
+			float olddrymass = _mass;
 			float partdrymass = 0.0f;
 			// if part's PhysicsSignificance = 1, then this part is "massless" and its mass would be ignored in stock KSP
 			if ((!dontProcessMasslessParts) || (newpart.PhysicsSignificance != 1))
@@ -661,10 +664,36 @@ namespace UbioWeldingLtd
 			_dragModel = newpart.dragModelType;
 
 			//average crash, breaking and temp
-			_crashTolerance = (_partNumber == 0) ? newpart.crashTolerance : (_crashTolerance + newpart.crashTolerance) * 0.75f;
-			_breakingForce = (_partNumber == 0) ? newpart.breakingForce : (_breakingForce + newpart.breakingForce) * 0.75f;
-			_breakingTorque = (_partNumber == 0) ? newpart.breakingTorque : (_breakingTorque + newpart.breakingTorque) * 0.75f;
-			_maxTemp = (_partNumber ==0) ? newpart.maxTemp : (_maxTemp + newpart.maxTemp) * 0.5f;
+			switch (_StrengthCalcMethod)
+			{
+				case StrengthParamsCalcMethod.Legacy:
+					_crashTolerance = (_partNumber == 0) ? newpart.crashTolerance : (_crashTolerance + newpart.crashTolerance) * 0.75f;
+					_breakingForce = (_partNumber == 0) ? newpart.breakingForce : (_breakingForce + newpart.breakingForce) * 0.75f;
+					_breakingTorque = (_partNumber == 0) ? newpart.breakingTorque : (_breakingTorque + newpart.breakingTorque) * 0.75f;
+					break;
+				case StrengthParamsCalcMethod.WeightedAverage:
+					_crashTolerance = (_partNumber == 0) ? newpart.crashTolerance : (_crashTolerance * olddrymass + newpart.crashTolerance * newpart.mass) / (olddrymass + newpart.mass);
+					_breakingForce = (_partNumber == 0) ? newpart.breakingForce : (_breakingForce * olddrymass + newpart.breakingForce * newpart.mass) / (olddrymass + newpart.mass);
+					_breakingTorque = (_partNumber == 0) ? newpart.breakingTorque : (_breakingTorque * olddrymass + newpart.breakingTorque * newpart.mass) / (olddrymass + newpart.mass);
+					break;
+				case StrengthParamsCalcMethod.ArithmeticMean:
+					_crashTolerance = (_partNumber == 0) ? newpart.crashTolerance : (_crashTolerance + newpart.crashTolerance) * 0.5f;
+					_breakingForce = (_partNumber == 0) ? newpart.breakingForce : (_breakingForce + newpart.breakingForce) * 0.5f;
+					_breakingTorque = (_partNumber == 0) ? newpart.breakingTorque : (_breakingTorque + newpart.breakingTorque) * 0.5f;
+					break;
+			}
+			switch (_MaxTempCalcMethod)
+			{
+				case MaxTempCalcMethod.ArithmeticMean:
+					_maxTemp = (_partNumber == 0) ? newpart.maxTemp : (_maxTemp + newpart.maxTemp) * 0.5f;
+					break;
+				case MaxTempCalcMethod.Lowest:
+					_maxTemp = (_partNumber == 0) ? newpart.maxTemp : Math.Min(_maxTemp, newpart.maxTemp);
+					break;
+				case MaxTempCalcMethod.WeightedAverage:
+					_maxTemp = (_partNumber == 0) ? newpart.maxTemp : (_maxTemp * olddrymass + newpart.maxTemp * olddrymass) / (olddrymass + newpart.mass);
+					break;
+			}
 
 			//Phisics signifance
 			if (newpart.PhysicsSignificance != 0 && _physicsSignificance != -1)
@@ -1532,9 +1561,9 @@ namespace UbioWeldingLtd
 			{
 				ConfigNode node = new ConfigNode(Constants.weldModelNode);
 				node.AddValue("model", model.url);
-				node.AddValue("position", ConfigNode.WriteVector(model.position)); ;
-				node.AddValue("scale", ConfigNode.WriteVector(model.scale));
-				node.AddValue("rotation", ConfigNode.WriteVector(model.rotation));
+				node.AddValue("position", ConfigNode.WriteVector(WeldingHelpers.RoundVector3(model.position))); ;
+				node.AddValue("scale", ConfigNode.WriteVector(WeldingHelpers.RoundVector3(model.scale)));
+				node.AddValue("rotation", ConfigNode.WriteVector(WeldingHelpers.RoundVector3(model.rotation)));
 				foreach (string tex in model.textures)
 				{
 					node.AddValue("texture", tex);
@@ -1547,12 +1576,38 @@ namespace UbioWeldingLtd
 			}
 
 			//add rescale factor
-			partconfig.AddValue("rescaleFactor", _rescaleFactor);
+			partconfig.AddValue("rescaleFactor", WeldingHelpers.RoundFloat(_rescaleFactor));
 
 			//add PhysicsSignificance
 			partconfig.AddValue("PhysicsSignificance", _physicsSignificance);
 
 			//add nodes stack
+			if (_attachNodes.Count() > 2)
+			{
+				float topmostMark = float.MinValue;
+				float lowestMark = float.MaxValue;
+				AttachNode topmostNode = _attachNodes[0];
+				AttachNode lowestNode = _attachNodes[1];
+				foreach (AttachNode node in _attachNodes)
+				{
+					if (node.position.y > topmostMark)
+					{
+						topmostMark = node.position.y;
+						topmostNode = node;
+					}
+					if (node.position.y < lowestMark)
+					{
+						lowestMark = node.position.y;
+						lowestNode = node;
+					}
+				}
+//				_attachNodes.Add(_attachNodes[0]);
+//				_attachNodes.Insert(_attachNodes.Count-1, _attachNodes[0]);
+				_attachNodes.Add(topmostNode);
+				_attachNodes.Add(lowestNode);
+				_attachNodes.Remove(topmostNode);
+				_attachNodes.Remove(lowestNode);
+			}
 			foreach (AttachNode node in _attachNodes)
 			{
 				//Make sure the orintation is an int
@@ -1564,10 +1619,11 @@ namespace UbioWeldingLtd
 				{
 					orientation = Vector3.up;
 				}
-				partconfig.AddValue(string.Format("node_stack_{0}", node.id), string.Format("{0},{1},{2}", ConfigNode.WriteVector(node.position), ConfigNode.WriteVector(orientation), node.size));
+				orientation.Normalize();
+				partconfig.AddValue(string.Format("node_stack_{0}", node.id), string.Format("{0},{1},{2}", ConfigNode.WriteVector(WeldingHelpers.RoundVector3(node.position)), ConfigNode.WriteVector(WeldingHelpers.RoundVector3(orientation)), node.size));
 			}
 			//add surface attach node
-			partconfig.AddValue("node_attach", string.Format("{0},{1},{2}", ConfigNode.WriteVector(_srfAttachNode.originalPosition), ConfigNode.WriteVector(_srfAttachNode.originalOrientation), _srfAttachNode.size));
+			partconfig.AddValue("node_attach", string.Format("{0},{1},{2}", ConfigNode.WriteVector(WeldingHelpers.RoundVector3(_srfAttachNode.originalPosition)), ConfigNode.WriteVector(WeldingHelpers.RoundVector3(_srfAttachNode.originalOrientation)), _srfAttachNode.size));
 
 			//merge fx
 			ConfigNode.Merge(partconfig, _fxData);
@@ -1599,15 +1655,15 @@ namespace UbioWeldingLtd
 
 			//add drag
 			partconfig.AddValue("dragModelType", _dragModel);
-			partconfig.AddValue("maximum_drag", _maximumDrag);
-			partconfig.AddValue("minimum_drag", _minimumDrag);
-			partconfig.AddValue("angularDrag", _angularDrag);
+			partconfig.AddValue("maximum_drag", WeldingHelpers.RoundFloat(_maximumDrag));
+			partconfig.AddValue("minimum_drag", WeldingHelpers.RoundFloat(_minimumDrag));
+			partconfig.AddValue("angularDrag", WeldingHelpers.RoundFloat(_angularDrag));
 
 			//add crash and breaking data
-			partconfig.AddValue("crashTolerance", _crashTolerance);
-			partconfig.AddValue("breakingForce", _breakingForce);
-			partconfig.AddValue("breakingTorque", _breakingTorque);
-			partconfig.AddValue("maxTemp", _maxTemp);
+			partconfig.AddValue("crashTolerance", WeldingHelpers.RoundFloat(_crashTolerance));
+			partconfig.AddValue("breakingForce", WeldingHelpers.RoundFloat(_breakingForce));
+			partconfig.AddValue("breakingTorque", WeldingHelpers.RoundFloat(_breakingTorque));
+			partconfig.AddValue("maxTemp", WeldingHelpers.RoundFloat(_maxTemp));
 
 			//add if crossfeed
 			partconfig.AddValue("fuelCrossFeed", _fuelCrossFeed);

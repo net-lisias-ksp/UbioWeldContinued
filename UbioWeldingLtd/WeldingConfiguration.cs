@@ -5,21 +5,44 @@ using System.Xml.Serialization;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 namespace UbioWeldingLtd
 {
+	public enum StrengthParamsCalcMethod
+	{
+		Legacy,
+		ArithmeticMean,
+		WeightedAverage
+	}
+	public enum MaxTempCalcMethod
+	{
+		ArithmeticMean,
+		WeightedAverage,
+		Lowest
+	}
 
 	[XmlRootAttribute("WeldingConfiguration", Namespace = "KSP-Forum", IsNullable = false)]
 	public class WeldingConfiguration
 	{
-		private int _editorButtonXPosition = 190;
-		private int _editorButtonYPosition = 100;
+
+		public object clone()
+		{
+			return this.MemberwiseClone();
+		}
+
+		private int _MainWindowXPosition = (Screen.width - Constants.guiMainWindowW) / 2;
+		private int _MainWindowYPosition = (Screen.height - Constants.guiMainWindowH) / 2;
 		private bool _dataBaseAutoReload = false;
 		private bool _includeAllNodes = false;
 		private bool _allowCareerMode = true;
 		private bool _dontProcessMasslessParts = true;
 		private bool _runInTestMode = true;
 		private bool _useStockToolbar = true;
+		private bool _useNamedCfgFile = true; //save the part in the named file like "WeldedPod.cfg", not "part.cfg"
+		private StrengthParamsCalcMethod _StrengthCalcMethod = StrengthParamsCalcMethod.WeightedAverage;
+		private MaxTempCalcMethod _MaxTempCalcMethod = MaxTempCalcMethod.Lowest;
+		private bool _clearEditor = true;
 		private string[] _vector2CurveModules;
 		private string[] _vector4CurveModules;
 		private string[] _subModules;
@@ -28,16 +51,16 @@ namespace UbioWeldingLtd
 		private string[] _unchangedModuleAttributes;
 		private string[] _breakingModuleAttributes;
 
-		public int editorButtonX
+		public int MainWindowXPosition
 		{
-			get { return _editorButtonXPosition; }
-			set { _editorButtonXPosition = value; }
+			get { return _MainWindowXPosition; }
+			set { _MainWindowXPosition = value; }
 		}
 
-		public int editorButtonY
+		public int MainWindowYPosition
 		{
-			get { return _editorButtonYPosition; }
-			set { _editorButtonYPosition = value; }
+			get { return _MainWindowYPosition; }
+			set { _MainWindowYPosition = value; }
 		}
 
 		public bool dataBaseAutoReload
@@ -74,6 +97,30 @@ namespace UbioWeldingLtd
 		{
 			get { return _useStockToolbar; }
 			set { _useStockToolbar = value; }
+		}
+
+		public bool useNamedCfgFile
+		{
+			get { return _useNamedCfgFile; }
+			set { _useNamedCfgFile = value; }
+		}
+
+		public StrengthParamsCalcMethod StrengthCalcMethod
+		{
+			get { return _StrengthCalcMethod; }
+			set { _StrengthCalcMethod = value; }
+		}
+
+		public MaxTempCalcMethod MaxTempCalcMethod
+		{
+			get { return _MaxTempCalcMethod; }
+			set { _MaxTempCalcMethod = value; }
+		}
+
+		public bool clearEditor
+		{
+			get { return _clearEditor; }
+			set { _clearEditor = value; }
 		}
 
 		public string[] vector2CurveModules

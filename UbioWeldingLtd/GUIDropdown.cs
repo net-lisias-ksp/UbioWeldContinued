@@ -79,8 +79,7 @@ namespace UbioWeldingLtd
  
 			if( isClickedComboButton )
 			{
-				Rect listRect = new Rect( rect.x, rect.y + listStyle.CalcHeight(listContent[0], 1.0f),
-						  rect.width, listStyle.CalcHeight(listContent[0], 1.0f) * listContent.Length );
+				Rect listRect = new Rect( rect.x, rect.y + listStyle.CalcHeight(listContent[0], 1.0f), rect.width, listStyle.CalcHeight(listContent[0], 1.0f) * listContent.Length );
  
 				GUI.Box( listRect, "", boxStyle );
 				int newSelectedItemIndex = GUI.SelectionGrid( listRect, selectedItemIndex, listContent, 1, listStyle );
@@ -90,24 +89,30 @@ namespace UbioWeldingLtd
 					buttonContent = listContent[selectedItemIndex];
 				}
 			}
- 
-			if( done )
+
+			if (done)
+			{
 				isClickedComboButton = false;
- 
+			}
 			return selectedItemIndex;
 		}
- 
+
 		public int SelectedItemIndex
 		{
-			get{
-				return selectedItemIndex;
-			}
-			set{
-				selectedItemIndex = value;
-				buttonContent = listContent[selectedItemIndex];
-			}
+			get { return selectedItemIndex; }
+			set { selectedItemIndex = value; buttonContent = listContent[selectedItemIndex]; }
 		}
 
-		public bool IsOpen { get { return isClickedComboButton; } }
+		public bool IsOpen
+		{
+			get { return isClickedComboButton; }
+		}
+
+		public void hide()
+		{
+			forceToUnShow = true;
+			isClickedComboButton = false;
+		}
+
 	} //class GUIDropdown
 }
