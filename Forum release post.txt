@@ -6,6 +6,7 @@ Because [B]UbioZur[/B] has kindly allowed to update his work, [B]Alewx [/B]and I
 [LIST]
 [*]	[U]Fixed wrong rescaling of some models in KSP 0.25[/U]
 [*]	Improved database reloading with ModuleManager installed (still incompatible with LOT of other mods)
+[*]	Updated <ModulesToIgnore> list
 [*]	Dropped compatibility with KSP 0.24.2
 [/LIST][/I]
 [Spoiler=Full history of changes]

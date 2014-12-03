@@ -1,6 +1,7 @@
 2014-12-03
-	[U]Fixed wrong rescaling of some models in KSP 0.25[/U]
+	Fixed wrong rescaling of some models in KSP 0.25
 	Improved database reloading with ModuleManager installed
+	Updated <ModulesToIgnore> list
 	Dropped compatibility with KSP 0.24.2
 2014-11-01
 	Fixed wrong rotation of models in some cases (especially in SHP)
