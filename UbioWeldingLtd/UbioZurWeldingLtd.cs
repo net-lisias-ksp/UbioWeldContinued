@@ -72,6 +72,7 @@ namespace UbioWeldingLtd
 		{
 			instance = this;
 			Debug.Log(string.Format("{0}- {1} => Awake", Constants.logPrefix, instance.GetType()));
+            Debug.Log(string.Format("{0} Platform is {1}", Constants.logPrefix, Application.platform));
 
 			initConfig();
 			_state = DisplayState.none;

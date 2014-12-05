@@ -93,6 +93,8 @@ namespace UbioWeldingLtd
 		private Vector3 _coMOffset = Vector3.zero;
 		private Vector3 _com = Vector3.zero;
 
+        private Char _filePathDelimiter;
+
 		public ConfigNode FullConfigNode = new ConfigNode(Constants.weldPartNode);
 		private static bool _includeAllNodes = false;
 		private static bool _dontProcessMasslessParts = false;
@@ -213,7 +215,18 @@ namespace UbioWeldingLtd
 		/*
 		 * Constructor
 		 */
-		public Welder() { }
+		public Welder()
+        {
+            //in Linux delimiters in file path are '/', not '\'
+            if (Application.platform == RuntimePlatform.LinuxPlayer) // may be RuntimePlatform.OSXPlayer too???
+            {
+                _filePathDelimiter = '/';
+            }
+            else
+            {
+                _filePathDelimiter = '\\';
+            }
+        }
 
 		/*
 		 * Remove all the (Clone) at the end of the names
@@ -349,7 +362,7 @@ namespace UbioWeldingLtd
 				string[] words = mesh.Split(sep);
 				mesh = words[0];
 			}
-			string filename = string.Format("{0}\\{1}.mu", cfgdir.parent.parent.path, mesh);
+            string filename = string.Format("{0}" + _filePathDelimiter + "{1}.mu", cfgdir.parent.parent.path, mesh);
 			string url = string.Format("{0}/{1}", cfgdir.parent.parent.url, mesh);
 
 			//in case the mesh name does not exist (.22 bug)
@@ -363,7 +376,7 @@ namespace UbioWeldingLtd
 #if (DEBUG)
 					Debug.LogWarning(string.Format("{0}{1}.New mesh name: {2}", Constants.logWarning, Constants.logPrefix, files[0]));
 #endif
-					char[] sep = { '\\','.' };
+					char[] sep = { '\\','.', '/' };
 					string[] words = files[0].Split(sep);
 					url = url.Replace(string.Format(@"{0}", mesh), words[1]);
 				}
