@@ -253,6 +253,7 @@ namespace UbioWeldingLtd
 		public static GUIContent guiSaveSettingsButtonGUIContent = new GUIContent("Save settings", "Save settings to config file");
 		public static GUIContent guiWeldItButtonGUIContent = new GUIContent("Weld it", "Press \"Weld it\" button to weld whole craft or selected part of it");
 		public static GUIContent guiClearEditorGUIContent = new GUIContent("Clear editor after welding", "Clear editor after welding");
+		public static GUIContent guiAdvancedDebugGUIContent = new GUIContent("Advanced debug", "SPAM KSP.log with additional debug info");
 
 		public static GUIContent[] StrengthParamsCalcMethodsGUIContent = 
 		{

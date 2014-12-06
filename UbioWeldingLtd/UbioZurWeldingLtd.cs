@@ -239,7 +239,7 @@ namespace UbioWeldingLtd
 
 #endif
 			bool warning = false;
-			_welder = new Welder();
+			_welder = new Welder(_config.advancedDebug);
 
 			partToWeld.transform.eulerAngles = Vector3.zero;
 			WeldingReturn ret = _welder.weldThisPart(partToWeld);
@@ -330,6 +330,7 @@ namespace UbioWeldingLtd
 				_config.dontProcessMasslessParts = GUILayout.Toggle(_config.dontProcessMasslessParts, Constants.guiDontProcessMasslessPartsGUIContent);
 				_config.dataBaseAutoReload = GUILayout.Toggle(_config.dataBaseAutoReload, Constants.guiDbAutoReloadGUIContent);
 				_config.useNamedCfgFile = GUILayout.Toggle(_config.useNamedCfgFile, Constants.guiUseNamedCfgFileGUIContent);
+				_config.advancedDebug = GUILayout.Toggle(_config.advancedDebug, Constants.guiAdvancedDebugGUIContent);
 				_config.clearEditor = GUILayout.Toggle(_config.clearEditor, Constants.guiClearEditorGUIContent);
 				GUILayout.Space(10.0f);
 				GUILayout.Label("Strength params calculation method");
