@@ -386,7 +386,8 @@ namespace UbioWeldingLtd
 					AdvDebug(string.Format("..words[1] {0}", words[1]));
 					AdvDebug(string.Format("..mesh {0}", mesh));
 
-					url = url.Replace(string.Format(@"{0}", mesh), words[1]);
+//					url = url.Replace(string.Format(@"{0}", mesh), words[1]);
+					url = url.Substring(0, url.LastIndexOf('/') + 1) + words[1];
 
 					AdvDebug(string.Format("..url {0}", url));
 
