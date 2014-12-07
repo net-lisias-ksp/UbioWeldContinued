@@ -21,7 +21,7 @@ namespace UbioWeldingLtd
 		}
 
 		public static UbioZurWeldingLtd instance { get; private set; }
-		
+		private Rect[] _guiInfoWindowColoumns = new Rect[4];
 		private Rect _editorErrorDial;
 		private Rect _editorWarningDial;
 		private Rect _editorInfoWindow;
@@ -33,9 +33,10 @@ namespace UbioWeldingLtd
 		private List<GUIContent> _catNames = new List<GUIContent>();
 		private GUIDropdown _catDropdown;
 		private GUIDropdown _techDropdown;
-		private GUIStyle _catListStyle = new GUIStyle();
-		private Vector2 _scrollRes = Vector2.zero;
-		private Vector2 _scrollMod = Vector2.zero;
+		private GUIStyle _guiStyle = new GUIStyle();
+		private GUISkin _guiskin = HighLogic.Skin;
+		private Vector2 _scrollRes;
+		private Vector2 _scrollMod;
 		private Vector2 _settingsScrollPosition = Vector2.zero;
 
 		private WeldingConfiguration _config;
@@ -55,6 +56,21 @@ namespace UbioWeldingLtd
 					return string.Format("{0}{1}/{2}{3}", Constants.weldPartPath, _welder.Category.ToString(), _welder.Name, Constants.weldPartDefaultFile);
 				}
 			}
+		}
+
+		public Rect editorInfoWindow
+		{
+			get { return _editorInfoWindow; }
+		}
+
+		public GUISkin guiskin
+		{
+			get { return _guiskin; }
+			}
+
+		public GUIStyle guistyle
+		{
+			get { return _guiStyle; }
 		}
 
 		/// <summary>
@@ -85,8 +101,8 @@ namespace UbioWeldingLtd
             _editorMainWindow = new Rect(_config.MainWindowXPosition, _config.MainWindowYPosition, Constants.guiMainWindowW, Constants.guiMainWindowH);
 
 			_catNames = WeldingHelpers.initPartCategories(_catNames);
-			_catListStyle = WeldingHelpers.initGuiStyle(_catListStyle);
-			_catDropdown = WeldingHelpers.initDropDown(_catNames, _catListStyle, _catDropdown);
+			_guiStyle = WeldingHelpers.initGuiStyle(_guiStyle);
+			_catDropdown = WeldingHelpers.initDropDown(_catNames, _guiStyle, _catDropdown);
 			DatabaseHandler.initMMAssembly();
 		}
 
@@ -184,15 +200,14 @@ namespace UbioWeldingLtd
 			initGUI();
 		}
 
-		/*
-		 * To draw the UI
-		 */
+		/// <summary>
+		/// Public Eventcall at the GuiDraw
+		/// </summary>
 		private void OnDraw()
 		{
 			if (_guiVisible)
 			{
-				//Set the GUI Skin
-				GUI.skin = HighLogic.Skin;
+				GUI.skin = _guiskin;
 
 				switch (_state)
 				{
@@ -207,7 +222,7 @@ namespace UbioWeldingLtd
                         _editorWarningDial = GUILayout.Window((int)_state, _editorWarningDial, OnWarningDisplay, Constants.weldManufacturer);
 						break;
 					case DisplayState.infoWindow :
-                        _editorInfoWindow = GUI.Window((int)_state, _editorInfoWindow, OnInfoWindow, Constants.weldManufacturer);
+						_editorInfoWindow = GUI.Window((int)_state, _editorInfoWindow, FillInfoWindow, Constants.weldManufacturer);
 						PreventClickThrough(_editorInfoWindow);
 						break;
 					case DisplayState.savedWindow :
@@ -281,7 +296,7 @@ namespace UbioWeldingLtd
 			}
 			_welder.processNewCoM();
 
-			_techDropdown = WeldingHelpers.initTechDropDown(_welder.techList, _catListStyle, _techDropdown);
+			_techDropdown = WeldingHelpers.initTechDropDown(_welder.techList, _guiStyle, _techDropdown);
 
 			_scrollMod = Vector2.zero;
 			_scrollRes = Vector2.zero;
@@ -334,6 +349,7 @@ namespace UbioWeldingLtd
 				_config.clearEditor = GUILayout.Toggle(_config.clearEditor, Constants.guiClearEditorGUIContent);
 				GUILayout.Space(10.0f);
 				GUILayout.Label("Strength params calculation method");
+//				_config.StrengthCalcMethod = (StrengthParamsCalcMethod)GUILayout.SelectionGrid((int)_config.StrengthCalcMethod, Constants.StrengthParamsCalcMethodsGUIContent, 1, GUILayout.MaxWidth(140));
 				foreach (StrengthParamsCalcMethod Method in Enum.GetValues(typeof(StrengthParamsCalcMethod)))
 				{
 					if (GUILayout.Toggle((_config.StrengthCalcMethod == Method), Constants.StrengthParamsCalcMethodsGUIContent[(int)Method], _settingsToggleGroupStyle))
@@ -343,6 +359,7 @@ namespace UbioWeldingLtd
 				}
 				GUILayout.Space(10.0f);
 				GUILayout.Label("MaxTemp calculation method");
+//				_config.MaxTempCalcMethod = (MaxTempCalcMethod)GUILayout.SelectionGrid((int)_config.MaxTempCalcMethod, Constants.MaxTempCalcMethodsGUIContent, 1, GUILayout.MaxWidth(140));
 				foreach (MaxTempCalcMethod Method in Enum.GetValues(typeof(MaxTempCalcMethod)))
 				{
 					if (GUILayout.Toggle((_config.MaxTempCalcMethod == Method), Constants.MaxTempCalcMethodsGUIContent[(int)Method], _settingsToggleGroupStyle))
@@ -352,6 +369,7 @@ namespace UbioWeldingLtd
 				}
 				GUILayout.EndScrollView();
 
+//				GUILayout.Space(10.0f);
 				if (GUILayout.Button(Constants.guiSaveSettingsButtonGUIContent, GUILayout.MaxWidth(100)))
 				{
 					FileManager.saveConfig(_config);
@@ -472,6 +490,7 @@ namespace UbioWeldingLtd
 				if (!MMPathLoaderIsReady)
 				{
 					GUILayout.Label(String.Format("ModuleManager progress: {0:P0}", (float)DatabaseHandler.DynaInvokeMMPatchLoaderMethod("ProgressFraction")));
+//					GUILayout.Label(String.Format("{0}", (string)DatabaseHandler.DynaInvokeMMPatchLoaderMethod("ProgressTitle")));
 				}
 			}
 			else
@@ -483,15 +502,154 @@ namespace UbioWeldingLtd
 					ClearEditor();
 					_state = DisplayState.none;
 				}
-				else if (GUILayout.Button(Constants.guiCancel))
-				{
-					ClearEditor();
-				}
 			}
 			GUILayout.EndVertical();
 
 			GUI.DragWindow();
 		} //private void OnErrorDisplay()
+
+
+		void FillInfoWindow(int windowID)
+		{
+			float margin = 5f;
+			float height = 20;
+			float posH = height;
+			float columnWidth = (Constants.guiInfoWindowW - (margin * 5)) / 4;
+			float columnHeight = (Constants.guiInfoWindowH - ((height + margin) * 2));
+			float scrollwidth = columnWidth - 20.0f;
+			GUIStyle style = new GUIStyle();
+
+			for (int i = 0; i < 4; i++)
+			{
+				_guiInfoWindowColoumns[i] = new Rect((margin * (i + 1)) + (columnWidth * i), height, columnWidth, columnHeight);
+				posH = height;
+				switch (i)
+				{
+					case 0:
+						{
+							GUI.Label(new Rect(_guiInfoWindowColoumns[i].x, posH, columnWidth, height), "Name:");
+							posH += height + margin;
+							_welder.Name = GUI.TextField(new Rect(_guiInfoWindowColoumns[i].x, posH, columnWidth, height), _welder.Name, 100);
+							posH += height + margin;
+							GUI.Label(new Rect(0, posH, columnWidth, height), "Title:");
+							posH += height + margin;
+							_welder.Title = GUI.TextField(new Rect(_guiInfoWindowColoumns[i].x, posH, columnWidth, height), _welder.Title, 100);
+							posH += height + margin;
+							GUI.Label(new Rect(0, posH, columnWidth, height), "Description:");
+							posH += height + margin;
+							_welder.Description = GUI.TextArea(new Rect(_guiInfoWindowColoumns[i].x, posH, columnWidth, 7 * height + 6 * margin), _welder.Description, 600);
+						}
+						break;
+					case 1:
+						{
+							GUI.Label(new Rect(_guiInfoWindowColoumns[i].x, posH, columnWidth, height), "Category:");
+							posH += height + margin;
+							Rect _cetegoryBox = new Rect(_guiInfoWindowColoumns[i].x, posH, columnWidth, height);
+							posH += height + margin;
+							GUI.Label(new Rect(_guiInfoWindowColoumns[i].x, posH, columnWidth, height), "RequiredTech:");
+							posH += height + margin;
+							Rect _techBox = new Rect(_guiInfoWindowColoumns[i].x, posH, columnWidth, height);
+							posH += height + margin;
+							GUI.Label(new Rect(_guiInfoWindowColoumns[i].x, posH, columnWidth, height), string.Format("Nb Parts: {0}", _welder.NbParts));
+							posH += height + margin;
+							GUI.Label(new Rect(_guiInfoWindowColoumns[i].x, posH, columnWidth, height), string.Format("Cost: {0:F2}", _welder.Cost));
+							posH += height + margin;
+							GUI.Label(new Rect(_guiInfoWindowColoumns[i].x, posH, columnWidth, height), string.Format("Mass: {0:F3} / {1:F3}", _welder.Mass, _welder.WetMass));
+							posH += height + margin;
+							GUI.Label(new Rect(_guiInfoWindowColoumns[i].x, posH, columnWidth, height), string.Format("Temp: {0:F1}", _welder.MaxTemp));
+							posH += height + margin;
+							GUI.Label(new Rect(_guiInfoWindowColoumns[i].x, posH, columnWidth, height), string.Format("B Force: {0:F3}", _welder.BreakingForce));
+							posH += height + margin;
+							GUI.Label(new Rect(_guiInfoWindowColoumns[i].x, posH, columnWidth, height), string.Format("B Torque: {0:F3}", _welder.BreakingTorque));
+							posH += height + margin;
+							GUI.Label(new Rect(_guiInfoWindowColoumns[i].x, posH, columnWidth, height), string.Format("Drag: {0:F3} / {1:F3}", _welder.MinDrag, _welder.MaxDrag));
+
+							_welder.techRequire = _welder.techList[_techDropdown.Show(_techBox)];
+							_catDropdown.SelectedItemIndex = (int)_welder.Category;
+							_welder.Category = (PartCategories)_catDropdown.Show(_cetegoryBox);
+
+						}
+						break;
+					case 2:
+						{
+							GUI.Label(new Rect(_guiInfoWindowColoumns[i].x, posH, columnWidth, height), "Modules:");
+							posH += height + margin;
+							string[] modulenames = _welder.Modules;
+							_scrollMod = GUI.BeginScrollView(new Rect(_guiInfoWindowColoumns[i].x, posH, columnWidth, (height * 11 + margin * 10)), _scrollMod, new Rect(0, 0, scrollwidth, modulenames.Length > 11 ? 270 + (modulenames.Length - 11) * (height + margin) : 270), false, true);
+							style.wordWrap = false;
+							style.normal.textColor = Color.white;
+							posH = 0;
+							foreach (string modulename in modulenames)
+							{
+								GUI.Label(new Rect(2, posH, scrollwidth, height), modulename, style);
+								posH += height + margin;
+							}
+							GUI.EndScrollView();
+						}
+						break;
+					case 3:
+						{
+							GUI.Label(new Rect(_guiInfoWindowColoumns[i].x, posH, columnWidth, height), "Resources:");
+							posH += height + margin;
+							string[] resourcesdata = _welder.Resources;
+							_scrollRes = GUI.BeginScrollView(new Rect(_guiInfoWindowColoumns[i].x, posH, columnWidth, (height * 11 + margin * 10)), _scrollRes, new Rect(0, 0, scrollwidth, resourcesdata.Length > 11 ? 270 + (resourcesdata.Length - 11) * (height + margin) : 270), false, true);
+							style.wordWrap = false;
+							style.normal.textColor = Color.white;
+							posH = 0;
+							foreach (string resname in resourcesdata)
+							{
+								GUI.Label(new Rect(2, posH, scrollwidth, height), resname, style);
+								posH += height + margin;
+							}
+							GUI.EndScrollView();
+						}
+						break;
+					default:
+						{
+							GUI.Label(new Rect(0, posH, columnWidth, height), "Broken GUI Column:");
+						}
+						break;
+				}
+			}
+
+			bool nameOk = WelderNameNotUsed();
+			if (!nameOk)
+			{
+				style.normal.textColor = Color.red;
+				GUI.Label(new Rect(margin, height + columnHeight + margin, columnWidth * 1.5f, height), Constants.guiNameUsed, style);
+			}
+			if (!string.IsNullOrEmpty(_welder.Name))
+			{
+				if (GUI.Button(new Rect(_guiInfoWindowColoumns[1].x + columnWidth * 0.5f, height + columnHeight + margin, columnWidth * 0.5f, height), Constants.guiSave))
+				{
+					//check if the file exist
+					string dirpath = string.Format("{0}{1}/{2}", Constants.weldPartPath, _welder.Category.ToString(), _welder.Name);
+					if (!System.IO.File.Exists(filepath))
+					{
+						if (!Directory.Exists(dirpath))
+						{
+							Directory.CreateDirectory(dirpath);
+						}
+						//create the file
+						StreamWriter partfile = System.IO.File.CreateText(filepath);
+						partfile.Close();
+						WriteCfg(filepath);
+						_state = DisplayState.savedWindow;
+					}
+					else
+					{
+						_state = DisplayState.overwriteDial;
+					}
+				}
+			}
+			if (GUI.Button(new Rect(_guiInfoWindowColoumns[2].x, height + columnHeight + margin, columnWidth * 0.5f, height), Constants.guiCancel))
+			{
+				ClearEditor();
+				_state = DisplayState.none;
+			}
+			GUI.DragWindow();
+		}
+
 
 		/*
 		 * Display the info window
@@ -525,8 +683,8 @@ namespace UbioWeldingLtd
 			GUI.Label(new Rect(posw, posh, quarterwidth, height), "Category");
 			posh += height;
 			_catDropdown.SelectedItemIndex = (int)_welder.Category;
-			int SelectedCat = _catDropdown.Show(new Rect(posw, posh, quarterwidth, height));
-			_welder.Category = (PartCategories)SelectedCat;
+			//int SelectedCat = _catDropdown.Show(new Rect(posw, posh, quarterwidth, height));
+			_welder.Category = (PartCategories)_catDropdown.Show(new Rect(posw, posh, quarterwidth, height));
 			if (!_catDropdown.IsOpen)
 			{
 				posh += height;
@@ -553,6 +711,7 @@ namespace UbioWeldingLtd
 				}
 			}
 
+			//Third
 			//Module
 			posh = inith;
 			posw = (quarterpos*2.0f) + margin;
@@ -665,12 +824,15 @@ namespace UbioWeldingLtd
 		 */
 		private void ClearEditor()
 		{
-			if (EditorLogic.SelectedPart == null)
+			if (_config.clearEditor)
 			{
-				EditorLogic.fetch.PartSelected = EditorLogic.startPod;
+				if (EditorLogic.SelectedPart == null)
+				{
+					EditorLogic.fetch.PartSelected = EditorLogic.startPod;
+				}
+				EditorLogic.fetch.DestroySelectedPart();
+				EditorPartList.Instance.Refresh();
 			}
-			EditorLogic.fetch.DestroySelectedPart();
-			EditorPartList.Instance.Refresh();
 			EditorLogic.fetch.Unlock(Constants.settingWeldingLock);
 		}
 
@@ -682,10 +844,12 @@ namespace UbioWeldingLtd
 			Vector2 pointerPos = Input.mousePosition;
 
 			pointerPos.y = Screen.height - pointerPos.y;
+			//            if (rect.Contains(pointerPos) && !EditorLogic.softLock)
 			if (rect.Contains(pointerPos))
 			{
 				EditorLogic.fetch.Lock(false, false, false, Constants.settingPreventClickThroughLock);
 			}
+			//            else if (!rect.Contains(pointerPos) && EditorLogic.softLock)
 			else if (!rect.Contains(pointerPos))
 			{
 				EditorLogic.fetch.Unlock(Constants.settingPreventClickThroughLock);

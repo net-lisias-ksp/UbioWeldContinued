@@ -43,8 +43,8 @@ namespace UbioWeldingLtd
 		public const int guiDialogH			 = 200;
 		public const int guiInfoWindowX		 = 300;
 		public const int guiInfoWindowY		 = 150;
-		public const int guiInfoWindowW		 = 700;
-		public const int guiInfoWindowH		 = 300;
+		public const int guiInfoWindowW		 = 705;
+		public const int guiInfoWindowH		 = 345;
         public const int guiMainWindowW     = 300;
 		public const int guiMainWindowH		= 200;
 		public const int guiMainWindowHSettingsExpanded = 650;
@@ -83,7 +83,6 @@ namespace UbioWeldingLtd
 		public const string setupVector4Line1 = "In <Vector4CurveModules> list are modules that will be read as vector4Curves that means they will create curves from floatpoints and tangents. There is a thread in the forum just about the magic of floatpoint tangents.";
 		public const string setupSubmoduleLine1 = "<SubModules> list contains the Submodules that otherwise would be ignored and not merged, Adding an entry here will give the tool the ability to merge the attributes in it.";
 		public const string setupModulesToIgnoreLine1 = "Modules in <ModulesToIgnore> list will be completly ignored from the tool and not get added to the new part.";
-		public const string setupModulesToMultiplyLine1 = "Modules in <ModulesToMultiply> list will be added to the new part no matter how often it already exists.";
 		public const string setupAveragedAttribtesLine1 = "Entries in <AveragedModuleAttributes> will make sure that the tool will not simply add the values of this attribute from the different parts and modules up, but will calculate it as aritmetric mean (average).";
 		public const string setupUnchangedAttribtesLine1 = "Entries in <UnchangedModuleAttributes> list will give the tool the order to not merge the values for this attribute.";
 		public const string setupBreakingAttribtesLine1 = "<BreakingModuleAttributes> might be the most important list of Attributes, the entries here will give the tool the order to check if the values of these attributes are equal, and only allow then the merging or the module, otherwise a new module would be added.";
@@ -211,29 +210,7 @@ namespace UbioWeldingLtd
 
 		public static string[] basicModulesToIgnore =
 		{
-			"TweakScale",
-			"FMRS_PM",
-			"Variometer",
-			"TrajectoriesVesselSettings",
-			"TelemachusDataLink",
-			"TelemachusPowerDrain",
-			"ProbeControlRoomPart",
-			"RasterPropMonitorComputer",
-			"Proximity",
-			"LazorSystemDockingCamera",
-			"ModuleDockingNodeController",
-			"ModuleDockingNodeNamed",
-			"ModuleStagingToggle",
-			"GoodspeedPump",
-			"ModuleTweakableDockingNode",
-			"KASModuleGrab",
-			"ModuleTweakableRCS",
-			"ModuleTweakableSolarPanel"
-		};
-
-		public static string[] basicModulesToMultiply =
-		{
-			"AntimatterCollector"
+			"TweakScale"
 		};
 
 		public static string[] basicAveragedModuleAttributes =

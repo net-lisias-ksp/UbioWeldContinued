@@ -94,6 +94,9 @@ namespace UbioWeldingLtd
 			{
 				isClickedComboButton = false;
 			}
+
+			closeOnOutsideClick(rect);
+
 			return selectedItemIndex;
 		}
 
@@ -112,6 +115,19 @@ namespace UbioWeldingLtd
 		{
 			forceToUnShow = true;
 			isClickedComboButton = false;
+		}
+
+		internal bool closeOnOutsideClick(Rect dropdownRect)
+		{
+			if (IsOpen && Event.current.type == EventType.mouseDown && !dropdownRect.Contains(Event.current.mousePosition))
+			{
+				hide();
+				return true;
+			}
+			else
+			{
+				return false;
+			}
 		}
 
 	} //class GUIDropdown
