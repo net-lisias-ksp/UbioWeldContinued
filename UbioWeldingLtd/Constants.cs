@@ -11,7 +11,7 @@ namespace UbioWeldingLtd
 	static class Constants
 	{
 		//Logs/debug constants
-		public const string logVersion		  = "v2.0pt5-0.24.2/0.25.0-Unofficial-v.03";
+		public const string logVersion		  = "v2.0pt5-0.25.0-Unofficial-v.05";
 		public const string logWarning		  = "WARNING ";
 		public const string logError			= "ERROR ";
 		public const string logPrefix		   = "[WeldingTool] ";
@@ -276,6 +276,7 @@ namespace UbioWeldingLtd
 		public static GUIContent guiSaveSettingsButtonGUIContent = new GUIContent("Save settings", "Save settings to config file");
 		public static GUIContent guiWeldItButtonGUIContent = new GUIContent("Weld it", "Press \"Weld it\" button to weld whole craft or selected part of it");
 		public static GUIContent guiClearEditorGUIContent = new GUIContent("Clear editor after welding", "Clear editor after welding");
+		public static GUIContent guiAdvancedDebugGUIContent = new GUIContent("Advanced debug", "SPAM KSP.log with additional debug info");
 
 		public static GUIContent[] StrengthParamsCalcMethodsGUIContent = 
 		{
