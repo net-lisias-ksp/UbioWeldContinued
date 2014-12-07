@@ -113,6 +113,7 @@ namespace UbioWeldingLtd
 				configuration.vector4CurveModules = Constants.basicVector4CurveModules;
 				configuration.subModules = Constants.basicSubModules;
 				configuration.modulesToIgnore = Constants.basicModulesToIgnore;
+				configuration.modulesToMultiply = Constants.basicModulesToMultiply;
 				configuration.averagedModuleAttributes = Constants.basicAveragedModuleAttributes;
 				configuration.unchangedModuleAttributes = Constants.basicUnchangedModuleAttributes;
 				configuration.breakingModuleAttributes = Constants.basicBreakingModuleAttributes;
