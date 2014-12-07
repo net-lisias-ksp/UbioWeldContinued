@@ -377,17 +377,10 @@ namespace UbioWeldingLtd
 					AdvDebug(string.Format("..files[0] {0}", files[0]));
 					AdvDebug(string.Format("..cfgdir.parent.parent.path.Length {0}", cfgdir.parent.parent.path.Length));
 					files[0] = files[0].Remove(0, cfgdir.parent.parent.path.Length);
-<<<<<<< HEAD
-#if (DEBUG)
-					Debug.LogWarning(string.Format("{0}{1}.New mesh name: {2}", Constants.logWarning, Constants.logPrefix, files[0]));
-#endif
-					char[] sep = { '\\', '.' };
-=======
 
 					AdvDebug(string.Format("{0}.New mesh name: {1}", Constants.logPrefix, files[0]));
 
 					char[] sep = { '\\','.', '/' };
->>>>>>> dfbba715bfd6aa9e283d94f7af0b8eb6027e754d
 					string[] words = files[0].Split(sep);
 
 					AdvDebug(string.Format("..words[1] {0}", words[1]));
@@ -420,34 +413,19 @@ namespace UbioWeldingLtd
 			string partname = (string)newpart.partInfo.partPrefab.name.Clone();
 			removecClone(ref partname);
 
-<<<<<<< HEAD
-			Debug.Log(string.Format("{0}{1}{2}", Constants.logPrefix, Constants.logWeldingPart, partname));
-#if (DEBUG)
-			Debug.Log(string.Format("{0}..part rescaleFactor {1:F}", Constants.logPrefix, newpart.rescaleFactor));
-			Debug.Log(string.Format("{0}..part scaleFactor {1:F}", Constants.logPrefix, newpart.scaleFactor));
-#endif
-=======
 			Debug.Log(string.Format("{0}{1}{2}",Constants.logPrefix,Constants.logWeldingPart,partname));
 			AdvDebug(string.Format("..part rescaleFactor {0:F}", newpart.rescaleFactor));
 			AdvDebug(string.Format("..part scaleFactor {0:F}", newpart.scaleFactor));
->>>>>>> dfbba715bfd6aa9e283d94f7af0b8eb6027e754d
 
 			//--- Find all the config file with the name
 			List<UrlDir.UrlConfig> matchingPartConfigs = new List<UrlDir.UrlConfig>();
 			foreach (UrlDir.UrlConfig config in GameDatabase.Instance.GetConfigs(Constants.weldPartNode))
 			{
 				string newconfigname = config.name.Replace('_', '.');
-<<<<<<< HEAD
-#if (DEBUG)
-				//Girka2K - too many spam in LOG from here
-				//				Debug.Log(string.Format("{0}.config name {1}", Constants.logPrefix, newconfigname));
-#endif
-=======
 
 //Girka2K - too many spam in LOG from here
 				//AdvDebug(tring.Format(".config name {0}", newconfigname));
 
->>>>>>> dfbba715bfd6aa9e283d94f7af0b8eb6027e754d
 				if (System.String.Equals(partname, newconfigname, System.StringComparison.Ordinal))
 				{
 					matchingPartConfigs.Add(config);
@@ -471,20 +449,11 @@ namespace UbioWeldingLtd
 					if (!cfg.config.HasNode(Constants.weldModelNode))
 					{
 						//Missing Model node
-<<<<<<< HEAD
-#if (DEBUG)
-						Debug.Log(string.Format("{0}.. Config {1} has no {2} node", Constants.logPrefix, cfg.name, Constants.weldModelNode));
-#endif
-						ModelInfo info = new ModelInfo();
-						info.url = GetMeshurl(cfg);
-						Debug.Log(string.Format("{0}..{1}{2}", Constants.logPrefix, Constants.logModelUrl, info.url));
-=======
 						AdvDebug(string.Format("..Config {0} has no {1} node",cfg.name,Constants.weldModelNode));
 
 						ModelInfo info = new ModelInfo();
 						info.url = GetMeshurl(cfg);
 						AdvDebug(string.Format("..{0}{1}", Constants.logModelUrl, info.url));
->>>>>>> dfbba715bfd6aa9e283d94f7af0b8eb6027e754d
 
 						Vector3 position = Vector3.zero;
 						setRelativePosition(newpart, ref position);
