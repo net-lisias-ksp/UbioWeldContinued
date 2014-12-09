@@ -19,6 +19,7 @@ namespace UbioWeldingLtd
 		private string buttonStyle;
 		private string boxStyle;
 		private GUIStyle listStyle;
+		private int _darknessFactor;
  
 		public GUIDropdown( GUIContent buttonContent, GUIContent[] listContent, GUIStyle listStyle )
 		{
@@ -29,13 +30,14 @@ namespace UbioWeldingLtd
 			this.listStyle = listStyle;
 		}
 
-		public GUIDropdown(GUIContent buttonContent, GUIContent[] listContent, string buttonStyle, string boxStyle, GUIStyle listStyle)
+		public GUIDropdown(GUIContent buttonContent, GUIContent[] listContent, string buttonStyle, string boxStyle, GUIStyle listStyle, int darkness)
 		{
 			this.buttonContent = buttonContent;
 			this.listContent = listContent;
 			this.buttonStyle = buttonStyle;
 			this.boxStyle = boxStyle;
 			this.listStyle = listStyle;
+			this._darknessFactor = darkness;
 		}
  
 		public int Show(Rect rect)
@@ -80,8 +82,11 @@ namespace UbioWeldingLtd
 			if( isClickedComboButton )
 			{
 				Rect listRect = new Rect( rect.x, rect.y + listStyle.CalcHeight(listContent[0], 1.0f), rect.width, listStyle.CalcHeight(listContent[0], 1.0f) * listContent.Length );
- 
-				GUI.Box( listRect, "", boxStyle );
+
+				for (int i = 0; i < _darknessFactor; i++)
+				{
+					GUI.Box(listRect, "", boxStyle);
+				}
 				int newSelectedItemIndex = GUI.SelectionGrid( listRect, selectedItemIndex, listContent, 1, listStyle );
 				if( newSelectedItemIndex != selectedItemIndex )
 				{

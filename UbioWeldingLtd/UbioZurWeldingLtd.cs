@@ -222,7 +222,7 @@ namespace UbioWeldingLtd
                         _editorWarningDial = GUILayout.Window((int)_state, _editorWarningDial, OnWarningDisplay, Constants.weldManufacturer);
 						break;
 					case DisplayState.infoWindow :
-						_editorInfoWindow = GUI.Window((int)_state, _editorInfoWindow, FillInfoWindow, Constants.weldManufacturer);
+						_editorInfoWindow = GUI.Window((int)_state, _editorInfoWindow, OnInfoWindow, Constants.weldManufacturer);
 						PreventClickThrough(_editorInfoWindow);
 						break;
 					case DisplayState.savedWindow :
@@ -509,7 +509,11 @@ namespace UbioWeldingLtd
 		} //private void OnErrorDisplay()
 
 
-		void FillInfoWindow(int windowID)
+		/// <summary>
+		/// Darws the Info window where the new saved partfile can be configured
+		/// </summary>
+		/// <param name="windowID"></param>
+		void OnInfoWindow(int windowID)
 		{
 			float margin = 5f;
 			float height = 20;
@@ -564,7 +568,14 @@ namespace UbioWeldingLtd
 							posH += height + margin;
 							GUI.Label(new Rect(_guiInfoWindowColoumns[i].x, posH, columnWidth, height), string.Format("Drag: {0:F3} / {1:F3}", _welder.MinDrag, _welder.MaxDrag));
 
-							_welder.techRequire = _welder.techList[_techDropdown.Show(_techBox)];
+							if (_catDropdown.IsOpen)
+							{
+								GUI.Box(_techBox, _welder.techRequire);
+							}
+							else
+							{
+								_welder.techRequire = _welder.techList[_techDropdown.Show(_techBox)];
+							}
 							_catDropdown.SelectedItemIndex = (int)_welder.Category;
 							_welder.Category = (PartCategories)_catDropdown.Show(_cetegoryBox);
 
@@ -650,140 +661,6 @@ namespace UbioWeldingLtd
 			GUI.DragWindow();
 		}
 
-
-		/*
-		 * Display the info window
-		 */
-		private void OnInfoWindow(int windowID)
-		{
-			float margin = 2.5f;
-			float quarterpos = Constants.guiInfoWindowW * 0.25f;
-			float quarterwidth = quarterpos - margin - margin;
-			float height = 20.0f;
-			float inith = height;
-			float posh = inith;
-
-			//First Colomn
-			GUI.Label(new Rect(margin, posh, quarterwidth, height), "Name");
-			posh += height;
-			_welder.Name = GUI.TextField(new Rect(margin, posh, quarterwidth, height), _welder.Name, 100);
-			posh += height;
-			GUI.Label(new Rect(margin, posh, quarterwidth, height), "Title");
-			posh += height;
-			_welder.Title = GUI.TextField(new Rect(margin, posh, quarterwidth, height), _welder.Title, 100);
-			posh += height;
-			GUI.Label(new Rect(margin, posh, quarterwidth, height), "Description");
-			posh += height;
-			_welder.Description = GUI.TextArea(new Rect(margin, posh, quarterwidth, 6 * height), _welder.Description, 400);
-			posh += 6 * height;
-
-			//Second
-			posh = inith;
-			float posw = quarterpos + margin;
-			GUI.Label(new Rect(posw, posh, quarterwidth, height), "Category");
-			posh += height;
-			_catDropdown.SelectedItemIndex = (int)_welder.Category;
-			//int SelectedCat = _catDropdown.Show(new Rect(posw, posh, quarterwidth, height));
-			_welder.Category = (PartCategories)_catDropdown.Show(new Rect(posw, posh, quarterwidth, height));
-			if (!_catDropdown.IsOpen)
-			{
-				posh += height;
-				GUI.Label(new Rect(posw, posh, quarterwidth, height), "RequiredTech");
-				posh += height;
-				int selectedTech = _techDropdown.Show(new Rect(posw, posh, quarterwidth, height));
-				_welder.techRequire = _welder.techList[selectedTech];
-				if (!_techDropdown.IsOpen)
-				{
-					posh += height;
-					GUI.Label(new Rect(posw, posh, quarterwidth, height), string.Format("Nb Parts: {0}", _welder.NbParts));
-					posh += height;
-					GUI.Label(new Rect(posw, posh, quarterwidth, height), string.Format("Cost: {0:F2}", _welder.Cost));
-					posh += height;
-					GUI.Label(new Rect(posw, posh, quarterwidth, height), string.Format("Mass: {0:F3} / {1:F3}", _welder.Mass, _welder.WetMass));
-					posh += height;
-					GUI.Label(new Rect(posw, posh, quarterwidth, height), string.Format("T: {0:F1}", _welder.MaxTemp));
-					posh += height;
-					GUI.Label(new Rect(posw, posh, quarterwidth, height), string.Format("F: {0:F3}", _welder.BreakingForce));
-					posh += height;
-					GUI.Label(new Rect(posw, posh, quarterwidth, height), string.Format("T: {0:F3}", _welder.BreakingTorque));
-					posh += height;
-					GUI.Label(new Rect(posw, posh, quarterwidth, height), string.Format("Drag: {0:F3} / {1:F3}", _welder.MinDrag, _welder.MaxDrag));
-				}
-			}
-
-			//Third
-			//Module
-			posh = inith;
-			posw = (quarterpos*2.0f) + margin;
-			GUI.Label(new Rect(posw, posh, quarterwidth, height), "Modules");
-			posh += height;
-			float scrollwidth = quarterwidth-20.0f;
-			_scrollMod = GUI.BeginScrollView(new Rect(posw, posh, quarterwidth, 10 * height), _scrollMod, new Rect(0, 0, scrollwidth, 200.0f), false, true);
-			posh = 0.0f;
-			string[] modulenames = _welder.Modules;
-			GUIStyle style = new GUIStyle();
-			style.wordWrap = false;
-			style.normal.textColor = Color.white;
-			foreach (string modulename in modulenames)
-			{
-				GUI.Label(new Rect(0, posh, scrollwidth, height), modulename, style);
-				posh += height;
-			}
-			GUI.EndScrollView();
-
-			//Res
-			posh = inith;
-			posw = (quarterpos * 3.0f) + margin;
-			GUI.Label(new Rect(posw, posh, quarterwidth, height), "Resources");
-			posh += height;
-			_scrollRes = GUI.BeginScrollView(new Rect(posw, posh, quarterwidth, 10 * height), _scrollRes, new Rect(0, 0, scrollwidth, 200.0f), false, true);
-			posh = 0.0f;
-			string[] resourcesdata = _welder.Resources;
-			foreach (string resdata in resourcesdata)
-			{
-				GUI.Label(new Rect(0, posh, scrollwidth, height), resdata, style);
-				posh += height;
-			}
-			GUI.EndScrollView();
-
-			bool nameOk = WelderNameNotUsed();
-			if (!nameOk)
-			{
-				style.normal.textColor = Color.red;
-				GUI.Label(new Rect(margin, 13*height, 2*quarterpos, height), Constants.guiNameUsed, style);
-			}
-			else if (!string.IsNullOrEmpty(_welder.Name))
-			{
-				if (GUI.Button(new Rect(2 * quarterpos, 13 * height, quarterwidth * 0.5f, height), Constants.guiSave) )
-				{
-					//check if the file exist
-					string dirpath = string.Format("{0}{1}/{2}", Constants.weldPartPath, _welder.Category.ToString(), _welder.Name);
-					if (!System.IO.File.Exists(filepath))
-					{
-						if (!Directory.Exists(dirpath))
-						{
-							Directory.CreateDirectory(dirpath);
-						}
-						//create the file
-						StreamWriter partfile = System.IO.File.CreateText(filepath);
-						partfile.Close();
-						WriteCfg(filepath);
-						_state = DisplayState.savedWindow;
-					}
-					else
-					{
-						_state = DisplayState.overwriteDial;
-					}
-				}
-			}
-			if (GUI.Button(new Rect(3 * quarterpos, 13 * height, quarterwidth * 0.5f, height), Constants.guiCancel) )
-			{
-				ClearEditor();
-				_state = DisplayState.none;
-			}
-
-			GUI.DragWindow();
-		} //private void OnInfoWindow(int windowID)
 
 		/*
 		 * Test if the name is not already in use
