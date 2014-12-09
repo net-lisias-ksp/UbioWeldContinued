@@ -522,7 +522,7 @@ namespace UbioWeldingLtd
 											(ConfigNode.ParseVector3(node.GetValue("scale")) * (newpart.rescaleFactor / _rescaleFactor)) :
 											new Vector3(newpart.transform.GetChild(0).localScale.x,
 														newpart.transform.GetChild(0).localScale.y,
-														newpart.transform.GetChild(0).localScale.z) * (newpart.rescaleFactor / _rescaleFactor);
+														newpart.transform.GetChild(0).localScale.z);
 
 							AdvDebug(string.Format("..newpart position {0}", newpart.transform.position.ToString("F3")));
 							AdvDebug(string.Format("..newpart rotation {0}", newpart.transform.rotation.ToString("F3")));
