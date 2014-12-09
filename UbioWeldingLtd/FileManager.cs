@@ -23,6 +23,7 @@ namespace UbioWeldingLtd
 				Constants.CommentOutText(Constants.setupVector4Line1),
 				Constants.CommentOutText(Constants.setupSubmoduleLine1),
 				Constants.CommentOutText(Constants.setupModulesToIgnoreLine1),
+				Constants.CommentOutText(Constants.setupModulesToMultiplyLine1),
 				Constants.CommentOutText(Constants.setupAveragedAttribtesLine1),
 				Constants.CommentOutText(Constants.setupUnchangedAttribtesLine1),
 				Constants.CommentOutText(Constants.setupBreakingAttribtesLine1),
@@ -96,13 +97,14 @@ namespace UbioWeldingLtd
 				moduleList = (ModuleLists)moduleListSerializer.Deserialize(FileStream);
 				FileStream.Close();
 
-				configuration.vector2CurveModules = WeldingHelpers.convertFromToStringArray(moduleList.vector2CurveModules);
-				configuration.vector4CurveModules = WeldingHelpers.convertFromToStringArray(moduleList.vector4CurveModules);
-				configuration.subModules = WeldingHelpers.convertFromToStringArray(moduleList.subModules);
-				configuration.modulesToIgnore = WeldingHelpers.convertFromToStringArray(moduleList.modulesToIgnore);
-				configuration.averagedModuleAttributes = WeldingHelpers.convertFromToStringArray(moduleList.averagedModuleAttributes);
-				configuration.unchangedModuleAttributes = WeldingHelpers.convertFromToStringArray(moduleList.unchangedModuleAttributes);
-				configuration.breakingModuleAttributes = WeldingHelpers.convertFromToStringArray(moduleList.breakingModuleAttributes);
+				configuration.vector2CurveModules = moduleList.vector2CurveModules != null ? WeldingHelpers.convertFromToStringArray(moduleList.vector2CurveModules) : new string[0];
+				configuration.vector4CurveModules = moduleList.vector4CurveModules != null ? WeldingHelpers.convertFromToStringArray(moduleList.vector4CurveModules) : new string[0];
+				configuration.subModules = moduleList.subModules != null ? WeldingHelpers.convertFromToStringArray(moduleList.subModules) : new string[0];
+				configuration.modulesToIgnore = moduleList.modulesToIgnore != null ? WeldingHelpers.convertFromToStringArray(moduleList.modulesToIgnore) : new string[0];
+				configuration.modulesToMultiply = moduleList.modulesToMultiply != null ? WeldingHelpers.convertFromToStringArray(moduleList.modulesToMultiply) : new string[0];
+				configuration.averagedModuleAttributes = moduleList.averagedModuleAttributes != null ? WeldingHelpers.convertFromToStringArray(moduleList.averagedModuleAttributes) : new string[0];
+				configuration.unchangedModuleAttributes = moduleList.unchangedModuleAttributes != null ? WeldingHelpers.convertFromToStringArray(moduleList.unchangedModuleAttributes) : new string[0];
+				configuration.breakingModuleAttributes = moduleList.breakingModuleAttributes != null ? WeldingHelpers.convertFromToStringArray(moduleList.breakingModuleAttributes) : new string[0];
 				FileStream.Close();
 			}
 			else
@@ -111,6 +113,7 @@ namespace UbioWeldingLtd
 				configuration.vector4CurveModules = Constants.basicVector4CurveModules;
 				configuration.subModules = Constants.basicSubModules;
 				configuration.modulesToIgnore = Constants.basicModulesToIgnore;
+				configuration.modulesToMultiply = Constants.basicModulesToMultiply;
 				configuration.averagedModuleAttributes = Constants.basicAveragedModuleAttributes;
 				configuration.unchangedModuleAttributes = Constants.basicUnchangedModuleAttributes;
 				configuration.breakingModuleAttributes = Constants.basicBreakingModuleAttributes;
@@ -151,6 +154,7 @@ namespace UbioWeldingLtd
 			moduleList.vector4CurveModules = WeldingHelpers.convertStringFromToArray(configToSave.vector4CurveModules.Length > Constants.basicVector4CurveModules.Length ? configToSave.vector4CurveModules: Constants.basicVector4CurveModules);
 			moduleList.subModules = WeldingHelpers.convertStringFromToArray(configToSave.subModules.Length > Constants.basicSubModules.Length ?configToSave.subModules: Constants.basicSubModules);
 			moduleList.modulesToIgnore = WeldingHelpers.convertStringFromToArray(configToSave.modulesToIgnore.Length > Constants.basicModulesToIgnore.Length ? configToSave.modulesToIgnore : Constants.basicModulesToIgnore);
+			moduleList.modulesToMultiply = WeldingHelpers.convertStringFromToArray(configToSave.modulesToMultiply.Length > Constants.basicModulesToMultiply.Length ? configToSave.modulesToMultiply : Constants.basicModulesToMultiply);
 			moduleList.averagedModuleAttributes = WeldingHelpers.convertStringFromToArray(configToSave.averagedModuleAttributes.Length > Constants.basicAveragedModuleAttributes.Length ? configToSave.averagedModuleAttributes:Constants.basicAveragedModuleAttributes);
 			moduleList.unchangedModuleAttributes = WeldingHelpers.convertStringFromToArray(configToSave.unchangedModuleAttributes.Length > Constants.basicUnchangedModuleAttributes.Length ? configToSave.unchangedModuleAttributes: Constants.basicUnchangedModuleAttributes);
 			moduleList.breakingModuleAttributes = WeldingHelpers.convertStringFromToArray(configToSave.breakingModuleAttributes.Length > Constants.basicBreakingModuleAttributes.Length ? configToSave.breakingModuleAttributes : Constants.basicBreakingModuleAttributes);
