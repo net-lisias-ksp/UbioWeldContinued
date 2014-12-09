@@ -119,7 +119,9 @@ namespace UbioWeldingLtd
 
 		internal bool closeOnOutsideClick(Rect dropdownRect)
 		{
-			if (IsOpen && Event.current.type == EventType.mouseDown && !dropdownRect.Contains(Event.current.mousePosition))
+			if (IsOpen
+                && ((Event.current.type == EventType.mouseDown) || (Event.current.type == EventType.used))
+                && !dropdownRect.Contains(Event.current.mousePosition))
 			{
 				hide();
 				return true;
