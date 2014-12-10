@@ -9,7 +9,6 @@ namespace UbioWeldingLtd
 {
 	public class GUIDropdown
 	{
-		private static bool forceToUnShow = false; 
 		private static int useControlID = -1;
 		private bool isClickedComboButton = false;
 		private int selectedItemIndex = 0;
@@ -39,30 +38,24 @@ namespace UbioWeldingLtd
 			this.listStyle = listStyle;
 			this._darknessFactor = darkness;
 		}
- 
+
 		public int Show(Rect rect)
 		{
-			if( forceToUnShow )
-			{
-				forceToUnShow = false;
-				isClickedComboButton = false;
-			}
- 
 			bool done = false;
-			int controlID = GUIUtility.GetControlID( FocusType.Passive );	   
- 
-			switch( Event.current.GetTypeForControl(controlID) )
+			int controlID = GUIUtility.GetControlID(FocusType.Passive);
+
+			switch (Event.current.GetTypeForControl(controlID))
 			{
 				case EventType.mouseUp:
-				{
-					if( isClickedComboButton )
 					{
-						done = true;
+						if (isClickedComboButton)
+						{
+							done = true;
+						}
 					}
-				}
-				break;
-			}	   
- 
+					break;
+			}
+
 			if( GUI.Button( rect, buttonContent, buttonStyle ) )
 			{
 				if( useControlID == -1 )
@@ -70,38 +63,31 @@ namespace UbioWeldingLtd
 					useControlID = controlID;
 					isClickedComboButton = false;
 				}
- 
-				if( useControlID != controlID )
-				{
-					forceToUnShow = true;
-					useControlID = controlID;
-				}
-				isClickedComboButton = true;
+				isClickedComboButton = !isClickedComboButton;
 			}
- 
-			if( isClickedComboButton )
+
+			if (isClickedComboButton)
 			{
-				Rect listRect = new Rect( rect.x, rect.y + listStyle.CalcHeight(listContent[0], 1.0f), rect.width, listStyle.CalcHeight(listContent[0], 1.0f) * listContent.Length );
-
-				for (int i = 0; i < _darknessFactor; i++)
+				Rect listRect = new Rect(rect.x, rect.y + listStyle.CalcHeight(listContent[0], 1.0f), rect.width, listStyle.CalcHeight(listContent[0], 1.0f) * listContent.Length);
+				if (!closeOnOutsideClick(listRect))
 				{
-					GUI.Box(listRect, "", boxStyle);
+					for (int i = 0; i < _darknessFactor; i++)
+					{
+						GUI.Box(listRect, "", boxStyle);
+					}
+					int newSelectedItemIndex = GUI.SelectionGrid(listRect, selectedItemIndex, listContent, 1, listStyle);
+					if (newSelectedItemIndex != selectedItemIndex)
+					{
+						selectedItemIndex = newSelectedItemIndex;
+						buttonContent = listContent[selectedItemIndex];
+					}
 				}
-				int newSelectedItemIndex = GUI.SelectionGrid( listRect, selectedItemIndex, listContent, 1, listStyle );
-				if( newSelectedItemIndex != selectedItemIndex )
+
+				if (done)
 				{
-					selectedItemIndex = newSelectedItemIndex;
-					buttonContent = listContent[selectedItemIndex];
+					isClickedComboButton = false;
 				}
 			}
-
-			if (done)
-			{
-				isClickedComboButton = false;
-			}
-
-			closeOnOutsideClick(rect);
-
 			return selectedItemIndex;
 		}
 
@@ -118,15 +104,12 @@ namespace UbioWeldingLtd
 
 		public void hide()
 		{
-			forceToUnShow = true;
 			isClickedComboButton = false;
 		}
 
 		internal bool closeOnOutsideClick(Rect dropdownRect)
 		{
-			if (IsOpen
-                && ((Event.current.type == EventType.mouseDown) || (Event.current.type == EventType.used))
-                && !dropdownRect.Contains(Event.current.mousePosition))
+			if (IsOpen && (Event.current.type == EventType.mouseDown) && !dropdownRect.Contains(Event.current.mousePosition))
 			{
 				hide();
 				return true;

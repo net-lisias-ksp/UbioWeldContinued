@@ -535,11 +535,11 @@ namespace UbioWeldingLtd
 							posH += height + margin;
 							_welder.Name = GUI.TextField(new Rect(_guiInfoWindowColoumns[i].x, posH, columnWidth, height), _welder.Name, 100);
 							posH += height + margin;
-							GUI.Label(new Rect(0, posH, columnWidth, height), "Title:");
+							GUI.Label(new Rect(_guiInfoWindowColoumns[i].x, posH, columnWidth, height), "Title:");
 							posH += height + margin;
 							_welder.Title = GUI.TextField(new Rect(_guiInfoWindowColoumns[i].x, posH, columnWidth, height), _welder.Title, 100);
 							posH += height + margin;
-							GUI.Label(new Rect(0, posH, columnWidth, height), "Description:");
+							GUI.Label(new Rect(_guiInfoWindowColoumns[i].x, posH, columnWidth, height), "Description:");
 							posH += height + margin;
 							_welder.Description = GUI.TextArea(new Rect(_guiInfoWindowColoumns[i].x, posH, columnWidth, 7 * height + 6 * margin), _welder.Description, 600);
 						}
