@@ -39,6 +39,9 @@ namespace UbioWeldingLtd
 		private Vector2 _scrollMod;
 		private Vector2 _settingsScrollPosition = Vector2.zero;
 
+		private AdvancedGUITextArea _textAreaDescription = new AdvancedGUITextArea();
+		private AdvancedGUITextField _textFieldTitle = new AdvancedGUITextField();
+		private AdvancedGUITextField _textFieldName = new AdvancedGUITextField();
 		private WeldingConfiguration _config;
 		private bool _guiVisible = false;
 		private bool _mainWindowsSettingsMode = false;
@@ -533,14 +536,17 @@ namespace UbioWeldingLtd
 						{
 							GUI.Label(new Rect(_guiInfoWindowColoumns[i].x, posH, columnWidth, height), "Name:");
 							posH += height + margin;
+							//_welder.Name = _textFieldTitle.DrawAdvancedGUITextField(new Rect(_guiInfoWindowColoumns[i].x, posH, columnWidth, height), _welder.Name, 100, (int)_state);
 							_welder.Name = GUI.TextField(new Rect(_guiInfoWindowColoumns[i].x, posH, columnWidth, height), _welder.Name, 100);
 							posH += height + margin;
 							GUI.Label(new Rect(_guiInfoWindowColoumns[i].x, posH, columnWidth, height), "Title:");
 							posH += height + margin;
+							//_welder.Title = _textFieldTitle.DrawAdvancedGUITextField(new Rect(_guiInfoWindowColoumns[i].x, posH, columnWidth, height), _welder.Title, 100, (int)_state);
 							_welder.Title = GUI.TextField(new Rect(_guiInfoWindowColoumns[i].x, posH, columnWidth, height), _welder.Title, 100);
 							posH += height + margin;
 							GUI.Label(new Rect(_guiInfoWindowColoumns[i].x, posH, columnWidth, height), "Description:");
 							posH += height + margin;
+							//_welder.Description = _textAreaDescription.DrawAdvancedGUITextArea(new Rect(_guiInfoWindowColoumns[i].x, posH, columnWidth, 7 * height + 6 * margin), _welder.Description, 600, (int)_state);
 							_welder.Description = GUI.TextArea(new Rect(_guiInfoWindowColoumns[i].x, posH, columnWidth, 7 * height + 6 * margin), _welder.Description, 600);
 						}
 						break;

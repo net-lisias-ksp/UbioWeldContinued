@@ -9,7 +9,7 @@ namespace UbioWeldingLtd
 {
 	public class GUIDropdown
 	{
-		private static int useControlID = -1;
+		private static int controlID = -1;
 		private bool isClickedComboButton = false;
 		private int selectedItemIndex = 0;
  
@@ -42,7 +42,7 @@ namespace UbioWeldingLtd
 		public int Show(Rect rect)
 		{
 			bool done = false;
-			int controlID = GUIUtility.GetControlID(FocusType.Passive);
+			int activeID = GUIUtility.GetControlID(FocusType.Passive);
 
 			switch (Event.current.GetTypeForControl(controlID))
 			{
@@ -56,14 +56,15 @@ namespace UbioWeldingLtd
 					break;
 			}
 
-			if( GUI.Button( rect, buttonContent, buttonStyle ) )
+			if( GUI.Button( rect, buttonContent, buttonStyle ))
 			{
-				if( useControlID == -1 )
+				if( controlID == -1 )
 				{
-					useControlID = controlID;
+					controlID = activeID;
 					isClickedComboButton = false;
 				}
 				isClickedComboButton = !isClickedComboButton;
+				GUI.FocusControl(null);
 			}
 
 			if (isClickedComboButton)

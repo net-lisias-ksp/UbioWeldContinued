@@ -50,6 +50,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AdvancedGUITextArea.cs" />
+    <Compile Include="AdvancedGUITextField.cs" />
     <Compile Include="OldWeldingPluginConfig.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="EditorToolbar.cs" />
