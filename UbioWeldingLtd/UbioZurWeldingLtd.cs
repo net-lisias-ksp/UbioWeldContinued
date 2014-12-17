@@ -116,7 +116,7 @@ namespace UbioWeldingLtd
 		{
 			if (!EditorLogic.softLock)
 			{
-				if (EditorLogic.startPod != null)
+				if (EditorLogic.RootPart != null)
 				{
 					if (_state != DisplayState.mainWindow)
 					{
@@ -389,13 +389,13 @@ namespace UbioWeldingLtd
 				FileManager.saveConfig(_config);
 				if (!EditorLogic.softLock)
 				{
-					if (EditorLogic.fetch.PartSelected != null)
+					if (EditorLogic.SelectedPart != null)
 					{
-						weldPart(EditorLogic.fetch.PartSelected);
+						weldPart(EditorLogic.SelectedPart);
 					}
-					else if (EditorLogic.startPod != null)
+					else if (EditorLogic.RootPart != null)
 					{
-						weldPart(EditorLogic.startPod);
+						weldPart(EditorLogic.RootPart);
 					}
 				}
 			}
@@ -709,12 +709,11 @@ namespace UbioWeldingLtd
 		{
 			if (_config.clearEditor)
 			{
-				if (EditorLogic.SelectedPart == null)
+				if (EditorLogic.SelectedPart != null)
 				{
-					EditorLogic.fetch.PartSelected = EditorLogic.startPod;
+					EditorLogic.fetch.DestroySelectedPart();
+					EditorPartList.Instance.Refresh();
 				}
-				EditorLogic.fetch.DestroySelectedPart();
-				EditorPartList.Instance.Refresh();
 			}
 			EditorLogic.fetch.Unlock(Constants.settingWeldingLock);
 		}
