@@ -116,7 +116,7 @@ namespace UbioWeldingLtd
 		/// </summary>
 		public void stockToolbarButtonUsed()
 		{
-			if (!EditorLockManager.isEditorSoftlocked())
+			if (!EditorLockManager.isEditorLocked())
 			{
 				if (EditorLogic.RootPart != null)
 				{
@@ -237,7 +237,8 @@ namespace UbioWeldingLtd
                         _editorOverwriteDial = GUILayout.Window((int)_state, _editorOverwriteDial, OnOverwriteDisplay, Constants.weldManufacturer);
 						break;
                     case DisplayState.mainWindow :
-                        _editorMainWindow = GUI.Window((int)_state, _editorMainWindow, OnMainWindow, Constants.weldManufacturer);
+						PreventClickThrough(_editorMainWindow);
+						_editorMainWindow = GUI.Window((int)_state, _editorMainWindow, OnMainWindow, Constants.weldManufacturer);
 						PreventClickThrough(_editorMainWindow);
                         break;
 				}
@@ -248,7 +249,7 @@ namespace UbioWeldingLtd
 		private void weldPart(Part partToWeld)
 		{
 			//Lock editor
-			EditorLockManager.lockEditor(true, true, true, Constants.settingWeldingLock);
+			EditorLockManager.lockEditor(Constants.settingWeldingLock);
 
 			//process the welding
 #if (DEBUG)
@@ -390,7 +391,7 @@ namespace UbioWeldingLtd
 			{
 				FileManager.saveConfig(_config);
 
-				if (!EditorLockManager.isEditorSoftlocked())
+				if (!EditorLockManager.isEditorLocked())
 				{
 					if (EditorLogic.SelectedPart != null)
 					{
@@ -710,6 +711,7 @@ namespace UbioWeldingLtd
 		 */
 		private void ClearEditor()
 		{
+			Debug.Log(string.Format("{0}{1}{2}", Constants.logPrefix, _config.clearEditor, EditorLogic.SelectedPart));
 			if (_config.clearEditor)
 			{
 				if (EditorLogic.SelectedPart != null)
@@ -726,13 +728,11 @@ namespace UbioWeldingLtd
 		 */
 		private void PreventClickThrough(Rect rect)
 		{
-			Vector2 pointerPos = Input.mousePosition;
-
-			pointerPos.y = Screen.height - pointerPos.y;
+			Vector2 pointerPos = Mouse.screenPos;
 			//            if (rect.Contains(pointerPos) && !EditorLogic.softLock)
 			if (rect.Contains(pointerPos))
 			{
-				EditorLockManager.lockEditor(false, false, false, Constants.settingPreventClickThroughLock);
+				EditorLockManager.lockEditor(Constants.settingPreventClickThroughLock);
 			}
 			//            else if (!rect.Contains(pointerPos) && EditorLogic.softLock)
 			else if (!rect.Contains(pointerPos))
@@ -741,4 +741,5 @@ namespace UbioWeldingLtd
 			}
 		}
 	} //public class UbioZurWeldingLtd : MonoBehaviour
+
 } //namespace UbioWeldingLtd

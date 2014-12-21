@@ -8,35 +8,11 @@ namespace UbioWeldingLtd
 
 		public class EditorLock
 		{
-			private bool _save;
-			private bool _exit;
-			private bool _load;
 			private string _key;
 
-			public EditorLock(bool save, bool exit, bool load, string key)
+			public EditorLock(string key)
 			{
-				_save = save;
-				_exit = exit;
-				_load = load;
 				_key = key;
-			}
-
-			public bool LockSave
-			{
-				get { return _save; }
-				set { _save = value; }
-			}
-
-			public bool lockExit
-			{
-				get { return _exit; }
-				set { _exit = value; }
-			}
-
-			public bool lockLoad
-			{
-				get { return _load; }
-				set { _load = value; }
 			}
 
 			public string lockKey
@@ -56,12 +32,12 @@ namespace UbioWeldingLtd
 		/// <param name="exitButton"></param>
 		/// <param name="saveButton"></param>
 		/// <param name="lockKey"></param>
-		public static void lockEditor(bool loadButton, bool exitButton, bool saveButton, string lockKey)
+		public static void lockEditor(string lockKey)
 		{
 			if (!isLockKeyActive(lockKey))
 			{
-				EditorLogic.fetch.Lock(loadButton, exitButton, saveButton, lockKey);
-				_activeLocks.Add(new EditorLock(loadButton, exitButton, loadButton, lockKey));
+			InputLockManager.SetControlLock(ControlTypes.EDITOR_MODE_SWITCH | ControlTypes.EDITOR_LOCK | ControlTypes.CAMERACONTROLS | ControlTypes.EDITOR_SOFT_LOCK, lockKey);
+			_activeLocks.Add(new EditorLock(lockKey));
 			}
 		}
 
@@ -74,7 +50,7 @@ namespace UbioWeldingLtd
 		{
 			if (isLockKeyActive(lockKey))
 			{
-				EditorLogic.fetch.Unlock(lockKey);
+				InputLockManager.RemoveControlLock(lockKey);
 
 				for (int i = 0; i < _activeLocks.Count; i++)
 				{
@@ -132,23 +108,6 @@ namespace UbioWeldingLtd
 
 
 		/// <summary>
-		/// provides the information if the main buttons of the editor are locked
-		/// </summary>
-		/// <returns></returns>
-		public static bool isEditorSoftlocked()
-		{
-			foreach (EditorLock l in _activeLocks)
-			{
-				if (l.LockSave && l.lockExit && l.lockLoad)
-				{
-					return true;
-				}
-			}
-			return false;
-		}
-
-
-		/// <summary>
 		/// resets the editorlocks to a clean state
 		/// </summary>
 		public static void resetEditorLocks()
@@ -158,3 +117,4 @@ namespace UbioWeldingLtd
 
 	}
 }
+
