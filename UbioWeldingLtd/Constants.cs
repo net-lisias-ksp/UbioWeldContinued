@@ -56,6 +56,7 @@ namespace UbioWeldingLtd
 		public const string guiDialSaved		= "New part saved and shipped!";
 		public const string guiDBReloading1		= "Database reloading";
 		public const string guiDBReloading2		= "Please be patient!";
+		public const string guiScreenMessagePartSelection = "Select partbranch for welding";
 
 		//Settings
 		public const string settingWeldingLock = "UBILOCK9213";
@@ -280,9 +281,10 @@ namespace UbioWeldingLtd
 		public static GUIContent guiDontProcessMasslessPartsGUIContent = new GUIContent("Don't process massless parts", "Don't take into account mass of massless parts (with PhysicsSignificance = 1)");
 		public static GUIContent guiUseNamedCfgFileGUIContent = new GUIContent("Use named part's file", "Use for welded part name of file like \"BigPod.cfg\", not \"part.cfg\"");
 		public static GUIContent guiSaveSettingsButtonGUIContent = new GUIContent("Save settings", "Save settings to config file");
-		public static GUIContent guiWeldItButtonGUIContent = new GUIContent("Weld it", "Press \"Weld it\" button to weld whole craft or selected part of it");
+		public static GUIContent guiWeldItButtonGUIContent = new GUIContent("Weld it", "Press \"Weld it\" button to weld whole craft or selected part of it. WARNING Editor will be reset after welding");
 		public static GUIContent guiClearEditorGUIContent = new GUIContent("Clear editor after welding", "Clear editor after welding");
 		public static GUIContent guiAdvancedDebugGUIContent = new GUIContent("Advanced debug", "SPAM KSP.log with additional debug info");
+		public static GUIContent guiSelectPartGUIContent = new GUIContent("Select partbranch", "Select the partbranch that you want to weld into a new part");
 
 		public static GUIContent[] StrengthParamsCalcMethodsGUIContent = 
 		{

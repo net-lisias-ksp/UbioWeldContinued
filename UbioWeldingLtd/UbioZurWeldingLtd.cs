@@ -18,7 +18,8 @@ namespace UbioWeldingLtd
 			infoWindow,
 			savedWindow,
 			overwriteDial,
-            mainWindow
+            mainWindow,
+			partSelection
 		}
 
 		public static UbioZurWeldingLtd instance { get; private set; }
@@ -39,6 +40,12 @@ namespace UbioWeldingLtd
 		private Vector2 _scrollRes;
 		private Vector2 _scrollMod;
 		private Vector2 _settingsScrollPosition = Vector2.zero;
+		private Part _currentSelectedPartbranch;
+		private Part _previousSelectedPartbranch;
+		private Part _selectedPartbranch;
+		private RaycastHit _hit;
+		private Ray _ray;
+		private EditorFacility _editorFacility;
 
 		private AdvancedGUITextArea _textAreaDescription = new AdvancedGUITextArea();
 		private AdvancedGUITextField _textFieldTitle = new AdvancedGUITextField();
@@ -91,7 +98,6 @@ namespace UbioWeldingLtd
 		public void Awake()
 		{
 			instance = this;
-			EditorLockManager.resetEditorLocks();
 			Debug.Log(string.Format("{0}- {1} => Awake", Constants.logPrefix, instance.GetType()));
             Debug.Log(string.Format("{0} Platform is {1}", Constants.logPrefix, Application.platform));
 
@@ -197,13 +203,76 @@ namespace UbioWeldingLtd
 			}
 		}
 
+
 		/*
 		 * Called once everything in scene is loaded
 		 */
 		public void Start()
 		{
 			initGUI();
+			EditorLockManager.resetEditorLocks();
+			_editorFacility = EditorDriver.editorFacility;
 		}
+
+
+		/// <summary>
+		/// Unity default function for stuff that happens every frame
+		/// </summary>
+		public void Update()
+		{
+			if (_state == DisplayState.partSelection)
+			{
+				_ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+				if (Physics.Raycast(_ray, out _hit))
+				{
+					_currentSelectedPartbranch = _hit.transform.gameObject.GetComponent<Part>() as Part;
+					if (_previousSelectedPartbranch != null && _previousSelectedPartbranch != _currentSelectedPartbranch)
+					{
+						disablePartHighlight(_previousSelectedPartbranch);
+					}
+					enablePartHighlight(_currentSelectedPartbranch);
+					_previousSelectedPartbranch = _currentSelectedPartbranch;
+					if (Input.GetKeyUp(KeyCode.Mouse0) && (Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)))
+					{
+						_selectedPartbranch = _currentSelectedPartbranch;
+						_selectedPartbranch.SetHighlightType(Part.HighlightType.AlwaysOn);
+						_currentSelectedPartbranch = null;
+						_previousSelectedPartbranch = null;
+						_state = DisplayState.mainWindow;
+					}
+				}
+			}
+			else if (_state != DisplayState.none)
+			{
+				if (_selectedPartbranch != null)
+				{
+					enablePartHighlight(_selectedPartbranch);
+				}
+			}
+		}
+
+		/// <summary>
+		/// highlights the part at mouseover
+		/// </summary>
+		/// <param name="part"></param>
+		private void enablePartHighlight(Part part)
+		{
+			if (part != null)
+			{
+				part.SetHighlightType(Part.HighlightType.OnMouseOver);
+				part.SetHighlightColor(Color.magenta);
+				part.SetHighlight(true, true);
+			}
+		}
+
+		private void disablePartHighlight(Part part)
+		{
+			if (part != null)
+			{
+				part.SetHighlightDefault();
+			}
+		}
+
 
 		/// <summary>
 		/// Public Eventcall at the GuiDraw
@@ -237,10 +306,12 @@ namespace UbioWeldingLtd
                         _editorOverwriteDial = GUILayout.Window((int)_state, _editorOverwriteDial, OnOverwriteDisplay, Constants.weldManufacturer);
 						break;
                     case DisplayState.mainWindow :
-						PreventClickThrough(_editorMainWindow);
 						_editorMainWindow = GUI.Window((int)_state, _editorMainWindow, OnMainWindow, Constants.weldManufacturer);
 						PreventClickThrough(_editorMainWindow);
                         break;
+					case DisplayState.partSelection:
+						ScreenMessages.PostScreenMessage(Constants.guiScreenMessagePartSelection, Time.deltaTime, ScreenMessageStyle.UPPER_CENTER);
+						break;
 				}
 			} //if (_guiVisible)
 		} //private void OnDraw()
@@ -338,7 +409,7 @@ namespace UbioWeldingLtd
             GUILayout.EndVertical();
             GUILayout.BeginVertical();
 
-			if (GUILayout.Button(new GUIContent("Settings", "Show/hide settings"), GUILayout.MaxWidth(100)))
+			if (GUILayout.Button(new GUIContent("Settings", "Show/hide settings"), GUILayout.MaxWidth(160)))
 			{
 				_mainWindowsSettingsMode = !_mainWindowsSettingsMode;
 			}
@@ -376,7 +447,7 @@ namespace UbioWeldingLtd
 				GUILayout.EndScrollView();
 
 //				GUILayout.Space(10.0f);
-				if (GUILayout.Button(Constants.guiSaveSettingsButtonGUIContent, GUILayout.MaxWidth(100)))
+				if (GUILayout.Button(Constants.guiSaveSettingsButtonGUIContent, GUILayout.MaxWidth(160)))
 				{
 					FileManager.saveConfig(_config);
 				}
@@ -386,21 +457,25 @@ namespace UbioWeldingLtd
 				_editorMainWindow.height = Constants.guiMainWindowH;
 				GUILayout.Space(20.0f);
 			}
+
+			//SelectPArtbranch button
+			if (GUILayout.RepeatButton(Constants.guiSelectPartGUIContent, GUILayout.MaxWidth(160)))
+			{
+				_state = DisplayState.partSelection;
+			}
+
 			//Weld button
-			if (GUILayout.Button(Constants.guiWeldItButtonGUIContent, GUILayout.MaxWidth(100)))
+			if (GUILayout.Button(Constants.guiWeldItButtonGUIContent, GUILayout.MaxWidth(160)))
 			{
 				FileManager.saveConfig(_config);
 
-				if (!EditorLockManager.isEditorLocked())
+				if (EditorLockManager.isEditorLocked())
 				{
-					if (EditorLogic.SelectedPart != null)
+					if (_selectedPartbranch == null)
 					{
-						weldPart(EditorLogic.SelectedPart);
+						_selectedPartbranch = EditorLogic.RootPart;
 					}
-					else if (EditorLogic.RootPart != null)
-					{
-						weldPart(EditorLogic.RootPart);
-					}
+					weldPart(_selectedPartbranch);
 				}
 			}
 			//Hints area
@@ -492,8 +567,10 @@ namespace UbioWeldingLtd
 			GUILayout.BeginVertical();
 			if (DatabaseHandler.isReloading)
 			{
-				GUILayout.Label(Constants.guiDBReloading1);
-				GUILayout.Label(Constants.guiDBReloading2);
+				ScreenMessages.PostScreenMessage(Constants.guiDBReloading1, Time.deltaTime, ScreenMessageStyle.UPPER_CENTER);
+				ScreenMessages.PostScreenMessage(Constants.guiDBReloading2, Time.deltaTime, ScreenMessageStyle.UPPER_CENTER);
+				//GUILayout.Label(Constants.guiDBReloading1);
+				//GUILayout.Label(Constants.guiDBReloading2);
 				if (!MMPathLoaderIsReady)
 				{
 					GUILayout.Label(String.Format("ModuleManager progress: {0:P0}", (float)DatabaseHandler.DynaInvokeMMPatchLoaderMethod("ProgressFraction")));
@@ -506,8 +583,8 @@ namespace UbioWeldingLtd
 				GUILayout.FlexibleSpace();
 				if (GUILayout.Button(Constants.guiOK))
 				{
-					ClearEditor();
 					_state = DisplayState.none;
+					ClearEditor();
 				}
 			}
 			GUILayout.EndVertical();
@@ -665,8 +742,8 @@ namespace UbioWeldingLtd
 			}
 			if (GUI.Button(new Rect(_guiInfoWindowColoumns[2].x, height + columnHeight + margin, columnWidth * 0.5f, height), Constants.guiCancel))
 			{
-				ClearEditor();
 				_state = DisplayState.none;
+				ClearEditor();
 			}
 			GUI.DragWindow();
 		}
@@ -697,7 +774,6 @@ namespace UbioWeldingLtd
 #endif
 
 			_welder.CreateFullConfigNode();
-
 			_welder.FullConfigNode.Save(filepath);
 
 			if (_config.dataBaseAutoReload)
@@ -711,16 +787,18 @@ namespace UbioWeldingLtd
 		 */
 		private void ClearEditor()
 		{
-			Debug.Log(string.Format("{0}{1}{2}", Constants.logPrefix, _config.clearEditor, EditorLogic.SelectedPart));
 			if (_config.clearEditor)
 			{
-				if (EditorLogic.SelectedPart != null)
+				EditorLockManager.resetEditorLocks();
+				EditorPartList.Instance.Refresh();
+				if (_selectedPartbranch != null)
 				{
-					EditorLogic.fetch.DestroySelectedPart();
-					EditorPartList.Instance.Refresh();
+					Debug.Log(string.Format("{0}{1} {2}", Constants.logPrefix, _config.clearEditor, _selectedPartbranch));
+					_selectedPartbranch = null;
 				}
+				EditorDriver.StartupBehaviour = EditorDriver.StartupBehaviours.START_CLEAN;
+				EditorDriver.StartEditor(_editorFacility);
 			}
-			EditorLockManager.unlockEditor(Constants.settingWeldingLock);
 		}
 
 		/*

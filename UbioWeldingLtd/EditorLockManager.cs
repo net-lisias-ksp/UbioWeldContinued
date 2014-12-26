@@ -51,7 +51,6 @@ namespace UbioWeldingLtd
 			if (isLockKeyActive(lockKey))
 			{
 				InputLockManager.RemoveControlLock(lockKey);
-
 				for (int i = 0; i < _activeLocks.Count; i++)
 				{
 					if (_activeLocks[i].lockKey == lockKey)
@@ -112,6 +111,10 @@ namespace UbioWeldingLtd
 		/// </summary>
 		public static void resetEditorLocks()
 		{
+			foreach (EditorLock editorLock in _activeLocks)
+			{
+				InputLockManager.RemoveControlLock(editorLock.lockKey);
+			}
 			_activeLocks.Clear();
 		}
 
