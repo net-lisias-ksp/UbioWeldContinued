@@ -793,11 +793,12 @@ namespace UbioWeldingLtd
 				EditorPartList.Instance.Refresh();
 				if (_selectedPartbranch != null)
 				{
-					Debug.Log(string.Format("{0}{1} {2}", Constants.logPrefix, _config.clearEditor, _selectedPartbranch));
+					disablePartHighlight(_selectedPartbranch);
+					EditorLogic.fetch.OnSubassemblyDialogDismiss(EditorLogic.RootPart);
+					Debug.Log(string.Format("{0}{1} {2} - {3}", Constants.logPrefix, _config.clearEditor, _selectedPartbranch, EditorLogic.SelectedPart));
+					EditorLogic.DeletePart(EditorLogic.RootPart);
 					_selectedPartbranch = null;
 				}
-				EditorDriver.StartupBehaviour = EditorDriver.StartupBehaviours.START_CLEAN;
-				EditorDriver.StartEditor(_editorFacility);
 			}
 		}
 
