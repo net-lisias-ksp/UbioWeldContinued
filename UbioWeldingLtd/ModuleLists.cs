@@ -53,6 +53,8 @@ namespace UbioWeldingLtd
 		private ModuleAttribute[] _vector4CurveModules;
 		private ModuleAttribute[] _subModules;
 		private ModuleAttribute[] _modulesToIgnore;
+		private ModuleAttribute[] _modulesToMultiply;
+		private ModuleAttribute[] _maximizedModuleAttributes;
 		private ModuleAttribute[] _averagedModuleAttributes;
 		private ModuleAttribute[] _unchangedModuleAttributes;
 		private ModuleAttribute[] _breakingModuleAttributes;
@@ -83,6 +85,20 @@ namespace UbioWeldingLtd
 		{
 			get { return _modulesToIgnore; }
 			set { _modulesToIgnore = value; }
+		}
+
+		[XmlArrayAttribute("ModulesToMultiply")]
+		public ModuleAttribute[] modulesToMultiply
+		{
+			get { return _modulesToMultiply; }
+			set { _modulesToMultiply = value; }
+		}
+
+		[XmlArrayAttribute("MaximizedModuleAttributes")]
+		public ModuleAttribute[] maximizedModuleAttributes
+		{
+			get { return _maximizedModuleAttributes; }
+			set { _maximizedModuleAttributes = value; }
 		}
 
 		[XmlArrayAttribute("AveragedModuleAttributes")]
