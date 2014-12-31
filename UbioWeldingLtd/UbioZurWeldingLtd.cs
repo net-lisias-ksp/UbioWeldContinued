@@ -133,6 +133,8 @@ namespace UbioWeldingLtd
 					else
 					{
 						_state = DisplayState.none;
+						disablePartHighlight(_selectedPartbranch);
+						_selectedPartbranch = null;
 					}
 				}
 			}
@@ -567,10 +569,9 @@ namespace UbioWeldingLtd
 			GUILayout.BeginVertical();
 			if (DatabaseHandler.isReloading)
 			{
-				ScreenMessages.PostScreenMessage(Constants.guiDBReloading1, Time.deltaTime, ScreenMessageStyle.UPPER_CENTER);
-				ScreenMessages.PostScreenMessage(Constants.guiDBReloading2, Time.deltaTime, ScreenMessageStyle.UPPER_CENTER);
-				//GUILayout.Label(Constants.guiDBReloading1);
-				//GUILayout.Label(Constants.guiDBReloading2);
+				ScreenMessages.PostScreenMessage(string.Concat(Constants.guiDBReloading1, "\n", Constants.guiDBReloading2), Time.deltaTime, ScreenMessageStyle.UPPER_CENTER);
+				GUILayout.Label(Constants.guiDBReloading1);
+				GUILayout.Label(Constants.guiDBReloading2);
 				if (!MMPathLoaderIsReady)
 				{
 					GUILayout.Label(String.Format("ModuleManager progress: {0:P0}", (float)DatabaseHandler.DynaInvokeMMPatchLoaderMethod("ProgressFraction")));

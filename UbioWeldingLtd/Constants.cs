@@ -56,7 +56,7 @@ namespace UbioWeldingLtd
 		public const string guiDialSaved		= "New part saved and shipped!";
 		public const string guiDBReloading1		= "Database reloading";
 		public const string guiDBReloading2		= "Please be patient!";
-		public const string guiScreenMessagePartSelection = "Select partbranch for welding";
+		public const string guiScreenMessagePartSelection = "Select partbranch for welding with ctrl + mouseclick";
 
 		//Settings
 		public const string settingWeldingLock = "UBILOCK9213";
