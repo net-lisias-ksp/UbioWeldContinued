@@ -49,6 +49,7 @@ namespace UbioWeldingLtd
 		private string[] _subModules;
 		private string[] _modulesToIgnore;
 		private string[] _modulesToMultiply;
+		private string[] _maximizedModuleAttributes;
 		private string[] _averagedModuleAttributes;
 		private string[] _unchangedModuleAttributes;
 		private string[] _breakingModuleAttributes;
@@ -159,6 +160,12 @@ namespace UbioWeldingLtd
 		{
 			get { return _modulesToMultiply; }
 			set { _modulesToMultiply = value; }
+		}
+
+		public string[] maximizedModuleAttributes
+		{
+			get { return _maximizedModuleAttributes; }
+			set { _maximizedModuleAttributes = value; }
 		}
 
 		public string[] averagedModuleAttributes

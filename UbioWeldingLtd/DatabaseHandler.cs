@@ -96,7 +96,7 @@ namespace UbioWeldingLtd
 		/// remember that this is NOT bound to a specific version of ModuleManager
 		/// </summary>
 		/// <returns></returns>
-		private static bool isModuleManagerInstalled
+		public static bool isModuleManagerInstalled
 		{
 			get { return (_MMPatchLoader != null); }
 		}
