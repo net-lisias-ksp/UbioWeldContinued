@@ -139,14 +139,14 @@ All images were made with great Kronal Vessel Viewer mod.
 
 [IMGUR]WOJ5h[/IMGUR]
 
-[URL="http://forum.kerbalspaceprogram.com/threads/38577?p=1002144&viewfull=1#post1002144"][B]malkuth[/B]'s updates for KSP 0.23[/URL]
+[B][SIZE=4]Other stuff[/SIZE][/B]
 
-[URL="https://github.com/girka2k/unofficailUbioWeld"]Sources[/URL]
+[SIZE=3][URL="https://github.com/girka2k/unofficailUbioWeld"]Sources[/URL][/SIZE]
 
 The [URL="http://forum.kerbalspaceprogram.com/threads/38577?p=1574784&viewfull=1#post1574784"]latest version for 0.25[/URL]
 The [URL="http://forum.kerbalspaceprogram.com/threads/38577?p=1642285&viewfull=1#post1642285"]latest version for 0.24.2[/URL]
 
-[B]Legal stuff:[/B]
+[B][SIZE=4]Legal stuff[/SIZE][/B]
 [IMG]https://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png[/IMG]
 Code and artworks are licensed under the Attribution-NonCommercial-ShareAlike 3.0 (CC BY-NC-SA 3.0)
 creative commons license. See [URL="http://creativecommons.org/licenses/by-nc-sa/3.0/legalcode"]http://creativecommons.org/licenses/by-nc-sa/3.0/legalcode[/URL]
