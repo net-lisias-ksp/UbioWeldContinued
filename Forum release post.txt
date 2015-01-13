@@ -1,16 +1,26 @@
 Because [B]UbioZur[/B] has kindly allowed to update his work, [B]Alewx [/B]and I have released the next update for this great mod.
 
-[URL="https://github.com/girka2k/unofficailUbioWeld/releases/download/Unofficial-v.05/UbioWeldingLtd-0.25.0-Unofficial-v.05.zip"][SIZE=5][B]Download[/B][/SIZE][/URL]
+[URL="https://github.com/Alewx/unofficailUbioWeld/releases/download/Version-2.1-Unofficial/UbioWeldingLtd_2.1-0.90-Unofficial.rar"][SIZE=5][B]Download[/B][/SIZE][/URL]
 
 [B][I]Latest changes:[/B]
 [LIST]
-[*]	[U]Fixed wrong rescaling of some models in KSP 0.25[/U]
-[*]	Improved database reloading with ModuleManager installed (still incompatible with LOT of other mods)
-[*]	Updated <ModulesToIgnore> list
-[*]	Dropped compatibility with KSP 0.24.2
+[*]	[B]Compatibility with KSP 0.90[/B]
+[*]	Added Partselection
+[*]	Fixed problems with Config laoding
+[*]	Added <MaximizedModuleAttributes> for values where only the highest is wanted like the new SAS Level
+[*]	Added <ModulesToMultiply> for Modules that shall be added mutliple times
+[*]	Fixed problems with Modulemerging where sometimes modules would not be added correctly
 [/LIST][/I]
 [Spoiler=Full history of changes]
-2014-12-03 (ver.05)
+2014-12-31 (ver2.1.0)
+[LIST]
+[*]	Compatibility with KSP 0.90
+[*]	Added Partselection
+[*]	Fixed problems with Config laoding
+[*]	Added <MaximizedModuleAttributes> for values where only the highest is wanted like the new SAS Level
+[*]	Added <ModulesToMultiply> for Modules that shall be added mutliple times
+[*]	Fixed problems with Modulemerging where sometimes modules would not be added correctly
+[/LIST]2014-12-03 (ver.05)
 [LIST]
 [*]	Fixed wrong rescaling of some models in KSP 0.25
 [*]	Improved database reloading with ModuleManager installed
@@ -83,8 +93,10 @@ Because [B]UbioZur[/B] has kindly allowed to update his work, [B]Alewx [/B]and I
 
 [URL="https://github.com/girka2k/unofficailUbioWeld"]Sources[/URL]
 
-Please note that this version is [B]incompatible with KSP 0.24.2![/B]
-The [URL="http://forum.kerbalspaceprogram.com/threads/38577-0-22-UbioZur-Welding-Ltd-2-0-Dev-STOPPED?p=1516107&viewfull=1#post1516107"]latest version for 0.24.2[/URL]
+Please note that this version is [B]incompatible with KSP 0.25![/B]
+
+The [URL="http://forum.kerbalspaceprogram.com/threads/38577-0-22-UbioZur-Welding-Ltd-2-0-Dev-STOPPED?p=1574784&viewfull=1#post1574784"]latest version for 0.25[/URL]
+The [URL="http://forum.kerbalspaceprogram.com/threads/38577-0-22-UbioZur-Welding-Ltd-2-0-Dev-STOPPED?p=1642285&viewfull=1#post1642285"]latest version for 0.24.2[/URL]
 
 [B]Legal stuff:[/B]
 [I]This work based on [B]Malkuth[/B]'s [URL="http://forum.kerbalspaceprogram.com/threads/38577-0-22-UbioZur-Welding-Ltd-2-0-Playtest-5-Now-In-Game-Tool?p=1002144&viewfull=1#post1002144"]update [/URL]for [B]UbioZur[/B]'s original code.
