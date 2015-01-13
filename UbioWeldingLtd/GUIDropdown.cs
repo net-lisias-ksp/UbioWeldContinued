@@ -9,8 +9,7 @@ namespace UbioWeldingLtd
 {
 	public class GUIDropdown
 	{
-		private static bool forceToUnShow = false; 
-		private static int useControlID = -1;
+		private static int controlID = -1;
 		private bool isClickedComboButton = false;
 		private int selectedItemIndex = 0;
  
@@ -19,6 +18,7 @@ namespace UbioWeldingLtd
 		private string buttonStyle;
 		private string boxStyle;
 		private GUIStyle listStyle;
+		private int _darknessFactor;
  
 		public GUIDropdown( GUIContent buttonContent, GUIContent[] listContent, GUIStyle listStyle )
 		{
@@ -29,74 +29,66 @@ namespace UbioWeldingLtd
 			this.listStyle = listStyle;
 		}
 
-		public GUIDropdown(GUIContent buttonContent, GUIContent[] listContent, string buttonStyle, string boxStyle, GUIStyle listStyle)
+		public GUIDropdown(GUIContent buttonContent, GUIContent[] listContent, string buttonStyle, string boxStyle, GUIStyle listStyle, int darkness)
 		{
 			this.buttonContent = buttonContent;
 			this.listContent = listContent;
 			this.buttonStyle = buttonStyle;
 			this.boxStyle = boxStyle;
 			this.listStyle = listStyle;
+			this._darknessFactor = darkness;
 		}
- 
+
 		public int Show(Rect rect)
 		{
-			if( forceToUnShow )
-			{
-				forceToUnShow = false;
-				isClickedComboButton = false;
-			}
- 
 			bool done = false;
-			int controlID = GUIUtility.GetControlID( FocusType.Passive );	   
- 
-			switch( Event.current.GetTypeForControl(controlID) )
+			int activeID = GUIUtility.GetControlID(FocusType.Passive);
+
+			switch (Event.current.GetTypeForControl(controlID))
 			{
 				case EventType.mouseUp:
-				{
-					if( isClickedComboButton )
 					{
-						done = true;
+						if (isClickedComboButton)
+						{
+							done = true;
+						}
 					}
-				}
-				break;
-			}	   
- 
-			if( GUI.Button( rect, buttonContent, buttonStyle ) )
+					break;
+			}
+
+			if( GUI.Button( rect, buttonContent, buttonStyle ))
 			{
-				if( useControlID == -1 )
+				if( controlID == -1 )
 				{
-					useControlID = controlID;
+					controlID = activeID;
 					isClickedComboButton = false;
 				}
- 
-				if( useControlID != controlID )
-				{
-					forceToUnShow = true;
-					useControlID = controlID;
-				}
-				isClickedComboButton = true;
+				isClickedComboButton = !isClickedComboButton;
+				GUI.FocusControl(null);
 			}
- 
-			if( isClickedComboButton )
+
+			if (isClickedComboButton)
 			{
-				Rect listRect = new Rect( rect.x, rect.y + listStyle.CalcHeight(listContent[0], 1.0f), rect.width, listStyle.CalcHeight(listContent[0], 1.0f) * listContent.Length );
- 
-				GUI.Box( listRect, "", boxStyle );
-				int newSelectedItemIndex = GUI.SelectionGrid( listRect, selectedItemIndex, listContent, 1, listStyle );
-				if( newSelectedItemIndex != selectedItemIndex )
+				Rect listRect = new Rect(rect.x, rect.y + listStyle.CalcHeight(listContent[0], 1.0f), rect.width, listStyle.CalcHeight(listContent[0], 1.0f) * listContent.Length);
+				if (!closeOnOutsideClick(listRect))
 				{
-					selectedItemIndex = newSelectedItemIndex;
-					buttonContent = listContent[selectedItemIndex];
+					for (int i = 0; i < _darknessFactor; i++)
+					{
+						GUI.Box(listRect, "", boxStyle);
+					}
+					int newSelectedItemIndex = GUI.SelectionGrid(listRect, selectedItemIndex, listContent, 1, listStyle);
+					if (newSelectedItemIndex != selectedItemIndex)
+					{
+						selectedItemIndex = newSelectedItemIndex;
+						buttonContent = listContent[selectedItemIndex];
+					}
+				}
+
+				if (done)
+				{
+					isClickedComboButton = false;
 				}
 			}
-
-			if (done)
-			{
-				isClickedComboButton = false;
-			}
-
-			closeOnOutsideClick(rect);
-
 			return selectedItemIndex;
 		}
 
@@ -113,15 +105,12 @@ namespace UbioWeldingLtd
 
 		public void hide()
 		{
-			forceToUnShow = true;
 			isClickedComboButton = false;
 		}
 
 		internal bool closeOnOutsideClick(Rect dropdownRect)
 		{
-			if (IsOpen
-                && ((Event.current.type == EventType.mouseDown) || (Event.current.type == EventType.used))
-                && !dropdownRect.Contains(Event.current.mousePosition))
+			if (IsOpen && (Event.current.type == EventType.mouseDown) && !dropdownRect.Contains(Event.current.mousePosition))
 			{
 				hide();
 				return true;

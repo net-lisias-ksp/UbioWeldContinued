@@ -56,7 +56,7 @@ namespace UbioWeldingLtd
 				}
 				contentList.Add(new GUIContent(techTitle));
 			}
-			dropDown = new GUIDropdown(contentList[0], contentList.ToArray(), "button", "box", guiStyle);
+			dropDown = new GUIDropdown(contentList[0], contentList.ToArray(), "button", "box", guiStyle, 3);
 			return dropDown;
 		}
 
@@ -89,7 +89,7 @@ namespace UbioWeldingLtd
 		/// <returns></returns>
 		public static GUIDropdown initDropDown(List<GUIContent> categoryList, GUIStyle guiStyle, GUIDropdown dropDown)
 		{
-			dropDown = new GUIDropdown(categoryList[0], categoryList.ToArray(), "button", "box", guiStyle);
+			dropDown = new GUIDropdown(categoryList[0], categoryList.ToArray(), "button", "box", guiStyle, 3);
 			return dropDown;
 		}
 
