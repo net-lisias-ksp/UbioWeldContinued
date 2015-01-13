@@ -1,10 +1,12 @@
 Because [B]UbioZur[/B] has kindly allowed to update his work, [B]Alewx [/B]and I have released the next update for this great mod.
 
 [URL="https://github.com/Alewx/unofficailUbioWeld/releases/download/Version-2.1-Unofficial/UbioWeldingLtd_2.1-0.90-Unofficial.rar"][SIZE=5][B]Download[/B][/SIZE][/URL]
+Please note that this version is [B]incompatible with KSP 0.25![/B]
 
 [B][I]Latest changes:[/B]
 [LIST]
 [*]	[B]Compatibility with KSP 0.90[/B]
+[*]	Dropped compatibility with KSP 0.25
 [*]	Added Partselection
 [*]	Fixed problems with Config laoding
 [*]	Added <MaximizedModuleAttributes> for values where only the highest is wanted like the new SAS Level
@@ -15,6 +17,7 @@ Because [B]UbioZur[/B] has kindly allowed to update his work, [B]Alewx [/B]and I
 2014-12-31 (ver2.1.0)
 [LIST]
 [*]	Compatibility with KSP 0.90
+[*]	Dropped compatibility with KSP 0.25
 [*]	Added Partselection
 [*]	Fixed problems with Config laoding
 [*]	Added <MaximizedModuleAttributes> for values where only the highest is wanted like the new SAS Level
@@ -92,8 +95,6 @@ Because [B]UbioZur[/B] has kindly allowed to update his work, [B]Alewx [/B]and I
 [/Spoiler]
 
 [URL="https://github.com/girka2k/unofficailUbioWeld"]Sources[/URL]
-
-Please note that this version is [B]incompatible with KSP 0.25![/B]
 
 The [URL="http://forum.kerbalspaceprogram.com/threads/38577-0-22-UbioZur-Welding-Ltd-2-0-Dev-STOPPED?p=1574784&viewfull=1#post1574784"]latest version for 0.25[/URL]
 The [URL="http://forum.kerbalspaceprogram.com/threads/38577-0-22-UbioZur-Welding-Ltd-2-0-Dev-STOPPED?p=1642285&viewfull=1#post1642285"]latest version for 0.24.2[/URL]
