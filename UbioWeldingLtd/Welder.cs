@@ -217,8 +217,8 @@ namespace UbioWeldingLtd
 		 */
 		public Welder(bool advancedDebug)
         {
-            //in Linux delimiters in file path are '/', not '\'
-            if (Application.platform == RuntimePlatform.LinuxPlayer) // may be RuntimePlatform.OSXPlayer too???
+            //in Linux and OSX delimiters in file path are '/', not '\'
+            if ((Application.platform == RuntimePlatform.LinuxPlayer) || (Application.platform == RuntimePlatform.OSXPlayer))
             {
                 _filePathDelimiter = '/';
             }
