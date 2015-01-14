@@ -1,0 +1,23 @@
+{
+    "NAME":"UbioWeldingLtd",
+    "URL":"https://raw.githubusercontent.com/UbioWeldingLtd/UbioWeldContinued/dev-0.90/GameData/UbioWeldingLtd/UbioWeldingLtd.version",
+    "GITHUB":
+    {
+        "USERNAME":"UbioWeldingLtd",
+        "REPOSITORY":"UbioWeldContinued",
+        "ALLOW_PRE_RELEASE":false,
+    },
+    "VERSION":
+    {
+        "MAJOR":2,
+        "MINOR":1,
+        "PATCH":0,
+        "BUILD":0
+    },
+    "KSP_VERSION":
+    {
+        "MAJOR":0,
+        "MINOR":90,
+        "PATCH":0
+    }
+} 
