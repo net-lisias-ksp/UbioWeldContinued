@@ -1,118 +1,119 @@
-[I]Because [B]UbioZur[/B] has kindly allowed to update his work, [B]Alewx [/B]and [B]girka2k[/B] have taken care to update and maintain this great mod.
+[I]Because [B]UbioZur[/B] has [URL="http://forum.kerbalspaceprogram.com/threads/38577?p=1556030#post1556030"]kindly allowed[/URL] to update his work, [B]Alewx [/B]and [B]girka2k[/B] have taken care to update and maintain this great mod.
 [/I]
 From the UbioZur's [URL="http://forum.kerbalspaceprogram.com/threads/38577"]original thread[/URL]:
 [QUOTE=UbioZur;493123]
 This is a welding tool to allow you to merge KSP parts together in order to reduce your part count and increase performance. You will now be able to create big space station or vessel without killing your CPU.
 The mass, price, resource quantity are kept as if you had all the part separated[/QUOTE]
-
-[URL="https://github.com/UbioWeldingLtd/UbioWeldContinued/releases/download/2.1.1/UbioWeldContinued-2.1.1.zip"][SIZE=5][B]Download version 2.1.1[/B][/SIZE][/URL]
+[URL="https://github.com/UbioWeldingLtd/UbioWeldContinued/releases/download/2.1.1/UbioWeldContinued-2.1.1.zip"][SIZE=5][B]Download version 2.1.1 for KSP 0.90[/B][/SIZE][/URL]
 Please note that this version is [B]incompatible with KSP 0.25![/B]
-
 [B][I]Latest changes:[/B]
 [LIST]
-[*]	Compatibility with Linux and MacOS
-[*]	AVC version check integration
-[*]	Fixed problem with with the welding of parts without category
-[*]	[B]Compatibility with KSP 0.90[/B]
-[*]	Dropped compatibility with KSP 0.25
-[*]	Added Partselection
-[*]	Fixed problems with Config laoding
-[*]	Added <MaximizedModuleAttributes> for values where only the highest is wanted like the new SAS Level
-[*]	Added <ModulesToMultiply> for Modules that shall be added mutliple times
-[*]	Fixed problems with Modulemerging where sometimes modules would not be added correctly
+2015-01-14 - Version 2.1.1 - Continued
+[LIST]
+[*] Compatibility with Linux and MacOS
+[*] AVC version check integration
+[*] Fixed problem with with the welding of parts without category
+[/LIST]
+2014-12-31 (ver2.1.0)
+[LIST]
+[*] Compatibility with KSP 0.90
+[*] Dropped compatibility with KSP 0.25
+[*] Added Partselection
+[*] Fixed problems with Config laoding
+[*] Added <MaximizedModuleAttributes> for values where only the highest is wanted like the new SAS Level
+[*] Added <ModulesToMultiply> for Modules that shall be added mutliple times
+[*] Fixed problems with Modulemerging where sometimes modules would not be added correctly
+[/LIST]
 [/LIST][/I]
 [Spoiler=Full history of changes under our care]
 2015-01-14 - Version 2.1.1 - Continued
 [LIST]
-[*]	Compatibility with Linux and MacOS
-[*]	AVC version check integration
-[*]	Fixed problem with with the welding of parts without category
+[*] Compatibility with Linux and MacOS
+[*] AVC version check integration
+[*] Fixed problem with with the welding of parts without category
 [/LIST]
 2014-12-31 (ver2.1.0)
 [LIST]
-[*]	Compatibility with KSP 0.90
-[*]	Dropped compatibility with KSP 0.25
-[*]	Added Partselection
-[*]	Fixed problems with Config laoding
-[*]	Added <MaximizedModuleAttributes> for values where only the highest is wanted like the new SAS Level
-[*]	Added <ModulesToMultiply> for Modules that shall be added mutliple times
-[*]	Fixed problems with Modulemerging where sometimes modules would not be added correctly
+[*] Compatibility with KSP 0.90
+[*] Dropped compatibility with KSP 0.25
+[*] Added Partselection
+[*] Fixed problems with Config laoding
+[*] Added <MaximizedModuleAttributes> for values where only the highest is wanted like the new SAS Level
+[*] Added <ModulesToMultiply> for Modules that shall be added mutliple times
+[*] Fixed problems with Modulemerging where sometimes modules would not be added correctly
 [/LIST]
 2014-12-03 (ver.05)
 [LIST]
-[*]	Fixed wrong rescaling of some models in KSP 0.25
-[*]	Improved database reloading with ModuleManager installed
-[*]	Updated <ModulesToIgnore> list
-[*]	Dropped compatibility with KSP 0.24.
+[*] Fixed wrong rescaling of some models in KSP 0.25
+[*] Improved database reloading with ModuleManager installed
+[*] Updated <ModulesToIgnore> list
+[*] Dropped compatibility with KSP 0.24.
 [/LIST]
 2014-11-01 (ver.04)
 [LIST]
-[*]	Fixed wrong rotation of models in some cases (especially in SHP)
-[*]	Now topmost and lowest nodes are placed to the end of list for fix impossibility to attach welded part to other in VAB/SHP. (It is assumed that the topmost and lowest nodes, most likely, are stack nodes)
-[*]	Most floating-point values (excluding amount of resources) of welded part are rounded to 5 fractional digits
-[*]	Some other minor fixes
+[*] Fixed wrong rotation of models in some cases (especially in SHP)
+[*] Now topmost and lowest nodes are placed to the end of list for fix impossibility to attach welded part to other in VAB/SHP. (It is assumed that the topmost and lowest nodes, most likely, are stack nodes)
+[*] Most floating-point values (excluding amount of resources) of welded part are rounded to 5 fractional digits
+[*] Some other minor fixes
 [/LIST]
 2014-10-21
 [LIST]
-[*]	KSP 0.25 compatibility 
-[*]	Stock Toolbar integration.
-[*]	Added the GUI to change most settings.
-[*]	Added ability for change requiredTech from GUI.
-[*]	Improved naming of the partfiles - now welded part can be saved in file named like folder (for example "WeldedPod.cfg", not "part.cfg").
-[*]	Tweakscale integration. Now it reads scale from scene part to include tweakscale.
-[*]	Added the correct addition of entryCosts.
-[*]	The ModuleAttributeList.xml gives you the ability to edit how the tool will process the merging of certain modules and their attributes. For details, see comments in the ModuleAttributeLists.xml file.
+[*] KSP 0.25 compatibility
+[*] Stock Toolbar integration.
+[*] Added the GUI to change most settings.
+[*] Added ability for change requiredTech from GUI.
+[*] Improved naming of the partfiles - now welded part can be saved in file named like folder (for example "WeldedPod.cfg", not "part.cfg").
+[*] Tweakscale integration. Now it reads scale from scene part to include tweakscale.
+[*] Added the correct addition of entryCosts.
+[*] The ModuleAttributeList.xml gives you the ability to edit how the tool will process the merging of certain modules and their attributes. For details, see comments in the ModuleAttributeLists.xml file.
 [Spoiler=details]
 [LIST]
-[*]		<Vector2CurveModules> section is the list of modules that have to be read as vector2 curves, as an example the ISP of an RCS thruster.
-[*]		In <Vector4CurveModules> list are modules that will be read as vector4Curves that means they will create curves from floatpoints and tangents. There is a thread in the forum just about the magic of floatpoint tangents.
-[*]		<SubModules> list contains the Submodules that otherwise would be ignored and not merged, Adding an entry here will give the tool the ability to merge the attributes in it.
-[*]		Modules in <ModulesToIgnore> list will be completly ignored from the tool and not get added to the new part.
-[*]		Entries in <AveragedModuleAttributes> will make sure that the tool will not simply add the values of this attribute from the different parts and modules up, but will calculate it as aritmetric mean (average).
-[*]		Entries in <UnchangedModuleAttributes> list will give the tool the order to not merge the values for this attribute.
-[*]		<BreakingModuleAttributes> might be the most important list of Attributes, the entries here will give the tool the order to check if the values of these attributes are equal, and only allow then the merging or the module, otherwise a new module would be added.
+[*] <Vector2CurveModules> section is the list of modules that have to be read as vector2 curves, as an example the ISP of an RCS thruster.
+[*] In <Vector4CurveModules> list are modules that will be read as vector4Curves that means they will create curves from floatpoints and tangents. There is a thread in the forum just about the magic of floatpoint tangents.
+[*] <SubModules> list contains the Submodules that otherwise would be ignored and not merged, Adding an entry here will give the tool the ability to merge the attributes in it.
+[*] Modules in <ModulesToIgnore> list will be completly ignored from the tool and not get added to the new part.
+[*] Entries in <AveragedModuleAttributes> will make sure that the tool will not simply add the values of this attribute from the different parts and modules up, but will calculate it as aritmetric mean (average).
+[*] Entries in <UnchangedModuleAttributes> list will give the tool the order to not merge the values for this attribute.
+[*] <BreakingModuleAttributes> might be the most important list of Attributes, the entries here will give the tool the order to check if the values of these attributes are equal, and only allow then the merging or the module, otherwise a new module would be added.
 [/LIST]
 [/spoiler]
-
-[*]	Fixed crashTolerance, breakingForce and breakingTorque calculation. Improved MaxTemp calculation.
+[*] Fixed crashTolerance, breakingForce and breakingTorque calculation. Improved MaxTemp calculation.
 [Spoiler=details]
 [LIST]
-[*]		Now there is three methods of calculation crashTolerance, breakingForce and breakingTorque values:
+[*] Now there is three methods of calculation crashTolerance, breakingForce and breakingTorque values:
 [LIST]
-[*]			legacy (UbioZur variant)
-[*]			arithmetic mean value of the values of parts
-[*]			weighted average by mass (now it's default)
+[*] legacy (UbioZur variant)
+[*] arithmetic mean value of the values of parts
+[*] weighted average by mass (now it's default)
 [/LIST]
-[*]		Also it presents new ways of calculation of MaxTemp:
+[*] Also it presents new ways of calculation of MaxTemp:
 [LIST]
-[*]			arithmetic mean value of the values of parts (UbioZur variant)
-[*]			weighted average by mass
-[*]			lowest between values of parts  (now it's default)
+[*] arithmetic mean value of the values of parts (UbioZur variant)
+[*] weighted average by mass
+[*] lowest between values of parts (now it's default)
 [/LIST]
 [/LIST]
 [/spoiler]
-[*]	Changed config file format (and name).
-[*]	Fixed miscalculation in case of resources which have not equal amount and maxAmount values.
+[*] Changed config file format (and name).
+[*] Fixed miscalculation in case of resources which have not equal amount and maxAmount values.
 [/LIST]
 2014-09-02
 [LIST]
-[*]	Fixes incorrect rescaling of parts, containing "scale" in MODEL description.
+[*] Fixes incorrect rescaling of parts, containing "scale" in MODEL description.
 [/LIST]
 2014-09-01
 [LIST]
-[*]	Fixed incorrect calculation of COM offset.
+[*] Fixed incorrect calculation of COM offset.
 [/LIST]
 2014-08-12
 [LIST]
-[*]	KSP 0.24 compatibility.
-[*]	Changed massless parts processing behavior.
+[*] KSP 0.24 compatibility.
+[*] Changed massless parts processing behavior.
 [/LIST]
 [/Spoiler]
-
 [B][SIZE=4]Installation[/SIZE][/B]
 As usual, extract the GameData folder from archive into the main folder where your game is installed - for example: C:\Program Files (x86)\Steam\steamapps\common\Kerbal Space Program
 [COLOR="#FF0000"]WARNING![/COLOR] Don't delete GameData\UbioWeldingLtd\[B]Parts[/B] folder or you will lose all your weldments!
-
 [B][SIZE=4]Usage[/SIZE][/B]
 [LIST]
 [*]Create the set of part you would like to weld inside the VAB or SPH
@@ -121,7 +122,6 @@ As usual, extract the GameData folder from archive into the main folder where yo
 [*]Reload game and then you will have your weldment available on the part list.
 (Weldments are saved in the GameData\UbioWeldingLtd\Parts folder)
 [/LIST]
-
 [B][SIZE=4]Known limitations / supported and unsupported mods[/SIZE][/B]
 [LIST]
 [*]If you weld together multiple RCS, you will not be able to use the part for rotation - the game doesn't allow it.
@@ -139,32 +139,22 @@ Other limitations will be described Soon(™)
 [*]Tweakscale
 [/LIST]
 Feel free to share in this thread what mods works and don't work for everyone to know.
-
 [B][SIZE=4]Known Issues[/SIZE][/B]
 Soon(™)
-
 [B][SIZE=4]Some examples[/SIZE][/B]
 I decided to publish images of several of my crafts, in which I used welding.
 Leaving aside the general design of these devices, they still can serve as an example how you can reduce the number of parts without violating the constraint on the welding multiple identical "active" parts together.
 All images were made with great [URL="https://github.com/bigorangemachine/ksp-kronalutils/releases"]Kronal Vessel Viewer[/URL] mod.
-
 [IMGUR]WOJ5h[/IMGUR]
-
 [B][SIZE=4]Other stuff[/SIZE][/B]
-
 [SIZE=3][URL="https://github.com/UbioWeldingLtd/UbioWeldContinued"]Sources[/URL][/SIZE]
-
 The [URL="http://forum.kerbalspaceprogram.com/threads/38577?p=1574784&viewfull=1#post1574784"]latest version for 0.25[/URL]
 The [URL="http://forum.kerbalspaceprogram.com/threads/38577?p=1642285&viewfull=1#post1642285"]latest version for 0.24.2[/URL]
-
 [B][SIZE=4]Legal stuff[/SIZE][/B]
 [IMG]https://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png[/IMG]
-Code and artworks are licensed under the Attribution-NonCommercial-ShareAlike 3.0 (CC BY-NC-SA 3.0)
-creative commons license. See [URL="http://creativecommons.org/licenses/by-nc-sa/3.0/legalcode"]http://creativecommons.org/licenses/by-nc-sa/3.0/legalcode[/URL]
-for full details.
+Code and artworks are licensed under the Attribution-NonCommercial-ShareAlike 3.0 (CC BY-NC-SA 3.0) creative commons license. See [URL="http://creativecommons.org/licenses/by-nc-sa/3.0/legalcode"]http://creativecommons.org/licenses/by-nc-sa/3.0/legalcode[/URL] for full details.
 [I]This work based on [B]malkuth[/B]'s [URL="http://forum.kerbalspaceprogram.com/threads/38577?p=1002144&viewfull=1#post1002144"]update [/URL]for [B]UbioZur[/B]'s original code.
 [COLOR="#696969"]All rights to original source code belong to [B]UbioZur[/B].
 The rights to [B]malkuth[/B]'s [URL="https://github.com/malkuth1974/unofficailUbioWeld"]code update[/URL] belongs to [B][URL="http://forum.kerbalspaceprogram.com/members/59125-malkuth"]malkuth[/URL][/B]
 The rights to subsequent code changes and artworks belongs to Alewx and girka2k[/COLOR][/I]
-
 Thank you [B]UbioZur[/B] for kind permission to continue your work!
