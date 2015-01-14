@@ -102,20 +102,22 @@ Please note that this version is [B]incompatible with KSP 0.25![/B]
 
 [B][SIZE=4]Installation[/SIZE][/B]
 As usual, extract the GameData folder from archive into the main folder where your game is installed - for example: C:\Program Files (x86)\Steam\steamapps\common\Kerbal Space Program
+[COLOR="#FF0000"]WARNING![/COLOR] Don't delete GameData\UbioWeldingLtd\[B]Parts[/B] folder or you will lose all your weldments!
 
 [B][SIZE=4]Usage[/SIZE][/B]
 [LIST]
 [*]Create the set of part you would like to weld inside the VAB or SPH
 [*]Press [img]http://i.imgur.com/7XknDud.png[/img] button in stock Launcher
 [*]Follow the instructions.
-[*]Reload game and then you will have your welded part available on the part list.
+[*]Reload game and then you will have your weldment available on the part list.
+(Weldments are saved in the GameData\UbioWeldingLtd\Parts folder)
 [/LIST]
 
 [B][SIZE=4]Known limitations / supported and unsupported mods[/SIZE][/B]
 [LIST]
 [*]If you weld together multiple RCS, you will not be able to use the part for rotation - the game doesn't allow it.
-[*]If you weld Engine with integrated Alternator, your part always will have Electricity amount equal to 0 (Bug/Feature of the game)
-[*]Don't include in your part more than one Leg/Light/Solar panel/Science experiment - it is game limitation
+[*]If you weld Engine with integrated Alternator, your weldment always will have Electricity amount equal to 0 (Bug/Feature of the game)
+[*]Don't include in your weldment more than one Leg/Light/Solar panel/Science experiment - it is game limitation
 Other limitations will be described Soon(™)
 [/LIST]
 [B]Incompatible mods[/B]:
@@ -127,7 +129,7 @@ Other limitations will be described Soon(™)
 [LIST]
 [*]Tweakscale
 [/LIST]
-Feel free to share in this thread what mods works and don't work (work around?) for everyone to know.
+Feel free to share in this thread what mods works and don't work for everyone to know.
 
 [B][SIZE=4]Known Issues[/SIZE][/B]
 Soon(™)
@@ -135,13 +137,13 @@ Soon(™)
 [B][SIZE=4]Some examples[/SIZE][/B]
 I decided to publish images of several of my crafts, in which I used welding.
 Leaving aside the general design of these devices, they still can serve as an example how you can reduce the number of parts without violating the constraint on the welding multiple identical "active" parts together.
-All images were made with great Kronal Vessel Viewer mod.
+All images were made with great [URL="https://github.com/bigorangemachine/ksp-kronalutils/releases"]Kronal Vessel Viewer[/URL] mod.
 
 [IMGUR]WOJ5h[/IMGUR]
 
 [B][SIZE=4]Other stuff[/SIZE][/B]
 
-[SIZE=3][URL="https://github.com/girka2k/unofficailUbioWeld"]Sources[/URL][/SIZE]
+[SIZE=3][URL="https://github.com/UbioWeldingLtd/UbioWeldContinued"]Sources[/URL][/SIZE]
 
 The [URL="http://forum.kerbalspaceprogram.com/threads/38577?p=1574784&viewfull=1#post1574784"]latest version for 0.25[/URL]
 The [URL="http://forum.kerbalspaceprogram.com/threads/38577?p=1642285&viewfull=1#post1642285"]latest version for 0.24.2[/URL]
@@ -151,7 +153,9 @@ The [URL="http://forum.kerbalspaceprogram.com/threads/38577?p=1642285&viewfull=1
 Code and artworks are licensed under the Attribution-NonCommercial-ShareAlike 3.0 (CC BY-NC-SA 3.0)
 creative commons license. See [URL="http://creativecommons.org/licenses/by-nc-sa/3.0/legalcode"]http://creativecommons.org/licenses/by-nc-sa/3.0/legalcode[/URL]
 for full details.
-[I]This work based on [B]Malkuth[/B]'s [URL="http://forum.kerbalspaceprogram.com/threads/38577?p=1002144&viewfull=1#post1002144"]update [/URL]for [B]UbioZur[/B]'s original code.
-[COLOR="#696969"]All rights to original source code belong to [B]UbioZur[/B], the rights to subsequent code changes belong to their authors.[/COLOR][/I]
+[I]This work based on [B]malkuth[/B]'s [URL="http://forum.kerbalspaceprogram.com/threads/38577?p=1002144&viewfull=1#post1002144"]update [/URL]for [B]UbioZur[/B]'s original code.
+[COLOR="#696969"]All rights to original source code belong to [B]UbioZur[/B].
+The rights to [B]malkuth[/B]'s [URL="https://github.com/malkuth1974/unofficailUbioWeld"]code update[/URL] belongs to [B][URL="http://forum.kerbalspaceprogram.com/members/59125-malkuth"]malkuth[/URL][/B]
+The rights to subsequent code changes and artworks belongs to Alewx and girka2k[/COLOR][/I]
 
 Thank you [B]UbioZur[/B] for kind permission to continue your work!
