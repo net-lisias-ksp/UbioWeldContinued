@@ -1,0 +1,9 @@
+Code and artworks are licensed under the Attribution-NonCommercial-ShareAlike 3.0 (CC BY-NC-SA 3.0)
+creative commons license. See http://creativecommons.org/licenses/by-nc-sa/3.0/legalcode for full details.
+
+This work based on malkuth's update (http://forum.kerbalspaceprogram.com/threads/38577?p=1002144&viewfull=1#post1002144) for UbioZur's original code.
+
+"UbioWeldingLtd" name (C) UbioZur (http://forum.kerbalspaceprogram.com/members/74865-UbioZur)
+All rights to original source code belong to UbioZur.
+The rights to malkuth code update belongs to malkuth (http://forum.kerbalspaceprogram.com/members/59125-malkuth)
+The rights to subsequent code changes and artworks belongs to Alewx and girka2k

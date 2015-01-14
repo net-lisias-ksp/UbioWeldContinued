@@ -1,9 +1,8 @@
-License:
-UbioWeldingLtd by Ubiozur, Girka2k, Alewx is licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License.
-http://creativecommons.org/licenses/by-nc-sa/4.0/
-Based on a work at https://github.com/Alewx/unofficailUbioWeld or https://github.com/girka2k/unofficailUbioWeld.
 
-
+2015-01-14 - Version 2.1.1 - Continued
+	Compatibility with Linux and MacOS
+	AVC version check integration
+	Fixed problem with with the welding of parts without category
 2014-12-31 - Version 2.1-Unofficial
 	Compatibility with KSP 0.90
 	Added partselection, selecting no part will use the whole craft
