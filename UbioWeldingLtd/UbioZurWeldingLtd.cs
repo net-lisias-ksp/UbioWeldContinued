@@ -390,7 +390,11 @@ namespace UbioWeldingLtd
 			}
 			else
 			{
-				_catDropdown.SelectedItemIndex = (int)_welder.Category;
+#if (DEBUG)
+				Debug.Log(string.Format("{0} welder.Category: {1}", Constants.logPrefix, (int)_welder.Category));
+#endif
+//PartCategories.none (has value of "-1") has no corresponding element in dropdown list so it must be replaced with something else
+				_catDropdown.SelectedItemIndex = (_welder.Category != PartCategories.none) ? (int)_welder.Category : (int)PartCategories.Structural;
 				_state = DisplayState.infoWindow;
 			}
 		}

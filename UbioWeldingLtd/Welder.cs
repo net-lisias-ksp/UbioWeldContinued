@@ -736,6 +736,7 @@ namespace UbioWeldingLtd
 				//TODO: Find where to find it in game. Would that be pre .15 stuff? http://forum.kerbalspaceprogram.com/threads/7529-Plugin-Posting-Rules-And-Official-Documentation?p=156430&viewfull=1#post156430
 				_module = "Part";
 				//
+				AdvDebug(string.Format("AdvDebug(weldThisPart - newpart.partInfo.category: {0}", newpart.partInfo.category.ToString()));
 				_category = newpart.partInfo.category;
 				//TODO: better surface node managment
 				_srfAttachNode = newpart.srfAttachNode;
