@@ -5,11 +5,14 @@ From the UbioZur's [URL="http://forum.kerbalspaceprogram.com/threads/38577"]orig
 This is a welding tool to allow you to merge KSP parts together in order to reduce your part count and increase performance. You will now be able to create big space station or vessel without killing your CPU.
 The mass, price, resource quantity are kept as if you had all the part separated[/QUOTE]
 
-[URL="https://github.com/Alewx/unofficailUbioWeld/releases/download/Version-2.1-Unofficial/UbioWeldingLtd_2.1-0.90-Unofficial.rar"][SIZE=5][B]Download version 2.1.0[/B][/SIZE][/URL]
+[URL="https://github.com/UbioWeldingLtd/UbioWeldContinued/releases/download/2.1.1/UbioWeldContinued-2.1.1.zip"][SIZE=5][B]Download version 2.1.1[/B][/SIZE][/URL]
 Please note that this version is [B]incompatible with KSP 0.25![/B]
 
 [B][I]Latest changes:[/B]
 [LIST]
+[*]	Compatibility with Linux and MacOS
+[*]	AVC version check integration
+[*]	Fixed problem with with the welding of parts without category
 [*]	[B]Compatibility with KSP 0.90[/B]
 [*]	Dropped compatibility with KSP 0.25
 [*]	Added Partselection
@@ -19,6 +22,12 @@ Please note that this version is [B]incompatible with KSP 0.25![/B]
 [*]	Fixed problems with Modulemerging where sometimes modules would not be added correctly
 [/LIST][/I]
 [Spoiler=Full history of changes under our care]
+2015-01-14 - Version 2.1.1 - Continued
+[LIST]
+[*]	Compatibility with Linux and MacOS
+[*]	AVC version check integration
+[*]	Fixed problem with with the welding of parts without category
+[/LIST]
 2014-12-31 (ver2.1.0)
 [LIST]
 [*]	Compatibility with KSP 0.90
