@@ -197,7 +197,8 @@ namespace UbioWeldingLtd
 
 		public PartCategories Category
 		{
-			get { return _category; }
+//PartCategories.none must be replaced with something else
+            get { return (_category != PartCategories.none) ? _category : PartCategories.Utility; }
 			set { _category = value; }
 		}
 
