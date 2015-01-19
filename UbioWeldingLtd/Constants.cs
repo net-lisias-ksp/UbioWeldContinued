@@ -230,9 +230,7 @@ namespace UbioWeldingLtd
 			"ModuleTweakableDockingNode",   
 			"KASModuleGrab",   
 			"ModuleTweakableRCS",   
-			"ModuleTweakableSolarPanel",
-			"CModuleStrut",
-			"CModuleLinkedMesh"
+			"ModuleTweakableSolarPanel"
 		};
 
 		public static string[] basicModulesToMultiply =   
