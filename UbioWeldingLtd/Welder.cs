@@ -230,17 +230,6 @@ namespace UbioWeldingLtd
 			_advancedDebug = advancedDebug;
         }
 
-		/*
-		 * Remove all the (Clone) at the end of the names
-		 */
-		private void removecClone(ref string name)
-		{
-			const string clone = "(Clone)";
-			while (new Regex(clone).IsMatch(name))
-			{
-				name = name.Substring(0, name.Length - clone.Length);
-			}
-		} //private void removecClone(ref string name)
 
 		/*
 		 * Set relative position
@@ -412,7 +401,7 @@ namespace UbioWeldingLtd
 			_coMOffset = Vector3.zero;
 			WeldingReturn ret = WeldingReturn.Success;
 			string partname = (string)newpart.partInfo.partPrefab.name.Clone();
-			removecClone(ref partname);
+			WeldingHelpers.removeTextRegex(ref partname, "(Clone)");
 
 			Debug.Log(string.Format("{0}{1}{2}",Constants.logPrefix,Constants.logWeldingPart,partname));
 			Debugger.AdvDebug(string.Format("..part rescaleFactor {0:F}", newpart.rescaleFactor), _advancedDebug);
@@ -608,7 +597,7 @@ namespace UbioWeldingLtd
 							foreach (ParticleEmitter gobj in fx.fxEmitters)
 							{
 								string fxname = gobj.name;
-								removecClone(ref fxname);
+								WeldingHelpers.removeTextRegex(ref fxname, "(Clone)");
 								string fxvalue = cfg.config.GetValue(fxname);
 								string[] allvalue = Regex.Split(fxvalue, ", ");
 								Vector3 pos = new Vector3(float.Parse(allvalue[0]), float.Parse(allvalue[1]), float.Parse(allvalue[2]));
