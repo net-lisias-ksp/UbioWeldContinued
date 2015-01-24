@@ -492,7 +492,7 @@ namespace UbioWeldingLtd
 				}
 			}
 			//Hints area
-			GUILayout.TextArea(GUI.tooltip, GUILayout.ExpandHeight(true), GUILayout.MaxHeight(60));
+			GUILayout.TextArea(GUI.tooltip, GUILayout.ExpandHeight(true), GUILayout.MaxHeight(100));
 			GUIStyle VersionLabelGUIStyle = new GUIStyle(GUI.skin.label);
 			VersionLabelGUIStyle.fontSize = 12;
 			GUILayout.Label(Constants.logVersion, VersionLabelGUIStyle);
