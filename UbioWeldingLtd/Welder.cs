@@ -101,6 +101,8 @@ namespace UbioWeldingLtd
 		private static bool _runInTestMode = false;
 		private static StrengthParamsCalcMethod _StrengthCalcMethod = StrengthParamsCalcMethod.WeightedAverage;
 		private static MaxTempCalcMethod _MaxTempCalcMethod = MaxTempCalcMethod.Lowest;
+		private int[] partsHashMap;
+
 
 		public static bool includeAllNodes
 		{
@@ -228,6 +230,7 @@ namespace UbioWeldingLtd
                 _filePathDelimiter = '\\';
             }
 			_advancedDebug = advancedDebug;
+			loadPartHashMap();
         }
 
 
@@ -560,7 +563,7 @@ namespace UbioWeldingLtd
 			foreach (AttachNode partnode in newpart.attachNodes)
 			{
 				//only add node if not attached to another part (or if requested in the condig file)
-				if (_includeAllNodes || null == partnode.attachedPart)
+				if (_includeAllNodes || null == partnode.attachedPart || (partnode.attachedPart != null && !isChildPart(newpart,partnode.attachedPart)))
 				{
 					AttachNode node = partnode; //make sure we don't overwrite the part node
 					node.id += partname + _partNumber;
@@ -1259,6 +1262,24 @@ namespace UbioWeldingLtd
 			{
 				partconfig.AddNode(mod);
 			}
+		}
+
+
+		private void loadPartHashMap()
+		{
+			Part[] children = UbioZurWeldingLtd.instance.selectedPartBranch.FindChildParts<Part>(true);
+			partsHashMap = new int[children.Length + 1];
+
+			for (int i = 0; i < children.Length; i++)
+			{
+				partsHashMap[i] = children[i].GetHashCode();
+			}
+			partsHashMap[children.Length] = UbioZurWeldingLtd.instance.selectedPartBranch.GetHashCode();
+		}
+
+		private bool isChildPart(Part parentPart, Part partToSearch)
+		{
+			return partsHashMap.Contains<int>(partToSearch.GetHashCode());
 		}
 
 	} //class Welder

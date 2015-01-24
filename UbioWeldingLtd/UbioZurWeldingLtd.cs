@@ -92,6 +92,11 @@ namespace UbioWeldingLtd
 			get { return _config; }
 		}
 
+		public Part selectedPartBranch
+		{
+			get { return _selectedPartbranch; }
+		}
+
 		/*
 		 * Called when plug in loaded
 		 */
