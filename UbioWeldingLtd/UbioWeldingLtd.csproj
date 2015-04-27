@@ -31,12 +31,13 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Assembly-CSharp">
-      <HintPath>..\..\AssemblyReferences\0.9\Assembly-CSharp.dll</HintPath>
+    <Reference Include="Assembly-CSharp, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\AssemblyReferences\1.0\Assembly-CSharp.dll</HintPath>
     </Reference>
     <Reference Include="Assembly-CSharp-firstpass, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\AssemblyReferences\0.9\Assembly-CSharp-firstpass.dll</HintPath>
+      <HintPath>..\..\AssemblyReferences\1.0\Assembly-CSharp-firstpass.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -46,7 +47,7 @@
     <Reference Include="System.Xml" />
     <Reference Include="UnityEngine, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\AssemblyReferences\0.9\UnityEngine.dll</HintPath>
+      <HintPath>..\..\AssemblyReferences\1.0\UnityEngine.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

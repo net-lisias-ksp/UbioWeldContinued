@@ -641,13 +641,13 @@ namespace UbioWeldingLtd
 			switch (_MaxTempCalcMethod)
 			{
 				case MaxTempCalcMethod.ArithmeticMean:
-					_maxTemp = (_partNumber == 0) ? newpart.maxTemp : (_maxTemp + newpart.maxTemp) * 0.5f;
+					_maxTemp = (_partNumber == 0) ? (float)newpart.maxTemp : (float)(_maxTemp + newpart.maxTemp) * 0.5f;
 					break;
 				case MaxTempCalcMethod.Lowest:
-					_maxTemp = (_partNumber == 0) ? newpart.maxTemp : Math.Min(_maxTemp, newpart.maxTemp);
+					_maxTemp = (_partNumber == 0) ? (float)newpart.maxTemp : (float)Math.Min(_maxTemp, newpart.maxTemp);
 					break;
 				case MaxTempCalcMethod.WeightedAverage:
-					_maxTemp = (_partNumber == 0) ? newpart.maxTemp : (_maxTemp * olddrymass + newpart.maxTemp * olddrymass) / (olddrymass + newpart.mass);
+					_maxTemp = (_partNumber == 0) ? (float)newpart.maxTemp : (float)(_maxTemp * olddrymass + newpart.maxTemp * olddrymass) / (olddrymass + newpart.mass);
 					break;
 			}
 
