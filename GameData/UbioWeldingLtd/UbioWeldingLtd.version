@@ -20,4 +20,16 @@
         "MINOR":90,
         "PATCH":0
     }
+    "KSP_VERSION":
+    {
+        "MAJOR":0,
+        "MINOR":90,
+        "PATCH":0
+    }
+    "KSP_VERSION_MAX":
+    {
+        "MAJOR":0,
+        "MINOR":90,
+        "PATCH":0
+    }
 } 
