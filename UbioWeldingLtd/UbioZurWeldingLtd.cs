@@ -92,6 +92,11 @@ namespace UbioWeldingLtd
 			get { return _config; }
 		}
 
+		public Part selectedPartBranch
+		{
+			get { return _selectedPartbranch; }
+		}
+
 		/*
 		 * Called when plug in loaded
 		 */
@@ -336,7 +341,12 @@ namespace UbioWeldingLtd
 			_welder = new Welder(_config.advancedDebug);
 
 			partToWeld.transform.eulerAngles = Vector3.zero;
-			WeldingReturn ret = _welder.weldThisPart(partToWeld);
+			WeldingReturn ret = 0;
+
+			if (!WeldingHelpers.DoesTextContainRegex(partToWeld.name, "strutConnector"))
+			{
+				ret = _welder.weldThisPart(partToWeld);
+			}
 
 			if (ret < 0)
 			{
@@ -357,7 +367,10 @@ namespace UbioWeldingLtd
 			{
 				foreach (Part child in children)
 				{
-					ret = _welder.weldThisPart(child);
+					if (!WeldingHelpers.DoesTextContainRegex(child.name, "strutConnector"))
+					{
+						ret = _welder.weldThisPart(child);
+					}
 
 					if (ret< 0)
 					{
@@ -484,7 +497,7 @@ namespace UbioWeldingLtd
 				}
 			}
 			//Hints area
-			GUILayout.TextArea(GUI.tooltip, GUILayout.ExpandHeight(true), GUILayout.MaxHeight(60));
+			GUILayout.TextArea(GUI.tooltip, GUILayout.ExpandHeight(true), GUILayout.MaxHeight(100));
 			GUIStyle VersionLabelGUIStyle = new GUIStyle(GUI.skin.label);
 			VersionLabelGUIStyle.fontSize = 12;
 			GUILayout.Label(Constants.logVersion, VersionLabelGUIStyle);
