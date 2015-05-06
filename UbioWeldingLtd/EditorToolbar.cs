@@ -18,6 +18,10 @@ namespace UbioWeldingLtd
 		private ApplicationLauncherButton _toolbarButton;
 		private bool _isEnabled = false;
 
+
+		/// <summary>
+		/// public access for initializing the toolbar
+		/// </summary>
 		public void initToolbar()
 		{
 			Debug.Log(string.Format("{0}- {1} => initToolbar", Constants.logPrefix, instance.GetType()));
@@ -30,7 +34,19 @@ namespace UbioWeldingLtd
 
 
 		/// <summary>
-		/// the public access for the toolbar
+		/// Function is called everytime the Editor is loaded as a scene. a quite primitive fallback as the Applauncher seems to not react on the GameEvents.onGUIApplicationLauncherReady
+		/// </summary>
+		private void Start()
+		{
+			if (_toolbarButton == null)
+			{
+				OnGuiAppLauncherReady();
+			}
+		}
+
+
+		/// <summary>
+		/// the initial start of the class with preparing of the toolbar
 		/// </summary>
 		private void Awake()
 		{
@@ -56,14 +72,12 @@ namespace UbioWeldingLtd
 
 
 		/// <summary>
-		/// initiallizes the toolbar
+		/// adds the toolbar to the applauncher
 		/// </summary>
 		private void OnGuiAppLauncherReady()
 		{
 			try
 			{
-				//if (this._iconTexture != null)
-				//{
 				this._toolbarButton = this._toolbar.AddModApplication(
 					useToolbarButton,
 					null,
@@ -76,11 +90,6 @@ namespace UbioWeldingLtd
 					);
 				this._isEnabled = true;
 				Debug.Log(string.Format("{0}-> OnGuiAppLauncherReady done", Constants.logPrefix));
-				//}
-				//else
-				//{
-				//	Debug.Log(string.Format("{0}-> OnGuiAppLauncherReady texture missing", Constants.logPrefix));
-				//}
 			}
 			catch (Exception exception)
 			{
@@ -117,10 +126,11 @@ namespace UbioWeldingLtd
 			try
 			{
 				GameEvents.onGUIApplicationLauncherReady.Remove(this.OnGuiAppLauncherReady);
-				if (this._toolbarButton != null)
+				if (_toolbarButton != null)
 				{
-					ApplicationLauncher.Instance.RemoveModApplication(this._toolbarButton);
+					ApplicationLauncher.Instance.RemoveModApplication(_toolbarButton);
 					this._isEnabled = false;
+					_toolbarButton = null;
 				}
 				Debug.Log("BuildToolbar->OnDestroy");
 			}
