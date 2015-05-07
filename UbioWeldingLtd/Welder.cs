@@ -617,7 +617,7 @@ namespace UbioWeldingLtd
 			_maximumDrag = (_maximumDrag + newpart.maximum_drag) * 0.5f;
 			_angularDrag = (_angularDrag + newpart.angularDrag) * 0.5f;
 			//TODO: modify type
-			_dragModel = newpart.dragModelType;
+			_dragModel = newpart.dragModel.ToString();
 
 			//average crash, breaking and temp
 			switch (_StrengthCalcMethod)
