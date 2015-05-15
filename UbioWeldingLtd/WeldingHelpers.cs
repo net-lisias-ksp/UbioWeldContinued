@@ -101,7 +101,7 @@ namespace UbioWeldingLtd
 		/// <param name="attributeToCheck"></param>
 		/// <param name="arrayToCompare"></param>
 		/// <returns></returns>
-		public static bool isArrayContaing(string attributeToCheck, string[] arrayToCompare)
+		public static bool isArrayContaining(string attributeToCheck, string[] arrayToCompare)
 		{
 
 			foreach (string attributeEntry in arrayToCompare)
