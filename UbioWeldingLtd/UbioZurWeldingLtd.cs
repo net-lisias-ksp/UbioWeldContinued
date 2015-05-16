@@ -137,13 +137,21 @@ namespace UbioWeldingLtd
 					}
 					else
 					{
-						_state = DisplayState.none;
-						disablePartHighlight(_selectedPartbranch);
-						_selectedPartbranch = null;
+						closeMainwindow();
 					}
 				}
 			}
 			//_stockToolbarButton.SetFalse();
+		}
+
+		/// <summary>
+		/// closes the mainwindow clean
+		/// </summary>
+		private void closeMainwindow()
+		{
+			_state = DisplayState.none;
+			disablePartHighlight(_selectedPartbranch);
+			_selectedPartbranch = null;
 		}
 
 		/// <summary>
@@ -427,7 +435,7 @@ namespace UbioWeldingLtd
             GUILayout.EndVertical();
             GUILayout.BeginVertical();
 
-			if (GUILayout.Button(new GUIContent("Settings", "Show/hide settings"), GUILayout.MaxWidth(160)))
+			if (GUILayout.Button(Constants.guiSettingsGUIContent, GUILayout.MaxWidth(160)))
 			{
 				_mainWindowsSettingsMode = !_mainWindowsSettingsMode;
 			}
@@ -495,6 +503,10 @@ namespace UbioWeldingLtd
 					}
 					weldPart(_selectedPartbranch);
 				}
+			}
+			if (GUILayout.Button(Constants.guiCloseGUIContent, GUILayout.MaxWidth(160)))
+			{
+				closeMainwindow();
 			}
 			//Hints area
 			GUILayout.TextArea(GUI.tooltip, GUILayout.ExpandHeight(true), GUILayout.MaxHeight(100));

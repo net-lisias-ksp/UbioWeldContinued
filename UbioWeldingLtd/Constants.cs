@@ -46,8 +46,8 @@ namespace UbioWeldingLtd
 		public const int guiInfoWindowW		 = 705;
 		public const int guiInfoWindowH		 = 345;
         public const int guiMainWindowW     = 300;
-		public const int guiMainWindowH		= 260;
-		public const int guiMainWindowHSettingsExpanded = 650;
+		public const int guiMainWindowH		= 285;
+		public const int guiMainWindowHSettingsExpanded = 675;
 		public const int guiScreenEdgeClearance = 80;
 		public const string guiDialFail		 = "We are sorry to announce that our engineer could not perform this weld.\n Please read the report (ALt+F2 or ksp.log) for more details)";
 		public const string guiDialWarn		 = "After welding everything, out Engineer had some extra feature that they didn't knew where to put.\n Please read the report (ALt+F2 or ksp.log) for more details)";
@@ -287,6 +287,8 @@ namespace UbioWeldingLtd
 		public static GUIContent guiClearEditorGUIContent = new GUIContent("Clear editor after welding", "Clear editor after welding");
 		public static GUIContent guiAdvancedDebugGUIContent = new GUIContent("Advanced debug", "SPAM KSP.log with additional debug info");
 		public static GUIContent guiSelectPartGUIContent = new GUIContent("Select partbranch", "use 'ctrl + click' to select the partbranch that you want to weld into a new part, if no part is selected the whole craft will be welded");
+		public static GUIContent guiCloseGUIContent = new GUIContent("Close", "Closes the welding menu");
+		public static GUIContent guiSettingsGUIContent = new GUIContent("Settings", "Show/hide settings");
 
 		public static GUIContent[] StrengthParamsCalcMethodsGUIContent = 
 		{

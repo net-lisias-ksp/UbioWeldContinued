@@ -517,6 +517,9 @@ namespace UbioWeldingLtd
 
 					if (runInTestMode)
 					{
+						//PartModuleList liveModuleList = newpart.Modules;
+						//PartModule liveModule = liveModuleList.GetModule(0);
+						//ConfigNode liveModuleNode = liveModule.snapshot.moduleValues;
 						mergeModules(partname, cfg, _modulelist, _advancedDebug);
 					}
 					else
