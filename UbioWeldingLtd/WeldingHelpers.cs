@@ -15,11 +15,8 @@ namespace UbioWeldingLtd
 		/// prepares the Categories for the saveing window
 		/// </summary>
 		/// <param name="inputList"></param>
-		/// <param name="inputDropDown"></param>
-		/// <param name="inputGUIStyle"></param>
 		public static List<GUIContent> initPartCategories(List<GUIContent> inputList)
 		{
-			//inputList = new List<GUIContent>();
 			List<string> catlist = new List<string>(System.Enum.GetNames(typeof(PartCategories)));
 			catlist.Remove(PartCategories.none.ToString());
 			foreach (string cat in catlist)
@@ -27,6 +24,38 @@ namespace UbioWeldingLtd
 				inputList.Add(new GUIContent(cat));
 			}
 			return inputList;
+		}
+
+
+		/// <summary>
+		/// creates a new dropdownmenu list for the techs that are required for the current welding part.
+		/// </summary>
+		/// <param name="techList"></param>
+		/// <param name="guiStyle"></param>
+		/// <param name="dropDown"></param>
+		/// <returns></returns>
+		public static GUIDropdown initVesselTypeDropDown(List<string> vesselTypeList, GUIStyle guiStyle, GUIDropdown dropDown)
+		{
+			List<GUIContent> contentList = new List<GUIContent>();
+
+			List<string> allVesselTypes = new List<string>(System.Enum.GetNames(typeof(VesselType)));
+
+			Debug.Log(string.Format("{0} vessel types Count = {1}", Constants.logPrefix, vesselTypeList.Count()));
+			foreach (string vesselTypeID in vesselTypeList)
+			{
+				string vesselTypeTitle = vesselTypeID; //for case, when techID will not be found - the length of the list of titles always must match the length of the list of techID's.
+				foreach (String vesselType in allVesselTypes)
+				{
+					if (vesselType == vesselTypeID)
+					{
+						vesselTypeTitle = vesselType;
+						break;
+					}
+				}
+				contentList.Add(new GUIContent(vesselTypeTitle));
+			}
+			dropDown = new GUIDropdown(contentList[0], contentList.ToArray(), "button", "box", guiStyle, 3);
+			return dropDown;
 		}
 
 
@@ -69,7 +98,6 @@ namespace UbioWeldingLtd
 		/// <returns></returns>
 		public static GUIStyle initGuiStyle(GUIStyle inputGUIStyle)
 		{
-			//inputGUIStyle = new GUIStyle();
 			inputGUIStyle.normal.textColor = Color.white;
 			inputGUIStyle.onHover.background =
 			inputGUIStyle.hover.background = new Texture2D(2, 2);

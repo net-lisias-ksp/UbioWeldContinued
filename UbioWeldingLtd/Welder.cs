@@ -70,7 +70,9 @@ namespace UbioWeldingLtd
 		private string _description = Constants.weldDefaultDesc;
 		private AttachRules _attachrules = new AttachRules();
 		private string _techRequire = string.Empty;
+		private string _vesselType = string.Empty;
 		private List<string> _listedTechs = new List<string>();
+		private List<string> _listedVesselTypes = new List<string>();
 		private int _entryCost = Constants.weldDefaultEntryCost;
 
 		private float _mass = 0.0f;
@@ -204,6 +206,12 @@ namespace UbioWeldingLtd
 			set { _category = value; }
 		}
 
+		public string vesselType
+		{
+			get { return _vesselType; }
+			set { _vesselType = value; }
+		}
+
 		public string techRequire
 		{
 			get { return _techRequire; }
@@ -213,6 +221,11 @@ namespace UbioWeldingLtd
 		public List<string> techList
 		{
 			get { return _listedTechs; }
+		}
+
+		public List<string> vesselTypeList
+		{
+			get { return _listedVesselTypes; }
 		}
 
 		/*
@@ -580,10 +593,20 @@ namespace UbioWeldingLtd
 				}
 			} //foreach (AttachNode node in newpart.attachNodes)
 
-			//TODO: Tech tree stuff
+			//reads the techtreenodes
 			if (!_listedTechs.Contains(newpart.partInfo.TechRequired))
 			{
 				_listedTechs.Add(newpart.partInfo.TechRequired);
+			}
+
+			//reads the vesseltype if that exists
+			Debugger.AdvDebug(string.Format(".. VesselType - {0}", newpart.vesselType), _advancedDebug);
+			if (newpart.vesselType != VesselType.Debris && newpart.vesselType != VesselType.Flag && newpart.vesselType != VesselType.Unknown)
+			{
+				if (!_listedVesselTypes.Contains(newpart.vesselType.ToString()))
+				{
+					_listedVesselTypes.Add(newpart.vesselType.ToString());
+				}
 			}
 
 			//Cost
@@ -1239,6 +1262,12 @@ namespace UbioWeldingLtd
 
 			//Add the mass
 			partconfig.AddValue("mass", _mass);
+
+			//Add the vesseltype if there is one
+			if (vesselTypeList.Count > 0)
+			{
+				partconfig.AddValue("vesselType", _vesselType);
+			}
 
 			//add drag
 			partconfig.AddValue("dragModelType", _dragModel);

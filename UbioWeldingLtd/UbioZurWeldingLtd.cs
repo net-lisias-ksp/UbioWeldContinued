@@ -35,6 +35,7 @@ namespace UbioWeldingLtd
 		private List<GUIContent> _catNames = new List<GUIContent>();
 		private GUIDropdown _catDropdown;
 		private GUIDropdown _techDropdown;
+		private GUIDropdown _vesselTypeDropdown;
 		private GUIStyle _guiStyle = new GUIStyle();
 		private GUISkin _guiskin = HighLogic.Skin;
 		private Vector2 _scrollRes;
@@ -398,6 +399,11 @@ namespace UbioWeldingLtd
 
 			_techDropdown = WeldingHelpers.initTechDropDown(_welder.techList, _guiStyle, _techDropdown);
 
+			if (_welder.vesselTypeList.Count > 0)
+			{
+				_vesselTypeDropdown = WeldingHelpers.initVesselTypeDropDown(_welder.vesselTypeList, _guiStyle, _vesselTypeDropdown);
+			}
+
 			_scrollMod = Vector2.zero;
 			_scrollRes = Vector2.zero;
 #if (DEBUG)
@@ -657,7 +663,7 @@ namespace UbioWeldingLtd
 							GUI.Label(new Rect(_guiInfoWindowColoumns[i].x, posH, columnWidth, height), "Description:");
 							posH += height + margin;
 							//_welder.Description = _textAreaDescription.DrawAdvancedGUITextArea(new Rect(_guiInfoWindowColoumns[i].x, posH, columnWidth, 7 * height + 6 * margin), _welder.Description, 600, (int)_state);
-							_welder.Description = GUI.TextArea(new Rect(_guiInfoWindowColoumns[i].x, posH, columnWidth, 7 * height + 6 * margin), _welder.Description, 600);
+							_welder.Description = GUI.TextArea(new Rect(_guiInfoWindowColoumns[i].x, posH, columnWidth, 8 * height + 7 * margin), _welder.Description, 600);
 						}
 						break;
 					case 1:
@@ -670,6 +676,14 @@ namespace UbioWeldingLtd
 							posH += height + margin;
 							Rect _techBox = new Rect(_guiInfoWindowColoumns[i].x, posH, columnWidth, height);
 							posH += height + margin;
+							Rect _vesselTypeBox = new Rect();
+							if (_welder.vesselTypeList.Count > 0)
+							{
+								GUI.Label(new Rect(_guiInfoWindowColoumns[i].x, posH, columnWidth, height), "VesselType:");
+								posH += height + margin;
+								_vesselTypeBox = new Rect(_guiInfoWindowColoumns[i].x, posH, columnWidth, height);
+								posH += height + margin;
+							}
 							GUI.Label(new Rect(_guiInfoWindowColoumns[i].x, posH, columnWidth, height), string.Format("Nb Parts: {0}", _welder.NbParts));
 							posH += height + margin;
 							GUI.Label(new Rect(_guiInfoWindowColoumns[i].x, posH, columnWidth, height), string.Format("Cost: {0:F2}", _welder.Cost));
@@ -684,6 +698,15 @@ namespace UbioWeldingLtd
 							posH += height + margin;
 							GUI.Label(new Rect(_guiInfoWindowColoumns[i].x, posH, columnWidth, height), string.Format("Drag: {0:F3} / {1:F3}", _welder.MinDrag, _welder.MaxDrag));
 
+							if (_techDropdown.IsOpen || _catDropdown.IsOpen)
+							{
+								GUI.Box(_vesselTypeBox, _welder.vesselType);
+							}
+							else
+							{
+								_welder.vesselType = _welder.vesselTypeList[_vesselTypeDropdown.Show(_vesselTypeBox)];
+							}
+
 							if (_catDropdown.IsOpen)
 							{
 								GUI.Box(_techBox, _welder.techRequire);
@@ -694,7 +717,6 @@ namespace UbioWeldingLtd
 							}
 							_catDropdown.SelectedItemIndex = (int)_welder.Category;
 							_welder.Category = (PartCategories)_catDropdown.Show(_cetegoryBox);
-
 						}
 						break;
 					case 2:

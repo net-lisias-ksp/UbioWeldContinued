@@ -44,7 +44,7 @@ namespace UbioWeldingLtd
 		public const int guiInfoWindowX		 = 300;
 		public const int guiInfoWindowY		 = 150;
 		public const int guiInfoWindowW		 = 705;
-		public const int guiInfoWindowH		 = 345;
+		public const int guiInfoWindowH		 = 370;
         public const int guiMainWindowW     = 300;
 		public const int guiMainWindowH		= 285;
 		public const int guiMainWindowHSettingsExpanded = 675;
