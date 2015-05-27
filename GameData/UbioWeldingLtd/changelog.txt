@@ -1,4 +1,5 @@
-
+2015-05-27 - Version 2.1.2 - Continued
+	Compatibility with KSP 1.0.x
 2015-01-14 - Version 2.1.1 - Continued
 	Compatibility with Linux and MacOS
 	AVC version check integration

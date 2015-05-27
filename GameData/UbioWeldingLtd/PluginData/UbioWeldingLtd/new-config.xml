@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <WeldingConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="KSP-Forum">
-  <MainWindowXPosition>325</MainWindowXPosition>
-  <MainWindowYPosition>141</MainWindowYPosition>
+  <MainWindowXPosition>328</MainWindowXPosition>
+  <MainWindowYPosition>244</MainWindowYPosition>
   <dataBaseAutoReload>false</dataBaseAutoReload>
   <includeAllNodes>false</includeAllNodes>
   <allowCareerMode>true</allowCareerMode>
