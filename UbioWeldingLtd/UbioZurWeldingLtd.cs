@@ -704,7 +704,10 @@ namespace UbioWeldingLtd
 							}
 							else
 							{
-								_welder.vesselType = _welder.vesselTypeList[_vesselTypeDropdown.Show(_vesselTypeBox)];
+								if (_welder.vesselTypeList.Count > 0)
+								{
+									_welder.vesselType = _welder.vesselTypeList[_vesselTypeDropdown.Show(_vesselTypeBox)];
+								}
 							}
 
 							if (_catDropdown.IsOpen)
