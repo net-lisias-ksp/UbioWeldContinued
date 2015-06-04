@@ -105,6 +105,16 @@ namespace UbioWeldingLtd
 		private static MaxTempCalcMethod _MaxTempCalcMethod = MaxTempCalcMethod.Lowest;
 		private int[] partsHashMap;
 
+		private int _modelIndex = 0;
+		private bool _meshSwitchRequired = false;
+		private List<int> _meshSwitchModelIndicies = new List<int>();
+		private List<string> _meshSwitchTransformNames = new List<string>();
+
+		public bool isMeshSwitchRequired
+		{
+			get { return _meshSwitchRequired; }
+		}
+
 
 		public static bool includeAllNodes
 		{
@@ -182,6 +192,11 @@ namespace UbioWeldingLtd
 				}
 				return moduleslist;
 			}
+		}
+
+		public List<ConfigNode> moduleList
+		{
+			get { return _modulelist; }
 		}
 
 		public string[] Resources
@@ -333,14 +348,120 @@ namespace UbioWeldingLtd
 				}
 				else
 				{
-
 					Debug.LogWarning(string.Format("{0}{1}.No mesh found, using default", Constants.logWarning, Constants.logPrefix));
-
 				}
 			}
 
 			return url;
 		}
+
+
+		private string loadListIntoString<T>(string buildingResult, List<T> list)
+		{
+			foreach (T obj in list)
+			{
+				if (string.IsNullOrEmpty(buildingResult))
+				{
+					buildingResult = obj.ToString();
+				}
+				else
+				{
+				}
+			}
+			return buildingResult;
+		}
+
+
+
+		public void prepareWeldedMeshSwitchModule(List<ConfigNode> moduleList)
+		{
+			ConfigNode newWeldedMeshSwitch = new ConfigNode(Constants.weldModuleNode);
+
+			string indexString = string.Empty;
+			string transformNamesString = string.Empty;
+
+			indexString = loadListIntoString(indexString, _meshSwitchModelIndicies);
+			transformNamesString = loadListIntoString(transformNamesString, _meshSwitchTransformNames);
+
+			newWeldedMeshSwitch.AddValue("name", Constants.weldedmeshSwitchModule);
+			newWeldedMeshSwitch.AddValue("objectIndicies", indexString);
+			newWeldedMeshSwitch.AddValue("objects", transformNamesString);
+
+			moduleList.Add(newWeldedMeshSwitch);
+		}
+
+
+		/// <summary>
+		/// loads the names for the transforms and the Index into the weldedMeshSwitch
+		/// </summary>
+		/// <param name="weldingPart"></param>
+		private void loadMeshSwitchValues(Part weldingPart)
+		{
+			Transform modelTransform = weldingPart.FindModelTransform(Constants.weldModelNode.ToLower()).GetChild(0);
+			List<string> transformList = new List<string>();
+			string listEntry = string.Empty;
+
+			while (modelTransform.childCount < 2)
+			{
+				modelTransform = modelTransform.GetChild(0);
+			}
+
+			foreach (Transform t in modelTransform)
+			{
+				if (t.gameObject.activeSelf)
+				{
+					if (string.IsNullOrEmpty(listEntry))
+					{
+						listEntry = t.name;
+					}
+					else
+					{
+					}
+				}
+			}
+			_meshSwitchModelIndicies.Add(_modelIndex);
+			_meshSwitchTransformNames.Add(listEntry);
+		}
+
+
+		/// <summary>
+		/// adds the actual modelinfo to the partconfig and checks if there is a meshswitch integrated so that it prepares the meshes from the part
+		/// </summary>
+		/// <param name="modelToAdd"></param>
+		/// <param name="containsMeshSwitch"></param>
+		/// <param name="weldingPart"></param>
+		private void addNewModel(ModelInfo modelToAdd, bool containsMeshSwitch, Part weldingPart)
+		{
+			if (containsMeshSwitch)
+			{
+				_meshSwitchRequired = true;
+				loadMeshSwitchValues(weldingPart);
+			}
+			_models.Add(modelToAdd);
+			_modelIndex++;
+		}
+
+
+		/// <summary>
+		/// a generell check of the partconfig if it contains a InterstellarMeshSwitch
+		/// </summary>
+		/// <param name="partconfig"></param>
+		/// <returns></returns>
+		private bool doesPartContainMeshSwitch(UrlDir.UrlConfig partconfig)
+		{
+			ConfigNode[] originalModules = partconfig.config.GetNodes(Constants.weldModuleNode);
+			string moduleName = "";
+			foreach (ConfigNode module in originalModules)
+			{
+				moduleName = module.GetValue(module.values.DistinctNames()[0]);
+				if (moduleName == Constants.interstellarMeshSwitchModule)
+				{
+					return true;
+				}
+			}
+			return false;
+		}
+
 
 		/*
 		 * Weld a new part
@@ -414,7 +535,7 @@ namespace UbioWeldingLtd
 						Debugger.AdvDebug(string.Format("..rotation {0}", info.rotation.ToString("F3")), _advancedDebug);
 						Debugger.AdvDebug(string.Format("..scale {0}", info.scale.ToString("F3")), _advancedDebug);
 
-						_models.Add(info);
+						addNewModel(info, doesPartContainMeshSwitch(cfg), newpart);
 						_coMOffset += info.position;
 					}
 					else //cfg.config.HasNode(Constants.weldModelNode)
@@ -485,43 +606,13 @@ namespace UbioWeldingLtd
 							{
 								info.parent = node.GetValue("parent");
 							}
-							_models.Add(info);
+							addNewModel(info, doesPartContainMeshSwitch(cfg), newpart);
 							_coMOffsetSum += info.position;
 						} //foreach (ConfigNode node in modelnodes)
 						_coMOffset = _coMOffsetSum / modelnodes.Length;
 					} // else of if ( !cfg.config.HasNode(Constants.weldModelNode) )
 
-					//RESSOURCE
-					ConfigNode[] ressources = cfg.config.GetNodes(Constants.weldResNode);
-					Debugger.AdvDebug(string.Format("..Config {0} has {1} {2} node", cfg.name, ressources.Length, Constants.weldResNode), _advancedDebug);
-
-					foreach (ConfigNode orires in ressources)
-					{
-						ConfigNode res = orires.CreateCopy();
-						string resname = res.GetValue("name");
-						bool exist = false;
-						foreach (ConfigNode rescfg in _resourceslist)
-						{
-							if (string.Equals(resname, rescfg.GetValue("name")))
-							{
-								//add the ressource
-								float amount = float.Parse(res.GetValue("amount")) + float.Parse(rescfg.GetValue("amount"));
-								float max = float.Parse(res.GetValue("maxAmount")) + float.Parse(rescfg.GetValue("maxAmount"));
-								rescfg.SetValue("amount", amount.ToString());
-								rescfg.SetValue("maxAmount", max.ToString());
-								exist = true;
-								Debugger.AdvDebug(string.Format("..{0}{1} {2}/{3}", Constants.logResMerge, resname, amount, max), _advancedDebug);
-								break;
-							}
-						}
-						if (!exist)
-						{
-							_resourceslist.Add(res);
-							float amount = float.Parse(res.GetValue("amount"));
-							float max = float.Parse(res.GetValue("maxAmount"));
-							Debugger.AdvDebug(string.Format("..{0}{1} {2}/{3}", Constants.logResAdd, resname, amount, max), _advancedDebug);
-						}
-					} //foreach (ConfigNode res in ressources)
+					mergeResources(newpart, _resourceslist);
 
 					//MODULE
 					ConfigNode[] originalModules = cfg.config.GetNodes(Constants.weldModuleNode);
@@ -539,6 +630,7 @@ namespace UbioWeldingLtd
 					{
 						ret = OldModuleMerge(ret, partname, cfg);
 					}
+
 					//manage the fx group
 					foreach (FXGroup fx in newpart.fxGroups)
 					{
@@ -700,6 +792,43 @@ namespace UbioWeldingLtd
 			}
 			_partNumber++;
 			return ret;
+		}
+
+		private void mergeResources(Part newpart, List<ConfigNode> resourcesList)
+		{
+			List<PartResource> partResourcesList = newpart.Resources.list;
+			Debugger.AdvDebug(string.Format("..Part {0} has {1} {2} node", newpart.partName, partResourcesList.Count, Constants.weldResNode), _advancedDebug);
+			foreach (PartResource partRes in partResourcesList)
+			{
+				string resourceName = partRes.resourceName;
+				float resourceAmount = 0;
+				float resourceMax = 0;
+				bool exist = false;
+				foreach (ConfigNode rescfg in resourcesList)
+				{
+					if (string.Equals(resourceName, rescfg.GetValue("name")))
+					{
+						resourceAmount = float.Parse(partRes.amount.ToString()) + float.Parse(rescfg.GetValue("amount"));
+						resourceMax = float.Parse(partRes.maxAmount.ToString()) + float.Parse(rescfg.GetValue("maxAmount"));
+						rescfg.SetValue("amount", resourceAmount.ToString());
+						rescfg.SetValue("maxAmount", resourceMax.ToString());
+						exist = true;
+						Debugger.AdvDebug(string.Format("..{0}{1} {2}/{3}", Constants.logResMerge, resourceName, resourceAmount, resourceMax), _advancedDebug);
+						break;
+					}
+				}
+				if (!exist)
+				{
+					ConfigNode resourceNode = new ConfigNode(Constants.weldResNode);
+					resourceAmount = float.Parse(partRes.amount.ToString());
+					resourceMax = float.Parse(partRes.maxAmount.ToString());
+					resourceNode.AddValue("name", resourceName);
+					resourceNode.AddValue("amount", float.Parse(partRes.amount.ToString()));
+					resourceNode.AddValue("maxAmount", float.Parse(partRes.maxAmount.ToString()));
+					resourcesList.Add(resourceNode);
+					Debugger.AdvDebug(string.Format("..{0}{1} {2}/{3}", Constants.logResAdd, resourceName, resourceAmount, resourceMax), _advancedDebug);
+				}
+			}
 		}
 
 

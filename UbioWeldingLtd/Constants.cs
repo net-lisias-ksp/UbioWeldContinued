@@ -146,6 +146,11 @@ namespace UbioWeldingLtd
 		public const int weldDefaultEntryCost   = 0;
 		public const int weldNumberOfFractionalDigits = 5;
 
+		public const string weldedMeshSwitchSubSplitter = ",";
+		public const string weldedMeshSwitchSplitter = ";";
+		public const string interstellarMeshSwitchModule = "InterstellarMeshSwitch";
+		public const string weldedmeshSwitchModule = "WeldedMeshSwitch";
+
 		//module name
 		public const string modStockSas		 = "ModuleSAS";
 		public const string modStockGear		= "ModuleLandingGear";

@@ -32,6 +32,8 @@
     <ModuleAttribute AttributeName="ModuleTweakableSolarPanel" />
     <ModuleAttribute AttributeName="CModuleStrut" />
     <ModuleAttribute AttributeName="CModuleLinkedMesh" />
+    <ModuleAttribute AttributeName="InterstellarMeshSwitch" />
+    <ModuleAttribute AttributeName="InterstellarFuelSwitch" />
   </ModulesToIgnore>
   <ModulesToMultiply>
     <ModuleAttribute AttributeName="AntimatterCollector" />

@@ -67,6 +67,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StyledGUIContent.cs" />
     <Compile Include="UbioZurWeldingLtd.cs" />
+    <Compile Include="WeldedMeshSwitch.cs" />
+    <Compile Include="WeldedParseTools.cs" />
     <Compile Include="Welder.cs" />
     <Compile Include="WeldingConfiguration.cs" />
     <Compile Include="WeldingHelpers.cs" />

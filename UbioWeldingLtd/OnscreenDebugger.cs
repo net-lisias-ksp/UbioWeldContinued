@@ -3,17 +3,17 @@
 namespace UbioWeldingLtd
 {
 
-	//[KSPAddon(KSPAddon.Startup.EditorAny, false)]
+	[KSPAddon(KSPAddon.Startup.EditorAny, false)]
 	public class OnscreenDebugger : MonoBehaviour
 	{
 
-		//public void Update()
-		//{
-			//if (Input.GetKeyUp(KeyCode.Return))
-			//{
-			//	listingParts(EditorLogic.RootPart.transform);
-			//}
-		//}
+		public void Update()
+		{
+			if (Input.GetKeyUp(KeyCode.Return))
+			{
+				listingParts(EditorLogic.RootPart.transform);
+			}
+		}
 
 
 		private void listingParts(Transform target)
