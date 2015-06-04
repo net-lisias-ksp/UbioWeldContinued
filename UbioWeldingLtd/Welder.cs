@@ -366,6 +366,7 @@ namespace UbioWeldingLtd
 				}
 				else
 				{
+					buildingResult += Constants.weldedMeshSwitchSplitter + obj.ToString();
 				}
 			}
 			return buildingResult;
@@ -416,6 +417,7 @@ namespace UbioWeldingLtd
 					}
 					else
 					{
+						listEntry += Constants.weldedMeshSwitchSubSplitter + t.name;
 					}
 				}
 			}
