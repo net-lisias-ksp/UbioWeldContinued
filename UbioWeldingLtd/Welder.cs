@@ -387,6 +387,7 @@ namespace UbioWeldingLtd
 			newWeldedMeshSwitch.AddValue("name", Constants.weldedmeshSwitchModule);
 			newWeldedMeshSwitch.AddValue("objectIndicies", indexString);
 			newWeldedMeshSwitch.AddValue("objects", transformNamesString);
+			newWeldedMeshSwitch.AddValue("advancedDebug", _advancedDebug);
 
 			moduleList.Add(newWeldedMeshSwitch);
 		}
@@ -803,17 +804,15 @@ namespace UbioWeldingLtd
 			foreach (PartResource partRes in partResourcesList)
 			{
 				string resourceName = partRes.resourceName;
-				float resourceAmount = 0;
-				float resourceMax = 0;
+				float resourceAmount = float.Parse(partRes.amount.ToString());
+				float resourceMax = float.Parse(partRes.maxAmount.ToString());
 				bool exist = false;
 				foreach (ConfigNode rescfg in resourcesList)
 				{
 					if (string.Equals(resourceName, rescfg.GetValue("name")))
 					{
-						resourceAmount = float.Parse(partRes.amount.ToString()) + float.Parse(rescfg.GetValue("amount"));
-						resourceMax = float.Parse(partRes.maxAmount.ToString()) + float.Parse(rescfg.GetValue("maxAmount"));
-						rescfg.SetValue("amount", resourceAmount.ToString());
-						rescfg.SetValue("maxAmount", resourceMax.ToString());
+						rescfg.SetValue("amount", (resourceAmount + float.Parse(rescfg.GetValue("maxAmount"))).ToString());
+						rescfg.SetValue("maxAmount", (resourceMax + float.Parse(rescfg.GetValue("maxAmount"))).ToString());
 						exist = true;
 						Debugger.AdvDebug(string.Format("..{0}{1} {2}/{3}", Constants.logResMerge, resourceName, resourceAmount, resourceMax), _advancedDebug);
 						break;
@@ -822,11 +821,9 @@ namespace UbioWeldingLtd
 				if (!exist)
 				{
 					ConfigNode resourceNode = new ConfigNode(Constants.weldResNode);
-					resourceAmount = float.Parse(partRes.amount.ToString());
-					resourceMax = float.Parse(partRes.maxAmount.ToString());
 					resourceNode.AddValue("name", resourceName);
-					resourceNode.AddValue("amount", float.Parse(partRes.amount.ToString()));
-					resourceNode.AddValue("maxAmount", float.Parse(partRes.maxAmount.ToString()));
+					resourceNode.AddValue("amount", resourceAmount.ToString());
+					resourceNode.AddValue("maxAmount", resourceMax.ToString());
 					resourcesList.Add(resourceNode);
 					Debugger.AdvDebug(string.Format("..{0}{1} {2}/{3}", Constants.logResAdd, resourceName, resourceAmount, resourceMax), _advancedDebug);
 				}
