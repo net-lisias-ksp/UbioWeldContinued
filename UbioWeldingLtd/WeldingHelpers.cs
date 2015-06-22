@@ -281,5 +281,21 @@ namespace UbioWeldingLtd
 		}
 
 
+
+		public static float angleClamp(float input, float min, float max)
+		{
+			while (input >= max)
+			{
+				input -= 360;
+			}
+
+			while (input < min)
+			{
+				input += 360;
+			}
+			return input;
+		}
+
+
 	}
 }

@@ -268,7 +268,8 @@ namespace UbioWeldingLtd
 		private void setRelativePosition(Part part, ref Vector3 position)
 		{
 			position += part.transform.position - part.localRoot.transform.position;
-		} //private void setRelativePosition(Part part, ref Vector3 position)
+		}
+
 
 		/*
 		 * Set relative rotation
@@ -277,15 +278,11 @@ namespace UbioWeldingLtd
 		{
 			rotation += part.transform.eulerAngles - part.localRoot.transform.eulerAngles;
 
-			if (360.0f <= rotation.x) rotation.x -= 360.0f;
-			else if (0 > rotation.x) rotation.x += 360.0f;
+			rotation.x = WeldingHelpers.angleClamp(rotation.x, 0, 360);
+			rotation.y = WeldingHelpers.angleClamp(rotation.y, 0, 360);
+			rotation.z = WeldingHelpers.angleClamp(rotation.z, 0, 360);
+		}
 
-			if (360.0f <= rotation.y) rotation.y -= 360.0f;
-			else if (0 > rotation.y) rotation.y += 360.0f;
-
-			if (360.0f <= rotation.y) rotation.y -= 360.0f;
-			else if (0 > rotation.y) rotation.y += 360.0f;
-		} //private void setRelativeRotation(Part part, ref Vector3 rotation)
 
 		/*
 		 * Process the new center of mass to the models and node
@@ -564,13 +561,11 @@ namespace UbioWeldingLtd
 							Debugger.AdvDebug(string.Format("..node.HasValue(\"position\") {0}", node.HasValue("position")), _advancedDebug);
 							Debugger.AdvDebug(string.Format("..node position {0}", position.ToString("F3")), _advancedDebug);
 							setRelativePosition(newpart, ref position);
-
 							info.position = position;
 
 							Vector3 rotation = (node.HasValue("rotation")) ? ConfigNode.ParseVector3(node.GetValue("rotation")) : Vector3.zero;
 							Debugger.AdvDebug(string.Format("..node.HasValue(\"rotation\") {0}", node.HasValue("rotation")), _advancedDebug);
 							Debugger.AdvDebug(string.Format("..node rotation {0}", rotation.ToString("F3")), _advancedDebug);
-
 							setRelativeRotation(newpart, ref rotation);
 							info.rotation = rotation;
 
@@ -760,6 +755,10 @@ namespace UbioWeldingLtd
 					_breakingTorque = (_partNumber == 0) ? newpart.breakingTorque : (_breakingTorque + newpart.breakingTorque) * 0.5f;
 					break;
 			}
+			Debugger.AdvDebug(string.Format("Part crashTolerance: {0} - Global crashTolerance: {1} - method: {2}", newpart.crashTolerance, _crashTolerance, _StrengthCalcMethod), _advancedDebug);
+			Debugger.AdvDebug(string.Format("Part crashTolerance: {0} - Global crashTolerance: {1} - method: {2}", newpart.breakingForce, _breakingForce, _StrengthCalcMethod), _advancedDebug);
+			Debugger.AdvDebug(string.Format("Part breakingTorque: {0} - Global breakingTorque: {1} - method: {2}", newpart.breakingTorque, _breakingTorque, _StrengthCalcMethod), _advancedDebug);
+
 			switch (_MaxTempCalcMethod)
 			{
 				case MaxTempCalcMethod.ArithmeticMean:
@@ -769,9 +768,10 @@ namespace UbioWeldingLtd
 					_maxTemp = (_partNumber == 0) ? (float)newpart.maxTemp : (float)Math.Min(_maxTemp, newpart.maxTemp);
 					break;
 				case MaxTempCalcMethod.WeightedAverage:
-					_maxTemp = (_partNumber == 0) ? (float)newpart.maxTemp : (float)(_maxTemp * olddrymass + newpart.maxTemp * olddrymass) / (olddrymass + newpart.mass);
+					_maxTemp = (_partNumber == 0) ? (float)newpart.maxTemp : (float)(_maxTemp * olddrymass + newpart.maxTemp * newpart.mass) / (olddrymass + newpart.mass);
 					break;
 			}
+			Debugger.AdvDebug(string.Format("Part maxTemp: {0} - Global maxTemp: {1} - method: {2}", newpart.maxTemp, _maxTemp, _MaxTempCalcMethod), _advancedDebug);
 
 			//Phisics signifance
 			if (newpart.PhysicsSignificance != 0 && _physicsSignificance != -1)
@@ -811,7 +811,7 @@ namespace UbioWeldingLtd
 				{
 					if (string.Equals(resourceName, rescfg.GetValue("name")))
 					{
-						rescfg.SetValue("amount", (resourceAmount + float.Parse(rescfg.GetValue("maxAmount"))).ToString());
+						rescfg.SetValue("amount", (resourceAmount + float.Parse(rescfg.GetValue("amount"))).ToString());
 						rescfg.SetValue("maxAmount", (resourceMax + float.Parse(rescfg.GetValue("maxAmount"))).ToString());
 						exist = true;
 						Debugger.AdvDebug(string.Format("..{0}{1} {2}/{3}", Constants.logResMerge, resourceName, resourceAmount, resourceMax), _advancedDebug);

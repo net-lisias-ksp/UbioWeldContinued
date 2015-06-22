@@ -237,7 +237,17 @@ namespace UbioWeldingLtd
 			"ModuleTweakableRCS",   
 			"ModuleTweakableSolarPanel",
 			"CModuleStrut",
-			"CModuleLinkedMesh"
+			"CModuleLinkedMesh",
+			"InterstellarMeshSwitch",
+			"InterstellarFuelSwitch",
+			"FSfuelSwitch",
+			"ModuleConnectedLivingSpace",
+			"ModuleTweakableJettison",
+			"ModuleTweakableReactionWheel",
+			"ModuleTweakableSAS",
+			"PilotRSASFix",
+			"ModuleTweakableFuelPump",
+			"CrewManifestModule"
 		};
 
 		public static string[] basicModulesToMultiply =   
@@ -274,7 +284,9 @@ namespace UbioWeldingLtd
 		public static string[] basicBreakingModuleAttributes = 
 		{
 			"FNAntimatterReactor_radius",
-			"ModuleScienceExperiment_experimentID"
+			"ModuleScienceExperiment_experimentID",
+			"DMModuleScienceAnimate_experimentID",
+			"ModuleDeployableSolarPanel_animationName"
 		};
 
 		public static string CommentOutText(string text)

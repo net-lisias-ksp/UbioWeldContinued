@@ -63,7 +63,7 @@ namespace UbioWeldingLtd
 						parentTransforms.Clear();
 						for (int index = 0; index < batchedTransformIndicies.Length; index++)
 						{
-							Transform newTransform = part.FindModelTransform(Constants.weldModelNode.ToLower()).GetChild(index);
+							Transform newTransform = part.FindModelTransform(Constants.weldModelNode.ToLower()).GetChild(batchedTransformIndicies[index]);
 							if (newTransform == null)
 							{
 								Debugger.AdvDebug("[WeldedMeshSwitch] could not find Transform at index " + index, advancedDebug);
@@ -84,12 +84,12 @@ namespace UbioWeldingLtd
 									Transform newFinalTransform = newTransform.FindChild(finalName.Trim(' '));
 									if (newFinalTransform == null)
 									{
-										Debugger.AdvDebug("[WeldedMeshSwitch] could not find finalTransform " + finalName, advancedDebug);
+										Debugger.AdvDebug("[WeldedMeshSwitch] could not find Transform " + finalName, advancedDebug);
 									}
 									else
 									{
 										newfinalTransforms.Add(newFinalTransform);
-										Debugger.AdvDebug("[WeldedMeshSwitch] added finalTransform" + finalName + " to list", advancedDebug);
+										Debugger.AdvDebug("[WeldedMeshSwitch] added find Transform" + finalName + " to list", advancedDebug);
 									}
 								}
 								if (newfinalTransforms.Count > 0)

@@ -302,7 +302,7 @@ namespace UbioWeldingLtd
 			{
 				if (newModule.HasValue(ModuleAttribute) || existingNewModule.HasValue(ModuleAttribute))
 				{
-					float newValue = float.Parse(newModule.GetValue(ModuleAttribute));
+					float newValue = float.TryParse(newModule.GetValue(ModuleAttribute), out newValue) == false ? float.Parse(existingNewModule.GetValue(ModuleAttribute)) : float.Parse(newModule.GetValue(ModuleAttribute));
 					Debugger.AdvDebug(string.Format("| {0} - newValue - {1} = {2}", newModuleName, ModuleAttribute, newValue), advancedDebugging);
 
 					if (existingNewModule.HasValue(ModuleAttribute) && newModule.HasValue(ModuleAttribute))
