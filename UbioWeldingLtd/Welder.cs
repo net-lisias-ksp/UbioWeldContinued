@@ -105,16 +105,65 @@ namespace UbioWeldingLtd
 		private static MaxTempCalcMethod _MaxTempCalcMethod = MaxTempCalcMethod.Lowest;
 		private int[] partsHashMap;
 
+		private float _explosionPotential = 0;
+		private double _thermalMassModifier = 0;
+		private double _heatConductivity = 0;
+		private double _emissiveConstant = 0;
+		private double _radiatorHeadroom = 0;
+		private Vector3 _CoLOffset = Vector3.zero;
+		private Vector3 _CoPOffset = Vector3.zero;
+		private string _bulkheadProfiles = string.Empty;
+		private int _stackSymmetry = 0;
+
 		private int _modelIndex = 0;
 		private bool _meshSwitchRequired = false;
 		private List<int> _meshSwitchModelIndicies = new List<int>();
 		private List<string> _meshSwitchTransformNames = new List<string>();
 
+		public string bulkheadProfiles
+		{
+			get { return _bulkheadProfiles; }
+		}
+
+		public Vector3 CoLOffset
+		{
+			get { return _CoLOffset; }
+		}
+
+		public Vector3 CoPOffset
+		{
+			get { return _CoPOffset; }
+		}
+
+		public float explosionPotential
+		{
+			get { return _explosionPotential; }
+		}
+
+		public double thermalMassModifier
+		{
+			get { return _thermalMassModifier; }
+		}
+
+		public double heatConductivity
+		{
+			get { return _heatConductivity; }
+		}
+
+		public double emissiveConstant
+		{
+			get { return _emissiveConstant; }
+		}
+
+		public double radiatorHeadroom
+		{
+			get { return _radiatorHeadroom; }
+		}
+
 		public bool isMeshSwitchRequired
 		{
 			get { return _meshSwitchRequired; }
 		}
-
 
 		public static bool includeAllNodes
 		{
@@ -687,6 +736,81 @@ namespace UbioWeldingLtd
 			if (!_listedTechs.Contains(newpart.partInfo.TechRequired))
 			{
 				_listedTechs.Add(newpart.partInfo.TechRequired);
+			}
+
+			if (!string.IsNullOrEmpty(newpart.partInfo.bulkheadProfiles))
+			{
+				_bulkheadProfiles = newpart.partInfo.bulkheadProfiles;
+			}
+
+			if (newpart.CoLOffset != null && newpart.CoLOffset != Vector3.zero)
+			{
+				_CoLOffset += newpart.CoLOffset;
+			}
+
+			if (newpart.CoPOffset != null && newpart.CoPOffset != Vector3.zero)
+			{
+				_CoPOffset += newpart.CoPOffset;
+			}
+
+			if (newpart.explosionPotential != 0)
+			{
+				if (_explosionPotential == 0)
+				{
+					_explosionPotential = newpart.explosionPotential;
+				}
+				else
+				{
+					_explosionPotential = (_explosionPotential + newpart.explosionPotential) / 2;
+				}
+			}
+
+			if (newpart.heatConductivity != 0)
+			{
+				if (heatConductivity == 0)
+				{
+					_heatConductivity = newpart.heatConductivity;
+				}
+				else
+				{
+					_heatConductivity = (_heatConductivity + newpart.heatConductivity) / 2;
+				}
+			}
+
+			if (newpart.emissiveConstant != 0)
+			{
+				if (_emissiveConstant == 0)
+				{
+					_emissiveConstant = newpart.emissiveConstant;
+				}
+				else
+				{
+					_emissiveConstant = (_emissiveConstant + newpart.emissiveConstant) / 2;
+				}
+			}
+
+			if (newpart.thermalMassModifier != 0)
+			{
+				if (_thermalMassModifier == 0)
+				{
+					_thermalMassModifier = newpart.thermalMassModifier;
+				}
+				else
+				{
+					_thermalMassModifier = (_thermalMassModifier + newpart.thermalMassModifier) / 2;
+				}
+			}
+
+			if (newpart.radiatorHeadroom != 0)
+			{
+				if (_radiatorHeadroom == 0)
+				{
+					_radiatorHeadroom = newpart.radiatorHeadroom;
+				}
+				else
+				{
+					_radiatorHeadroom = (_radiatorHeadroom + newpart.radiatorHeadroom) / 2;
+				}
 			}
 
 			//reads the vesseltype if that exists
@@ -1368,6 +1492,18 @@ namespace UbioWeldingLtd
 			partconfig.name = Constants.weldPartNode; //Because it get removed during the merge!?
 			//Add CrewCapacity
 			partconfig.AddValue("CrewCapacity", _crewCapacity);
+			// Add stackSymmetry
+			partconfig.AddValue("stackSymmetry", _stackSymmetry);
+
+			// Add Lifting Offsets
+			if (_CoLOffset != Vector3.zero)
+			{
+				partconfig.AddValue("CoLOffset", _CoLOffset);
+			}
+			if (_CoPOffset != Vector3.zero)
+			{
+				partconfig.AddValue("CoPOffset", _CoPOffset);
+			}
 
 			//Add R&D (.22)
 			partconfig.AddValue("TechRequired", _techRequire);
@@ -1411,6 +1547,33 @@ namespace UbioWeldingLtd
 
 			//add if crossfeed
 			partconfig.AddValue("fuelCrossFeed", _fuelCrossFeed);
+
+			// Add expolsionpotential
+			if (_explosionPotential > 0)
+			{
+				partconfig.AddValue("explosionPotential", _explosionPotential);
+			}
+
+			// Add temperature Values
+			if (_thermalMassModifier > 0)
+			{
+				partconfig.AddValue("thermalMassModifier", _thermalMassModifier);
+			}
+			if (_heatConductivity > 0)
+			{
+				partconfig.AddValue("heatConductivity", _heatConductivity);
+			}
+			if (_emissiveConstant > 0)
+			{
+				partconfig.AddValue("emissiveConstant", _emissiveConstant);
+			}
+			if (_radiatorHeadroom > 0)
+			{
+				partconfig.AddValue("radiatorHeadroom", _radiatorHeadroom);
+			}
+
+			// Add bulkheadProfile
+			partconfig.AddValue("bulkheadProfiles", _bulkheadProfiles);
 
 			//add RESOURCE
 			foreach (ConfigNode res in _resourceslist)

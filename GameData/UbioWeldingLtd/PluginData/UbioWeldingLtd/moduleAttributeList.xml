@@ -69,6 +69,7 @@
   <BreakingModuleAttributes>
     <ModuleAttribute AttributeName="FNAntimatterReactor_radius" />
     <ModuleAttribute AttributeName="ModuleScienceExperiment_experimentID" />
+    <ModuleAttribute AttributeName="DMModuleScienceAnimate_experimentID" />
     <ModuleAttribute AttributeName="ModuleDeployableSolarPanel_animationName" />
   </BreakingModuleAttributes>
 </ModuleAttributeLists>
