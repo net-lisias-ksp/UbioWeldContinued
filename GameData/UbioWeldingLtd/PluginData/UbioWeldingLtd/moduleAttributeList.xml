@@ -32,6 +32,16 @@
     <ModuleAttribute AttributeName="ModuleTweakableSolarPanel" />
     <ModuleAttribute AttributeName="CModuleStrut" />
     <ModuleAttribute AttributeName="CModuleLinkedMesh" />
+    <ModuleAttribute AttributeName="InterstellarMeshSwitch" />
+    <ModuleAttribute AttributeName="InterstellarFuelSwitch" />
+    <ModuleAttribute AttributeName="FSfuelSwitch" />
+    <ModuleAttribute AttributeName="ModuleConnectedLivingSpace" />
+    <ModuleAttribute AttributeName="ModuleTweakableJettison" />
+    <ModuleAttribute AttributeName="ModuleTweakableReactionWheel" />
+    <ModuleAttribute AttributeName="ModuleTweakableSAS" />
+    <ModuleAttribute AttributeName="PilotRSASFix" />
+    <ModuleAttribute AttributeName="ModuleTweakableFuelPump" />
+    <ModuleAttribute AttributeName="CrewManifestModule" />
   </ModulesToIgnore>
   <ModulesToMultiply>
     <ModuleAttribute AttributeName="AntimatterCollector" />
@@ -59,6 +69,8 @@
   <BreakingModuleAttributes>
     <ModuleAttribute AttributeName="FNAntimatterReactor_radius" />
     <ModuleAttribute AttributeName="ModuleScienceExperiment_experimentID" />
+    <ModuleAttribute AttributeName="DMModuleScienceAnimate_experimentID" />
+    <ModuleAttribute AttributeName="ModuleDeployableSolarPanel_animationName" />
   </BreakingModuleAttributes>
 </ModuleAttributeLists>
 <!-- The ModuleAttributeList.xml gives you the ability to edit how the Weldingtool will process the merging of certain modules and their attributes. -->

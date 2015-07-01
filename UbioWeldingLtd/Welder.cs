@@ -105,6 +105,65 @@ namespace UbioWeldingLtd
 		private static MaxTempCalcMethod _MaxTempCalcMethod = MaxTempCalcMethod.Lowest;
 		private int[] partsHashMap;
 
+		private float _explosionPotential = 0;
+		private double _thermalMassModifier = 0;
+		private double _heatConductivity = 0;
+		private double _emissiveConstant = 0;
+		private double _radiatorHeadroom = 0;
+		private Vector3 _CoLOffset = Vector3.zero;
+		private Vector3 _CoPOffset = Vector3.zero;
+		private string _bulkheadProfiles = string.Empty;
+		private int _stackSymmetry = 0;
+
+		private int _modelIndex = 0;
+		private bool _meshSwitchRequired = false;
+		private List<int> _meshSwitchModelIndicies = new List<int>();
+		private List<string> _meshSwitchTransformNames = new List<string>();
+
+		public string bulkheadProfiles
+		{
+			get { return _bulkheadProfiles; }
+		}
+
+		public Vector3 CoLOffset
+		{
+			get { return _CoLOffset; }
+		}
+
+		public Vector3 CoPOffset
+		{
+			get { return _CoPOffset; }
+		}
+
+		public float explosionPotential
+		{
+			get { return _explosionPotential; }
+		}
+
+		public double thermalMassModifier
+		{
+			get { return _thermalMassModifier; }
+		}
+
+		public double heatConductivity
+		{
+			get { return _heatConductivity; }
+		}
+
+		public double emissiveConstant
+		{
+			get { return _emissiveConstant; }
+		}
+
+		public double radiatorHeadroom
+		{
+			get { return _radiatorHeadroom; }
+		}
+
+		public bool isMeshSwitchRequired
+		{
+			get { return _meshSwitchRequired; }
+		}
 
 		public static bool includeAllNodes
 		{
@@ -184,6 +243,11 @@ namespace UbioWeldingLtd
 			}
 		}
 
+		public List<ConfigNode> moduleList
+		{
+			get { return _modulelist; }
+		}
+
 		public string[] Resources
 		{
 			get
@@ -253,7 +317,8 @@ namespace UbioWeldingLtd
 		private void setRelativePosition(Part part, ref Vector3 position)
 		{
 			position += part.transform.position - part.localRoot.transform.position;
-		} //private void setRelativePosition(Part part, ref Vector3 position)
+		}
+
 
 		/*
 		 * Set relative rotation
@@ -262,15 +327,11 @@ namespace UbioWeldingLtd
 		{
 			rotation += part.transform.eulerAngles - part.localRoot.transform.eulerAngles;
 
-			if (360.0f <= rotation.x) rotation.x -= 360.0f;
-			else if (0 > rotation.x) rotation.x += 360.0f;
+			rotation.x = WeldingHelpers.angleClamp(rotation.x, 0, 360);
+			rotation.y = WeldingHelpers.angleClamp(rotation.y, 0, 360);
+			rotation.z = WeldingHelpers.angleClamp(rotation.z, 0, 360);
+		}
 
-			if (360.0f <= rotation.y) rotation.y -= 360.0f;
-			else if (0 > rotation.y) rotation.y += 360.0f;
-
-			if (360.0f <= rotation.y) rotation.y -= 360.0f;
-			else if (0 > rotation.y) rotation.y += 360.0f;
-		} //private void setRelativeRotation(Part part, ref Vector3 rotation)
 
 		/*
 		 * Process the new center of mass to the models and node
@@ -333,14 +394,123 @@ namespace UbioWeldingLtd
 				}
 				else
 				{
-
 					Debug.LogWarning(string.Format("{0}{1}.No mesh found, using default", Constants.logWarning, Constants.logPrefix));
-
 				}
 			}
 
 			return url;
 		}
+
+
+		private string loadListIntoString<T>(string buildingResult, List<T> list)
+		{
+			foreach (T obj in list)
+			{
+				if (string.IsNullOrEmpty(buildingResult))
+				{
+					buildingResult = obj.ToString();
+				}
+				else
+				{
+					buildingResult += Constants.weldedMeshSwitchSplitter + obj.ToString();
+				}
+			}
+			return buildingResult;
+		}
+
+
+
+		public void prepareWeldedMeshSwitchModule(List<ConfigNode> moduleList)
+		{
+			ConfigNode newWeldedMeshSwitch = new ConfigNode(Constants.weldModuleNode);
+
+			string indexString = string.Empty;
+			string transformNamesString = string.Empty;
+
+			indexString = loadListIntoString(indexString, _meshSwitchModelIndicies);
+			transformNamesString = loadListIntoString(transformNamesString, _meshSwitchTransformNames);
+
+			newWeldedMeshSwitch.AddValue("name", Constants.weldedmeshSwitchModule);
+			newWeldedMeshSwitch.AddValue("objectIndicies", indexString);
+			newWeldedMeshSwitch.AddValue("objects", transformNamesString);
+			newWeldedMeshSwitch.AddValue("advancedDebug", _advancedDebug);
+
+			moduleList.Add(newWeldedMeshSwitch);
+		}
+
+
+		/// <summary>
+		/// loads the names for the transforms and the Index into the weldedMeshSwitch
+		/// </summary>
+		/// <param name="weldingPart"></param>
+		private void loadMeshSwitchValues(Part weldingPart)
+		{
+			Transform modelTransform = weldingPart.FindModelTransform(Constants.weldModelNode.ToLower()).GetChild(0);
+			List<string> transformList = new List<string>();
+			string listEntry = string.Empty;
+
+			while (modelTransform.childCount < 2)
+			{
+				modelTransform = modelTransform.GetChild(0);
+			}
+
+			foreach (Transform t in modelTransform)
+			{
+				if (t.gameObject.activeSelf)
+				{
+					if (string.IsNullOrEmpty(listEntry))
+					{
+						listEntry = t.name;
+					}
+					else
+					{
+						listEntry += Constants.weldedMeshSwitchSubSplitter + t.name;
+					}
+				}
+			}
+			_meshSwitchModelIndicies.Add(_modelIndex);
+			_meshSwitchTransformNames.Add(listEntry);
+		}
+
+
+		/// <summary>
+		/// adds the actual modelinfo to the partconfig and checks if there is a meshswitch integrated so that it prepares the meshes from the part
+		/// </summary>
+		/// <param name="modelToAdd"></param>
+		/// <param name="containsMeshSwitch"></param>
+		/// <param name="weldingPart"></param>
+		private void addNewModel(ModelInfo modelToAdd, bool containsMeshSwitch, Part weldingPart)
+		{
+			if (containsMeshSwitch)
+			{
+				_meshSwitchRequired = true;
+				loadMeshSwitchValues(weldingPart);
+			}
+			_models.Add(modelToAdd);
+			_modelIndex++;
+		}
+
+
+		/// <summary>
+		/// a generell check of the partconfig if it contains a InterstellarMeshSwitch
+		/// </summary>
+		/// <param name="partconfig"></param>
+		/// <returns></returns>
+		private bool doesPartContainMeshSwitch(UrlDir.UrlConfig partconfig)
+		{
+			ConfigNode[] originalModules = partconfig.config.GetNodes(Constants.weldModuleNode);
+			string moduleName = "";
+			foreach (ConfigNode module in originalModules)
+			{
+				moduleName = module.GetValue(module.values.DistinctNames()[0]);
+				if (moduleName == Constants.interstellarMeshSwitchModule)
+				{
+					return true;
+				}
+			}
+			return false;
+		}
+
 
 		/*
 		 * Weld a new part
@@ -414,7 +584,7 @@ namespace UbioWeldingLtd
 						Debugger.AdvDebug(string.Format("..rotation {0}", info.rotation.ToString("F3")), _advancedDebug);
 						Debugger.AdvDebug(string.Format("..scale {0}", info.scale.ToString("F3")), _advancedDebug);
 
-						_models.Add(info);
+						addNewModel(info, doesPartContainMeshSwitch(cfg), newpart);
 						_coMOffset += info.position;
 					}
 					else //cfg.config.HasNode(Constants.weldModelNode)
@@ -440,13 +610,11 @@ namespace UbioWeldingLtd
 							Debugger.AdvDebug(string.Format("..node.HasValue(\"position\") {0}", node.HasValue("position")), _advancedDebug);
 							Debugger.AdvDebug(string.Format("..node position {0}", position.ToString("F3")), _advancedDebug);
 							setRelativePosition(newpart, ref position);
-
 							info.position = position;
 
 							Vector3 rotation = (node.HasValue("rotation")) ? ConfigNode.ParseVector3(node.GetValue("rotation")) : Vector3.zero;
 							Debugger.AdvDebug(string.Format("..node.HasValue(\"rotation\") {0}", node.HasValue("rotation")), _advancedDebug);
 							Debugger.AdvDebug(string.Format("..node rotation {0}", rotation.ToString("F3")), _advancedDebug);
-
 							setRelativeRotation(newpart, ref rotation);
 							info.rotation = rotation;
 
@@ -485,43 +653,13 @@ namespace UbioWeldingLtd
 							{
 								info.parent = node.GetValue("parent");
 							}
-							_models.Add(info);
+							addNewModel(info, doesPartContainMeshSwitch(cfg), newpart);
 							_coMOffsetSum += info.position;
 						} //foreach (ConfigNode node in modelnodes)
 						_coMOffset = _coMOffsetSum / modelnodes.Length;
 					} // else of if ( !cfg.config.HasNode(Constants.weldModelNode) )
 
-					//RESSOURCE
-					ConfigNode[] ressources = cfg.config.GetNodes(Constants.weldResNode);
-					Debugger.AdvDebug(string.Format("..Config {0} has {1} {2} node", cfg.name, ressources.Length, Constants.weldResNode), _advancedDebug);
-
-					foreach (ConfigNode orires in ressources)
-					{
-						ConfigNode res = orires.CreateCopy();
-						string resname = res.GetValue("name");
-						bool exist = false;
-						foreach (ConfigNode rescfg in _resourceslist)
-						{
-							if (string.Equals(resname, rescfg.GetValue("name")))
-							{
-								//add the ressource
-								float amount = float.Parse(res.GetValue("amount")) + float.Parse(rescfg.GetValue("amount"));
-								float max = float.Parse(res.GetValue("maxAmount")) + float.Parse(rescfg.GetValue("maxAmount"));
-								rescfg.SetValue("amount", amount.ToString());
-								rescfg.SetValue("maxAmount", max.ToString());
-								exist = true;
-								Debugger.AdvDebug(string.Format("..{0}{1} {2}/{3}", Constants.logResMerge, resname, amount, max), _advancedDebug);
-								break;
-							}
-						}
-						if (!exist)
-						{
-							_resourceslist.Add(res);
-							float amount = float.Parse(res.GetValue("amount"));
-							float max = float.Parse(res.GetValue("maxAmount"));
-							Debugger.AdvDebug(string.Format("..{0}{1} {2}/{3}", Constants.logResAdd, resname, amount, max), _advancedDebug);
-						}
-					} //foreach (ConfigNode res in ressources)
+					mergeResources(newpart, _resourceslist);
 
 					//MODULE
 					ConfigNode[] originalModules = cfg.config.GetNodes(Constants.weldModuleNode);
@@ -539,6 +677,7 @@ namespace UbioWeldingLtd
 					{
 						ret = OldModuleMerge(ret, partname, cfg);
 					}
+
 					//manage the fx group
 					foreach (FXGroup fx in newpart.fxGroups)
 					{
@@ -597,6 +736,81 @@ namespace UbioWeldingLtd
 			if (!_listedTechs.Contains(newpart.partInfo.TechRequired))
 			{
 				_listedTechs.Add(newpart.partInfo.TechRequired);
+			}
+
+			if (!string.IsNullOrEmpty(newpart.partInfo.bulkheadProfiles))
+			{
+				_bulkheadProfiles = newpart.partInfo.bulkheadProfiles;
+			}
+
+			if (newpart.CoLOffset != null && newpart.CoLOffset != Vector3.zero)
+			{
+				_CoLOffset += newpart.CoLOffset;
+			}
+
+			if (newpart.CoPOffset != null && newpart.CoPOffset != Vector3.zero)
+			{
+				_CoPOffset += newpart.CoPOffset;
+			}
+
+			if (newpart.explosionPotential != 0)
+			{
+				if (_explosionPotential == 0)
+				{
+					_explosionPotential = newpart.explosionPotential;
+				}
+				else
+				{
+					_explosionPotential = (_explosionPotential + newpart.explosionPotential) / 2;
+				}
+			}
+
+			if (newpart.heatConductivity != 0)
+			{
+				if (heatConductivity == 0)
+				{
+					_heatConductivity = newpart.heatConductivity;
+				}
+				else
+				{
+					_heatConductivity = (_heatConductivity + newpart.heatConductivity) / 2;
+				}
+			}
+
+			if (newpart.emissiveConstant != 0)
+			{
+				if (_emissiveConstant == 0)
+				{
+					_emissiveConstant = newpart.emissiveConstant;
+				}
+				else
+				{
+					_emissiveConstant = (_emissiveConstant + newpart.emissiveConstant) / 2;
+				}
+			}
+
+			if (newpart.thermalMassModifier != 0)
+			{
+				if (_thermalMassModifier == 0)
+				{
+					_thermalMassModifier = newpart.thermalMassModifier;
+				}
+				else
+				{
+					_thermalMassModifier = (_thermalMassModifier + newpart.thermalMassModifier) / 2;
+				}
+			}
+
+			if (newpart.radiatorHeadroom != 0)
+			{
+				if (_radiatorHeadroom == 0)
+				{
+					_radiatorHeadroom = newpart.radiatorHeadroom;
+				}
+				else
+				{
+					_radiatorHeadroom = (_radiatorHeadroom + newpart.radiatorHeadroom) / 2;
+				}
 			}
 
 			//reads the vesseltype if that exists
@@ -665,6 +879,10 @@ namespace UbioWeldingLtd
 					_breakingTorque = (_partNumber == 0) ? newpart.breakingTorque : (_breakingTorque + newpart.breakingTorque) * 0.5f;
 					break;
 			}
+			Debugger.AdvDebug(string.Format("Part crashTolerance: {0} - Global crashTolerance: {1} - method: {2}", newpart.crashTolerance, _crashTolerance, _StrengthCalcMethod), _advancedDebug);
+			Debugger.AdvDebug(string.Format("Part crashTolerance: {0} - Global crashTolerance: {1} - method: {2}", newpart.breakingForce, _breakingForce, _StrengthCalcMethod), _advancedDebug);
+			Debugger.AdvDebug(string.Format("Part breakingTorque: {0} - Global breakingTorque: {1} - method: {2}", newpart.breakingTorque, _breakingTorque, _StrengthCalcMethod), _advancedDebug);
+
 			switch (_MaxTempCalcMethod)
 			{
 				case MaxTempCalcMethod.ArithmeticMean:
@@ -674,9 +892,10 @@ namespace UbioWeldingLtd
 					_maxTemp = (_partNumber == 0) ? (float)newpart.maxTemp : (float)Math.Min(_maxTemp, newpart.maxTemp);
 					break;
 				case MaxTempCalcMethod.WeightedAverage:
-					_maxTemp = (_partNumber == 0) ? (float)newpart.maxTemp : (float)(_maxTemp * olddrymass + newpart.maxTemp * olddrymass) / (olddrymass + newpart.mass);
+					_maxTemp = (_partNumber == 0) ? (float)newpart.maxTemp : (float)(_maxTemp * olddrymass + newpart.maxTemp * newpart.mass) / (olddrymass + newpart.mass);
 					break;
 			}
+			Debugger.AdvDebug(string.Format("Part maxTemp: {0} - Global maxTemp: {1} - method: {2}", newpart.maxTemp, _maxTemp, _MaxTempCalcMethod), _advancedDebug);
 
 			//Phisics signifance
 			if (newpart.PhysicsSignificance != 0 && _physicsSignificance != -1)
@@ -700,6 +919,39 @@ namespace UbioWeldingLtd
 			}
 			_partNumber++;
 			return ret;
+		}
+
+		private void mergeResources(Part newpart, List<ConfigNode> resourcesList)
+		{
+			List<PartResource> partResourcesList = newpart.Resources.list;
+			Debugger.AdvDebug(string.Format("..Part {0} has {1} {2} node", newpart.partName, partResourcesList.Count, Constants.weldResNode), _advancedDebug);
+			foreach (PartResource partRes in partResourcesList)
+			{
+				string resourceName = partRes.resourceName;
+				float resourceAmount = float.Parse(partRes.amount.ToString());
+				float resourceMax = float.Parse(partRes.maxAmount.ToString());
+				bool exist = false;
+				foreach (ConfigNode rescfg in resourcesList)
+				{
+					if (string.Equals(resourceName, rescfg.GetValue("name")))
+					{
+						rescfg.SetValue("amount", (resourceAmount + float.Parse(rescfg.GetValue("amount"))).ToString());
+						rescfg.SetValue("maxAmount", (resourceMax + float.Parse(rescfg.GetValue("maxAmount"))).ToString());
+						exist = true;
+						Debugger.AdvDebug(string.Format("..{0}{1} {2}/{3}", Constants.logResMerge, resourceName, resourceAmount, resourceMax), _advancedDebug);
+						break;
+					}
+				}
+				if (!exist)
+				{
+					ConfigNode resourceNode = new ConfigNode(Constants.weldResNode);
+					resourceNode.AddValue("name", resourceName);
+					resourceNode.AddValue("amount", resourceAmount.ToString());
+					resourceNode.AddValue("maxAmount", resourceMax.ToString());
+					resourcesList.Add(resourceNode);
+					Debugger.AdvDebug(string.Format("..{0}{1} {2}/{3}", Constants.logResAdd, resourceName, resourceAmount, resourceMax), _advancedDebug);
+				}
+			}
 		}
 
 
@@ -1240,6 +1492,18 @@ namespace UbioWeldingLtd
 			partconfig.name = Constants.weldPartNode; //Because it get removed during the merge!?
 			//Add CrewCapacity
 			partconfig.AddValue("CrewCapacity", _crewCapacity);
+			// Add stackSymmetry
+			partconfig.AddValue("stackSymmetry", _stackSymmetry);
+
+			// Add Lifting Offsets
+			if (_CoLOffset != Vector3.zero)
+			{
+				partconfig.AddValue("CoLOffset", _CoLOffset);
+			}
+			if (_CoPOffset != Vector3.zero)
+			{
+				partconfig.AddValue("CoPOffset", _CoPOffset);
+			}
 
 			//Add R&D (.22)
 			partconfig.AddValue("TechRequired", _techRequire);
@@ -1283,6 +1547,33 @@ namespace UbioWeldingLtd
 
 			//add if crossfeed
 			partconfig.AddValue("fuelCrossFeed", _fuelCrossFeed);
+
+			// Add expolsionpotential
+			if (_explosionPotential > 0)
+			{
+				partconfig.AddValue("explosionPotential", _explosionPotential);
+			}
+
+			// Add temperature Values
+			if (_thermalMassModifier > 0)
+			{
+				partconfig.AddValue("thermalMassModifier", _thermalMassModifier);
+			}
+			if (_heatConductivity > 0)
+			{
+				partconfig.AddValue("heatConductivity", _heatConductivity);
+			}
+			if (_emissiveConstant > 0)
+			{
+				partconfig.AddValue("emissiveConstant", _emissiveConstant);
+			}
+			if (_radiatorHeadroom > 0)
+			{
+				partconfig.AddValue("radiatorHeadroom", _radiatorHeadroom);
+			}
+
+			// Add bulkheadProfile
+			partconfig.AddValue("bulkheadProfiles", _bulkheadProfiles);
 
 			//add RESOURCE
 			foreach (ConfigNode res in _resourceslist)

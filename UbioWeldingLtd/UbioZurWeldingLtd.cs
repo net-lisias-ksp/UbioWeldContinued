@@ -396,6 +396,11 @@ namespace UbioWeldingLtd
 				}
 			}
 			_welder.processNewCoM();
+			
+			if (_welder.isMeshSwitchRequired)
+			{
+				_welder.prepareWeldedMeshSwitchModule(_welder.moduleList);
+			}
 
 			_techDropdown = WeldingHelpers.initTechDropDown(_welder.techList, _guiStyle, _techDropdown);
 

@@ -11,7 +11,7 @@ namespace UbioWeldingLtd
 	static class Constants
 	{
 		//Logs/debug constants
-		public const string logVersion ="v2.1.3 - 1.02.0 - Continued";
+		public const string logVersion ="v2.2.0 - 1.0.4 - Continued";
 		public const string logWarning		  = "WARNING ";
 		public const string logError			= "ERROR ";
 		public const string logPrefix		   = "[WeldingTool] ";
@@ -146,6 +146,11 @@ namespace UbioWeldingLtd
 		public const int weldDefaultEntryCost   = 0;
 		public const int weldNumberOfFractionalDigits = 5;
 
+		public const string weldedMeshSwitchSubSplitter = ",";
+		public const string weldedMeshSwitchSplitter = ";";
+		public const string interstellarMeshSwitchModule = "InterstellarMeshSwitch";
+		public const string weldedmeshSwitchModule = "WeldedMeshSwitch";
+
 		//module name
 		public const string modStockSas		 = "ModuleSAS";
 		public const string modStockGear		= "ModuleLandingGear";
@@ -232,7 +237,17 @@ namespace UbioWeldingLtd
 			"ModuleTweakableRCS",   
 			"ModuleTweakableSolarPanel",
 			"CModuleStrut",
-			"CModuleLinkedMesh"
+			"CModuleLinkedMesh",
+			"InterstellarMeshSwitch",
+			"InterstellarFuelSwitch",
+			"FSfuelSwitch",
+			"ModuleConnectedLivingSpace",
+			"ModuleTweakableJettison",
+			"ModuleTweakableReactionWheel",
+			"ModuleTweakableSAS",
+			"PilotRSASFix",
+			"ModuleTweakableFuelPump",
+			"CrewManifestModule"
 		};
 
 		public static string[] basicModulesToMultiply =   
@@ -269,7 +284,9 @@ namespace UbioWeldingLtd
 		public static string[] basicBreakingModuleAttributes = 
 		{
 			"FNAntimatterReactor_radius",
-			"ModuleScienceExperiment_experimentID"
+			"ModuleScienceExperiment_experimentID",
+			"DMModuleScienceAnimate_experimentID",
+			"ModuleDeployableSolarPanel_animationName"
 		};
 
 		public static string CommentOutText(string text)
