@@ -44,7 +44,7 @@ namespace UbioWeldingLtd
 		public const int guiInfoWindowX		 = 300;
 		public const int guiInfoWindowY		 = 150;
 		public const int guiInfoWindowW		 = 705;
-		public const int guiInfoWindowH		 = 370;
+		public const int guiInfoWindowH		 = 445;
         public const int guiMainWindowW     = 300;
 		public const int guiMainWindowH		= 285;
 		public const int guiMainWindowHSettingsExpanded = 675;
@@ -52,6 +52,7 @@ namespace UbioWeldingLtd
 		public const string guiDialFail		 = "We are sorry to announce that our engineer could not perform this weld.\n Please read the report (ALt+F2 or ksp.log) for more details)";
 		public const string guiDialWarn		 = "After welding everything, out Engineer had some extra feature that they didn't knew where to put.\n Please read the report (ALt+F2 or ksp.log) for more details)";
 		public const string guiNameUsed		 = "Name already used by another part!";
+		public const string guiSymmetryNotNumbered = "Symmetry value is not a number!";
 		public const string guiDialOverwrite	= "File already exist, Do you want to overwrite it?";
 		public const string guiDialSaved		= "New part saved and shipped!";
 		public const string guiDBReloading1		= "Database reloading";
@@ -237,6 +238,7 @@ namespace UbioWeldingLtd
 			"ModuleTweakableRCS",   
 			"ModuleTweakableSolarPanel",
 			"CModuleStrut",
+			"CModuleFuelLine",
 			"CModuleLinkedMesh",
 			"InterstellarMeshSwitch",
 			"InterstellarFuelSwitch",

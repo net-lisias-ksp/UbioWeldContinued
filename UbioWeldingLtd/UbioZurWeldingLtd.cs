@@ -669,6 +669,10 @@ namespace UbioWeldingLtd
 							posH += height + margin;
 							//_welder.Description = _textAreaDescription.DrawAdvancedGUITextArea(new Rect(_guiInfoWindowColoumns[i].x, posH, columnWidth, 7 * height + 6 * margin), _welder.Description, 600, (int)_state);
 							_welder.Description = GUI.TextArea(new Rect(_guiInfoWindowColoumns[i].x, posH, columnWidth, 8 * height + 7 * margin), _welder.Description, 600);
+							posH += 8 * height + 8 * margin;
+							GUI.Label(new Rect(_guiInfoWindowColoumns[i].x, posH, columnWidth, height), "Symmetry:");
+							posH += height + margin;
+							_welder.stringStackSymmetry = GUI.TextField(new Rect(_guiInfoWindowColoumns[i].x, posH, columnWidth, height), _welder.stringStackSymmetry, 100);
 						}
 						break;
 					case 1:
@@ -732,7 +736,7 @@ namespace UbioWeldingLtd
 							GUI.Label(new Rect(_guiInfoWindowColoumns[i].x, posH, columnWidth, height), "Modules:");
 							posH += height + margin;
 							string[] modulenames = _welder.Modules;
-							_scrollMod = GUI.BeginScrollView(new Rect(_guiInfoWindowColoumns[i].x, posH, columnWidth, (height * 11 + margin * 10)), _scrollMod, new Rect(0, 0, scrollwidth, modulenames.Length > 11 ? 270 + (modulenames.Length - 11) * (height + margin) : 270), false, true);
+							_scrollMod = GUI.BeginScrollView(new Rect(_guiInfoWindowColoumns[i].x, posH, columnWidth, (height * 14 + margin * 13)), _scrollMod, new Rect(0, 0, scrollwidth, modulenames.Length > 14 ? 345 + (modulenames.Length - 14) * (height + margin) : 345), false, true);
 							style.wordWrap = false;
 							style.normal.textColor = Color.white;
 							posH = 0;
@@ -749,7 +753,7 @@ namespace UbioWeldingLtd
 							GUI.Label(new Rect(_guiInfoWindowColoumns[i].x, posH, columnWidth, height), "Resources:");
 							posH += height + margin;
 							string[] resourcesdata = _welder.Resources;
-							_scrollRes = GUI.BeginScrollView(new Rect(_guiInfoWindowColoumns[i].x, posH, columnWidth, (height * 11 + margin * 10)), _scrollRes, new Rect(0, 0, scrollwidth, resourcesdata.Length > 11 ? 270 + (resourcesdata.Length - 11) * (height + margin) : 270), false, true);
+							_scrollRes = GUI.BeginScrollView(new Rect(_guiInfoWindowColoumns[i].x, posH, columnWidth, (height * 14 + margin * 13)), _scrollRes, new Rect(0, 0, scrollwidth, resourcesdata.Length > 14 ? 345 + (resourcesdata.Length - 14) * (height + margin) : 345), false, true);
 							style.wordWrap = false;
 							style.normal.textColor = Color.white;
 							posH = 0;
@@ -769,12 +773,18 @@ namespace UbioWeldingLtd
 				}
 			}
 
-			bool nameOk = WelderNameNotUsed();
-			if (!nameOk)
+			if (!WelderNameNotUsed())
 			{
 				style.normal.textColor = Color.red;
-				GUI.Label(new Rect(margin, height + columnHeight + margin, columnWidth * 1.5f, height), Constants.guiNameUsed, style);
+				GUI.Label(new Rect(margin, columnHeight + margin, columnWidth * 1.5f, height), Constants.guiNameUsed, style);
 			}
+			if (!isSymmetryNumber())
+			{
+				style.normal.textColor = Color.red;
+				GUI.Label(new Rect(margin, height + columnHeight + margin, columnWidth * 1.5f, height), Constants.guiSymmetryNotNumbered, style);
+			}
+
+
 			if (!string.IsNullOrEmpty(_welder.Name))
 			{
 				if (GUI.Button(new Rect(_guiInfoWindowColoumns[1].x + columnWidth * 0.5f, height + columnHeight + margin, columnWidth * 0.5f, height), Constants.guiSave))
@@ -799,6 +809,10 @@ namespace UbioWeldingLtd
 					}
 				}
 			}
+			else
+			{
+				GUI.Box(new Rect(_guiInfoWindowColoumns[1].x + columnWidth * 0.5f, height + columnHeight + margin, columnWidth * 0.5f, height), Constants.guiSave);
+			}
 			if (GUI.Button(new Rect(_guiInfoWindowColoumns[2].x, height + columnHeight + margin, columnWidth * 0.5f, height), Constants.guiCancel))
 			{
 				_state = DisplayState.none;
@@ -822,6 +836,24 @@ namespace UbioWeldingLtd
 			}
 			return true;
 		}
+
+
+
+		private bool isSymmetryNumber()
+		{
+			int result;
+
+			if (int.TryParse(_welder.stringStackSymmetry, out result))
+			{
+				_welder.stackSymmetry = result;
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+
 
 		/*
 		 * Writing the cfg File
