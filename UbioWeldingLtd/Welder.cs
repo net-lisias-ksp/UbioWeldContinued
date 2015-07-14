@@ -114,6 +114,7 @@ namespace UbioWeldingLtd
 		private Vector3 _CoPOffset = Vector3.zero;
 		private string _bulkheadProfiles = string.Empty;
 		private int _stackSymmetry = 0;
+		private string _stringStackSymmetry = "0";
 
 		private int _modelIndex = 0;
 		private bool _meshSwitchRequired = false;
@@ -291,6 +292,19 @@ namespace UbioWeldingLtd
 		{
 			get { return _listedVesselTypes; }
 		}
+
+		public int stackSymmetry
+		{
+			get { return _stackSymmetry; }
+			set { _stackSymmetry = value; }
+		}
+
+		public string stringStackSymmetry
+		{
+			get { return _stringStackSymmetry; }
+			set { _stringStackSymmetry = value; }
+		}
+
 
 		/*
 		 * Constructor
@@ -1423,7 +1437,7 @@ namespace UbioWeldingLtd
 			{
 				ConfigNode node = new ConfigNode(Constants.weldModelNode);
 				node.AddValue("model", model.url);
-				node.AddValue("position", ConfigNode.WriteVector(WeldingHelpers.RoundVector3(model.position))); ;
+				node.AddValue("position", ConfigNode.WriteVector(WeldingHelpers.RoundVector3(model.position)));
 				node.AddValue("scale", ConfigNode.WriteVector(WeldingHelpers.RoundVector3(model.scale)));
 				node.AddValue("rotation", ConfigNode.WriteVector(WeldingHelpers.RoundVector3(model.rotation)));
 				foreach (string tex in model.textures)
@@ -1498,12 +1512,13 @@ namespace UbioWeldingLtd
 			// Add Lifting Offsets
 			if (_CoLOffset != Vector3.zero)
 			{
-				partconfig.AddValue("CoLOffset", _CoLOffset);
+				partconfig.AddValue("CoLOffset", ConfigNode.WriteVector(WeldingHelpers.RoundVector3(_CoLOffset)));
 			}
 			if (_CoPOffset != Vector3.zero)
 			{
-				partconfig.AddValue("CoPOffset", _CoPOffset);
+				partconfig.AddValue("CoPOffset", ConfigNode.WriteVector(WeldingHelpers.RoundVector3(_CoPOffset)));
 			}
+
 
 			//Add R&D (.22)
 			partconfig.AddValue("TechRequired", _techRequire);
