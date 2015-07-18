@@ -195,6 +195,7 @@ namespace UbioWeldingLtd
 			Welder.StrengthCalcMethod = oldConfigFound ? StrengthParamsCalcMethod.ArithmeticMean : _config.StrengthCalcMethod;
 			Welder.MaxTempCalcMethod = oldConfigFound ? MaxTempCalcMethod.ArithmeticMean : _config.MaxTempCalcMethod;
 			Welder.runInTestMode = oldConfigFound ? false : _config.runInTestMode;
+			Welder.precisionDigits = oldConfigFound ? 6 : _config.precisionDigits;
 		}
 
 		/// <summary>
@@ -461,6 +462,9 @@ namespace UbioWeldingLtd
 				_config.useNamedCfgFile = GUILayout.Toggle(_config.useNamedCfgFile, Constants.guiUseNamedCfgFileGUIContent);
 				_config.advancedDebug = GUILayout.Toggle(_config.advancedDebug, Constants.guiAdvancedDebugGUIContent);
 				_config.clearEditor = GUILayout.Toggle(_config.clearEditor, Constants.guiClearEditorGUIContent);
+				GUILayout.Space(10.0f);
+				GUILayout.Label(" Vector Precision: " + _config.precisionDigits);
+				_config.precisionDigits = (int)GUILayout.HorizontalSlider(_config.precisionDigits, 1, 6);
 				GUILayout.Space(10.0f);
 				GUILayout.Label("Strength params calculation method");
 //				_config.StrengthCalcMethod = (StrengthParamsCalcMethod)GUILayout.SelectionGrid((int)_config.StrengthCalcMethod, Constants.StrengthParamsCalcMethodsGUIContent, 1, GUILayout.MaxWidth(140));

@@ -33,6 +33,7 @@ namespace UbioWeldingLtd
 
 		private int _MainWindowXPosition = (Screen.width - Constants.guiMainWindowW) / 2;
 		private int _MainWindowYPosition = (Screen.height - Constants.guiMainWindowH) / 2;
+		private int _precisionDigits = 6;
 		private bool _dataBaseAutoReload = false;
 		private bool _includeAllNodes = false;
 		private bool _allowCareerMode = true;
@@ -64,6 +65,12 @@ namespace UbioWeldingLtd
 		{
 			get { return _MainWindowYPosition; }
 			set { _MainWindowYPosition = value; }
+		}
+
+		public int precisionDigits
+		{
+			get { return _precisionDigits; }
+			set { _precisionDigits = value; }
 		}
 
 		public bool dataBaseAutoReload

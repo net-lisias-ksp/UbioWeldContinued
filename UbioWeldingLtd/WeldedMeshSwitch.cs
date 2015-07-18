@@ -16,6 +16,8 @@ namespace UbioWeldingLtd
 		public string objects = string.Empty;
 		[KSPField]
 		public bool advancedDebug = false;
+		[KSPField]
+		public bool destroyUnusedParts = true;
 
 
 		private List<Transform> parentTransforms = new List<Transform>();
@@ -120,13 +122,23 @@ namespace UbioWeldingLtd
 						}
 						foreach (Transform t in parent)
 						{
-							if (objectTransforms[index].Contains(t))
+							if (t != null)
 							{
-								t.gameObject.SetActive(true);
-							}
-							else
-							{
-								t.gameObject.SetActive(false);
+								if (objectTransforms[index].Contains(t))
+								{
+									t.gameObject.SetActive(true);
+								}
+								else
+								{
+									if (destroyUnusedParts)
+									{
+										DestroyObject(t.gameObject);
+									}
+									else
+									{
+										t.gameObject.SetActive(false);
+									}
+								}
 							}
 						}
 					}
