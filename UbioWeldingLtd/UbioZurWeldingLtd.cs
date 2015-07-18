@@ -491,6 +491,7 @@ namespace UbioWeldingLtd
 				if (GUILayout.Button(Constants.guiSaveSettingsButtonGUIContent, GUILayout.MaxWidth(160)))
 				{
 					FileManager.saveConfig(_config);
+					_config = FileManager.loadConfig();
 				}
 			}
 			else
@@ -846,10 +847,9 @@ namespace UbioWeldingLtd
 		private bool isSymmetryNumber()
 		{
 			int result;
-
 			if (int.TryParse(_welder.stringStackSymmetry, out result))
 			{
-				_welder.stackSymmetry = result;
+				_welder.stackSymmetry = result-1;
 				return true;
 			}
 			else

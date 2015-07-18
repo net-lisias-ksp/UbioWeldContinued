@@ -321,5 +321,31 @@ namespace UbioWeldingLtd
 		}
 
 
+		public static bool isVectorEqualOne(Vector3 inputVector)
+		{
+			bool[] isVectorEqual = { false, false, false };
+			if (inputVector.x == 1)
+			{
+				isVectorEqual[0] = true;
+			}
+			if (inputVector.x == 1)
+			{
+				isVectorEqual[1] = true;
+			}
+			if (inputVector.x == 1)
+			{
+				isVectorEqual[2] = true;
+			}
+			foreach (bool b in isVectorEqual)
+			{
+				if (b == false)
+				{
+					return false;
+				}
+			}
+			return true;
+		}
+
+
 	}
 }

@@ -594,7 +594,14 @@ namespace UbioWeldingLtd
 						setRelativeRotation(newpart, ref rotation);
 						info.rotation = WeldingHelpers.limitRotationAngle(rotation);
 
-						info.scale = newpart.transform.GetChild(0).localScale;
+						if ((newpart.rescaleFactor / _rescaleFactor) == 1 && WeldingHelpers.isVectorEqualOne(newpart.transform.GetChild(0).localScale))
+						{
+							info.scale = Vector3.zero;
+						}
+						else
+						{
+							info.scale = newpart.transform.GetChild(0).localScale;
+						}
 
 						Debugger.AdvDebug(string.Format("..newpart position {0}", newpart.transform.position.ToString("F3")), _advancedDebug);
 						Debugger.AdvDebug(string.Format("..newpart rotation {0}", newpart.transform.rotation.ToString("F3")), _advancedDebug);
@@ -661,7 +668,7 @@ namespace UbioWeldingLtd
 							}
 							else
 							{
-								if ((newpart.rescaleFactor / _rescaleFactor) == 1 && newpart.transform.GetChild(0).localScale.magnitude == 1)
+								if ((newpart.rescaleFactor / _rescaleFactor) == 1 && WeldingHelpers.isVectorEqualOne(newpart.transform.GetChild(0).localScale))
 								{
 									info.scale = Vector3.zero;
 								}
@@ -1484,10 +1491,6 @@ namespace UbioWeldingLtd
 				{
 					node.AddValue("rotation", ConfigNode.WriteVector(WeldingHelpers.RoundVector3(model.rotation, _precisionDigits)));
 				}
-				foreach (string tex in model.textures)
-				{
-					node.AddValue("texture", tex);
-				}
 				if (!string.IsNullOrEmpty(model.parent))
 				{
 					node.AddValue("parent", model.parent);
@@ -1552,7 +1555,10 @@ namespace UbioWeldingLtd
 			//Add CrewCapacity
 			partconfig.AddValue("CrewCapacity", _crewCapacity);
 			// Add stackSymmetry
-			partconfig.AddValue("stackSymmetry", _stackSymmetry);
+			if (_stackSymmetry > 0)
+			{
+				partconfig.AddValue("stackSymmetry", _stackSymmetry);
+			}
 
 			// Add Lifting Offsets
 			if (_CoLOffset != Vector3.zero)
