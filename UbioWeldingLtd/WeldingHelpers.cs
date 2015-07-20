@@ -231,11 +231,11 @@ namespace UbioWeldingLtd
 		/// this rounds Vector3 coordinates to --Constants.weldNumberOfFractionalDigits-- fractional digits
 		/// </summary>
 		/// <returns></returns>
-		public static Vector3 RoundVector3(Vector3 inVector)
+		public static Vector3 RoundVector3(Vector3 inVector, int digits)
 		{
-			float x = (float)Math.Round(inVector.x, Constants.weldNumberOfFractionalDigits);
-			float y = (float)Math.Round(inVector.y, Constants.weldNumberOfFractionalDigits);
-			float z = (float)Math.Round(inVector.z, Constants.weldNumberOfFractionalDigits);
+			float x = (float)(Math.Round(inVector.x, digits));
+			float y = (float)(Math.Round(inVector.y, digits));
+			float z = (float)(Math.Round(inVector.z, digits));
 			return new Vector3(x, y, z);
 		}
 
@@ -244,9 +244,9 @@ namespace UbioWeldingLtd
 		/// this rounds float value to --Constants.weldNumberOfFractionalDigits-- fractional digits
 		/// </summary>
 		/// <returns></returns>
-		public static float RoundFloat(float inValue)
+		public static float RoundFloat(float inValue, int digits)
 		{
-			return (float)Math.Round(inValue, Constants.weldNumberOfFractionalDigits);
+			return (float)(Math.Round(inValue, digits));
 		}
 
 
@@ -294,6 +294,56 @@ namespace UbioWeldingLtd
 				input += 360;
 			}
 			return input;
+		}
+
+
+		/// <summary>
+		/// limits a rotationvector to a value between 0 and 359 as 360 is just 0
+		/// </summary>
+		/// <param name="inputVector"></param>
+		/// <returns></returns>
+		public static Vector3 limitRotationAngle(Vector3 inputVector)
+		{
+			bool[] angleLimiting = { false, false, false };
+			if (RoundFloat(inputVector.x, 3).Equals(360))
+			{
+				angleLimiting[0] = true;
+			}
+			if (RoundFloat(inputVector.y, 3).Equals(360))
+			{
+				angleLimiting[1] = true;
+			}
+			if (RoundFloat(inputVector.z, 3).Equals(360))
+			{
+				angleLimiting[2] = true;
+			}
+			return new Vector3(angleLimiting[0] ? 0 : inputVector.x, angleLimiting[1] ? 0 : inputVector.y, angleLimiting[2] ? 0 : inputVector.z);
+		}
+
+
+		public static bool isVectorEqualFactor(Vector3 inputVector, float factor)
+		{
+			bool[] isVectorEqual = { false, false, false };
+			if (RoundFloat(inputVector.x, 3).Equals(RoundFloat(factor, 3)))
+			{
+				isVectorEqual[0] = true;
+			}
+			if (RoundFloat(inputVector.y, 3).Equals(RoundFloat(factor, 3)))
+			{
+				isVectorEqual[1] = true;
+			}
+			if (RoundFloat(inputVector.z, 3).Equals(RoundFloat(factor, 3)))
+			{
+				isVectorEqual[2] = true;
+			}
+			foreach (bool b in isVectorEqual)
+			{
+				if (b == false)
+				{
+					return false;
+				}
+			}
+			return true;
 		}
 
 

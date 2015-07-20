@@ -104,6 +104,7 @@ namespace UbioWeldingLtd
 		private static StrengthParamsCalcMethod _StrengthCalcMethod = StrengthParamsCalcMethod.WeightedAverage;
 		private static MaxTempCalcMethod _MaxTempCalcMethod = MaxTempCalcMethod.Lowest;
 		private int[] partsHashMap;
+		private static int _precisionDigits;
 
 		private float _explosionPotential = 0;
 		private double _thermalMassModifier = 0;
@@ -182,6 +183,12 @@ namespace UbioWeldingLtd
 		{
 			get { return _runInTestMode; }
 			set { _runInTestMode = value; }
+		}
+
+		public static int precisionDigits
+		{
+			get { return _precisionDigits; }
+			set { _precisionDigits = value; }
 		}
 
 		public static StrengthParamsCalcMethod StrengthCalcMethod
@@ -448,6 +455,7 @@ namespace UbioWeldingLtd
 			newWeldedMeshSwitch.AddValue("objectIndicies", indexString);
 			newWeldedMeshSwitch.AddValue("objects", transformNamesString);
 			newWeldedMeshSwitch.AddValue("advancedDebug", _advancedDebug);
+			newWeldedMeshSwitch.AddValue("destroyUnusedParts", true);
 
 			moduleList.Add(newWeldedMeshSwitch);
 		}
@@ -580,13 +588,17 @@ namespace UbioWeldingLtd
 
 						Vector3 position = Vector3.zero;
 						setRelativePosition(newpart, ref position);
-						info.position = position;
+						info.position = WeldingHelpers.RoundVector3(position, _precisionDigits);
 
 						Vector3 rotation = newpart.localRoot.transform.eulerAngles;
 						setRelativeRotation(newpart, ref rotation);
-						info.rotation = rotation;
+						info.rotation = WeldingHelpers.RoundVector3(WeldingHelpers.limitRotationAngle(rotation), _precisionDigits);
 
-						info.scale = newpart.transform.GetChild(0).localScale;
+						info.scale = WeldingHelpers.RoundVector3(newpart.transform.GetChild(0).localScale * (newpart.rescaleFactor / _rescaleFactor),_precisionDigits);
+						if (WeldingHelpers.isVectorEqualFactor(info.scale, newpart.rescaleFactor))
+						{
+							info.scale = Vector3.zero;
+						}
 
 						Debugger.AdvDebug(string.Format("..newpart position {0}", newpart.transform.position.ToString("F3")), _advancedDebug);
 						Debugger.AdvDebug(string.Format("..newpart rotation {0}", newpart.transform.rotation.ToString("F3")), _advancedDebug);
@@ -624,13 +636,13 @@ namespace UbioWeldingLtd
 							Debugger.AdvDebug(string.Format("..node.HasValue(\"position\") {0}", node.HasValue("position")), _advancedDebug);
 							Debugger.AdvDebug(string.Format("..node position {0}", position.ToString("F3")), _advancedDebug);
 							setRelativePosition(newpart, ref position);
-							info.position = position;
+							info.position = WeldingHelpers.RoundVector3(position,_precisionDigits);
 
 							Vector3 rotation = (node.HasValue("rotation")) ? ConfigNode.ParseVector3(node.GetValue("rotation")) : Vector3.zero;
 							Debugger.AdvDebug(string.Format("..node.HasValue(\"rotation\") {0}", node.HasValue("rotation")), _advancedDebug);
 							Debugger.AdvDebug(string.Format("..node rotation {0}", rotation.ToString("F3")), _advancedDebug);
 							setRelativeRotation(newpart, ref rotation);
-							info.rotation = rotation;
+							info.rotation = WeldingHelpers.RoundVector3(WeldingHelpers.limitRotationAngle(rotation),_precisionDigits);
 
 							Debugger.AdvDebug(string.Format("..node.HasValue(\"scale\") {0}", node.HasValue("scale")), _advancedDebug);
 							if (node.HasValue("scale"))
@@ -639,11 +651,12 @@ namespace UbioWeldingLtd
 							}
 							Debugger.AdvDebug(string.Format("..Childs count {0}", newpart.transform.childCount), _advancedDebug);
 
-							info.scale = (node.HasValue("scale")) ?
-											(ConfigNode.ParseVector3(node.GetValue("scale")) * (newpart.rescaleFactor / _rescaleFactor)) :
-											new Vector3(newpart.transform.GetChild(0).localScale.x,
-														newpart.transform.GetChild(0).localScale.y,
-														newpart.transform.GetChild(0).localScale.z);
+							info.scale = WeldingHelpers.RoundVector3(newpart.transform.GetChild(0).localScale,_precisionDigits);
+							//info.scale = (node.HasValue("scale")) ?
+							//				(ConfigNode.ParseVector3(node.GetValue("scale")) * (newpart.rescaleFactor / _rescaleFactor)) :
+							//				new Vector3(newpart.transform.GetChild(0).localScale.x,
+							//							newpart.transform.GetChild(0).localScale.y,
+							//							newpart.transform.GetChild(0).localScale.z);
 
 							Debugger.AdvDebug(string.Format("..newpart position {0}", newpart.transform.position.ToString("F3")), _advancedDebug);
 							Debugger.AdvDebug(string.Format("..newpart rotation {0}", newpart.transform.rotation.ToString("F3")), _advancedDebug);
@@ -682,9 +695,6 @@ namespace UbioWeldingLtd
 
 					if (runInTestMode)
 					{
-						//PartModuleList liveModuleList = newpart.Modules;
-						//PartModule liveModule = liveModuleList.GetModule(0);
-						//ConfigNode liveModuleNode = liveModule.snapshot.moduleValues;
 						mergeModules(partname, cfg, _modulelist, _advancedDebug);
 					}
 					else
@@ -732,7 +742,7 @@ namespace UbioWeldingLtd
 			foreach (AttachNode partnode in newpart.attachNodes)
 			{
 				//only add node if not attached to another part (or if requested in the condig file)
-				if (_includeAllNodes || null == partnode.attachedPart || (partnode.attachedPart != null && !isChildPart(newpart,partnode.attachedPart)))
+				if (_includeAllNodes || partnode.attachedPart == null || (partnode.attachedPart != null && !isChildPart(newpart,partnode.attachedPart)))
 				{
 					AttachNode node = partnode; //make sure we don't overwrite the part node
 					node.id += partname + _partNumber;
@@ -1437,12 +1447,21 @@ namespace UbioWeldingLtd
 			{
 				ConfigNode node = new ConfigNode(Constants.weldModelNode);
 				node.AddValue("model", model.url);
-				node.AddValue("position", ConfigNode.WriteVector(WeldingHelpers.RoundVector3(model.position)));
-				node.AddValue("scale", ConfigNode.WriteVector(WeldingHelpers.RoundVector3(model.scale)));
-				node.AddValue("rotation", ConfigNode.WriteVector(WeldingHelpers.RoundVector3(model.rotation)));
 				foreach (string tex in model.textures)
 				{
 					node.AddValue("texture", tex);
+				}
+				if (!model.position.Equals(Vector3.zero))
+				{
+					node.AddValue("position", ConfigNode.WriteVector(WeldingHelpers.RoundVector3(model.position,_precisionDigits)));
+				}
+				if (!model.scale.Equals(Vector3.zero))
+				{
+					node.AddValue("scale", ConfigNode.WriteVector(WeldingHelpers.RoundVector3(model.scale, _precisionDigits)));
+				}
+				if (!model.rotation.Equals(Vector3.zero))
+				{
+					node.AddValue("rotation", ConfigNode.WriteVector(WeldingHelpers.RoundVector3(model.rotation, _precisionDigits)));
 				}
 				if (!string.IsNullOrEmpty(model.parent))
 				{
@@ -1452,7 +1471,7 @@ namespace UbioWeldingLtd
 			}
 
 			//add rescale factor
-			partconfig.AddValue("rescaleFactor", WeldingHelpers.RoundFloat(_rescaleFactor));
+			partconfig.AddValue("rescaleFactor", WeldingHelpers.RoundFloat(_rescaleFactor, _precisionDigits));
 
 			//add PhysicsSignificance
 			partconfig.AddValue("PhysicsSignificance", _physicsSignificance);
@@ -1496,10 +1515,11 @@ namespace UbioWeldingLtd
 					orientation = Vector3.up;
 				}
 				orientation.Normalize();
-				partconfig.AddValue(string.Format("node_stack_{0}", node.id), string.Format("{0},{1},{2}", ConfigNode.WriteVector(WeldingHelpers.RoundVector3(node.position)), ConfigNode.WriteVector(WeldingHelpers.RoundVector3(orientation)), node.size));
+
+				partconfig.AddValue(string.Format("node_stack_{0}", node.id), string.Format("{0},{1},{2}", ConfigNode.WriteVector(WeldingHelpers.RoundVector3(node.position, _precisionDigits)), ConfigNode.WriteVector(WeldingHelpers.RoundVector3(orientation, _precisionDigits)), node.size));
 			}
 			//add surface attach node
-			partconfig.AddValue("node_attach", string.Format("{0},{1},{2}", ConfigNode.WriteVector(WeldingHelpers.RoundVector3(_srfAttachNode.originalPosition)), ConfigNode.WriteVector(WeldingHelpers.RoundVector3(_srfAttachNode.originalOrientation)), _srfAttachNode.size));
+			partconfig.AddValue("node_attach", string.Format("{0},{1},{2}", ConfigNode.WriteVector(WeldingHelpers.RoundVector3(_srfAttachNode.originalPosition, _precisionDigits)), ConfigNode.WriteVector(WeldingHelpers.RoundVector3(_srfAttachNode.originalOrientation, _precisionDigits)), _srfAttachNode.size));
 
 			//merge fx
 			ConfigNode.Merge(partconfig, _fxData);
@@ -1507,16 +1527,19 @@ namespace UbioWeldingLtd
 			//Add CrewCapacity
 			partconfig.AddValue("CrewCapacity", _crewCapacity);
 			// Add stackSymmetry
-			partconfig.AddValue("stackSymmetry", _stackSymmetry);
+			if (_stackSymmetry > 0)
+			{
+				partconfig.AddValue("stackSymmetry", _stackSymmetry);
+			}
 
 			// Add Lifting Offsets
 			if (_CoLOffset != Vector3.zero)
 			{
-				partconfig.AddValue("CoLOffset", ConfigNode.WriteVector(WeldingHelpers.RoundVector3(_CoLOffset)));
+				partconfig.AddValue("CoLOffset", ConfigNode.WriteVector(WeldingHelpers.RoundVector3(_CoLOffset, _precisionDigits)));
 			}
 			if (_CoPOffset != Vector3.zero)
 			{
-				partconfig.AddValue("CoPOffset", ConfigNode.WriteVector(WeldingHelpers.RoundVector3(_CoPOffset)));
+				partconfig.AddValue("CoPOffset", ConfigNode.WriteVector(WeldingHelpers.RoundVector3(_CoPOffset, _precisionDigits)));
 			}
 
 
@@ -1550,15 +1573,15 @@ namespace UbioWeldingLtd
 
 			//add drag
 			partconfig.AddValue("dragModelType", _dragModel);
-			partconfig.AddValue("maximum_drag", WeldingHelpers.RoundFloat(_maximumDrag));
-			partconfig.AddValue("minimum_drag", WeldingHelpers.RoundFloat(_minimumDrag));
-			partconfig.AddValue("angularDrag", WeldingHelpers.RoundFloat(_angularDrag));
+			partconfig.AddValue("maximum_drag", WeldingHelpers.RoundFloat(_maximumDrag, _precisionDigits));
+			partconfig.AddValue("minimum_drag", WeldingHelpers.RoundFloat(_minimumDrag,_precisionDigits));
+			partconfig.AddValue("angularDrag", WeldingHelpers.RoundFloat(_angularDrag,_precisionDigits));
 
 			//add crash and breaking data
-			partconfig.AddValue("crashTolerance", WeldingHelpers.RoundFloat(_crashTolerance));
-			partconfig.AddValue("breakingForce", WeldingHelpers.RoundFloat(_breakingForce));
-			partconfig.AddValue("breakingTorque", WeldingHelpers.RoundFloat(_breakingTorque));
-			partconfig.AddValue("maxTemp", WeldingHelpers.RoundFloat(_maxTemp));
+			partconfig.AddValue("crashTolerance", WeldingHelpers.RoundFloat(_crashTolerance, _precisionDigits));
+			partconfig.AddValue("breakingForce", WeldingHelpers.RoundFloat(_breakingForce, _precisionDigits));
+			partconfig.AddValue("breakingTorque", WeldingHelpers.RoundFloat(_breakingTorque, _precisionDigits));
+			partconfig.AddValue("maxTemp", WeldingHelpers.RoundFloat(_maxTemp, _precisionDigits));
 
 			//add if crossfeed
 			partconfig.AddValue("fuelCrossFeed", _fuelCrossFeed);
