@@ -588,19 +588,16 @@ namespace UbioWeldingLtd
 
 						Vector3 position = Vector3.zero;
 						setRelativePosition(newpart, ref position);
-						info.position = position;
+						info.position = WeldingHelpers.RoundVector3(position, _precisionDigits);
 
 						Vector3 rotation = newpart.localRoot.transform.eulerAngles;
 						setRelativeRotation(newpart, ref rotation);
-						info.rotation = WeldingHelpers.limitRotationAngle(rotation);
+						info.rotation = WeldingHelpers.RoundVector3(WeldingHelpers.limitRotationAngle(rotation), _precisionDigits);
 
-						if ((newpart.rescaleFactor / _rescaleFactor) == 1 && WeldingHelpers.isVectorEqualOne(newpart.transform.GetChild(0).localScale))
+						info.scale = WeldingHelpers.RoundVector3(newpart.transform.GetChild(0).localScale * (newpart.rescaleFactor / _rescaleFactor),_precisionDigits);
+						if (WeldingHelpers.isVectorEqualFactor(info.scale, newpart.rescaleFactor))
 						{
 							info.scale = Vector3.zero;
-						}
-						else
-						{
-							info.scale = newpart.transform.GetChild(0).localScale;
 						}
 
 						Debugger.AdvDebug(string.Format("..newpart position {0}", newpart.transform.position.ToString("F3")), _advancedDebug);
@@ -639,13 +636,13 @@ namespace UbioWeldingLtd
 							Debugger.AdvDebug(string.Format("..node.HasValue(\"position\") {0}", node.HasValue("position")), _advancedDebug);
 							Debugger.AdvDebug(string.Format("..node position {0}", position.ToString("F3")), _advancedDebug);
 							setRelativePosition(newpart, ref position);
-							info.position = position;
+							info.position = WeldingHelpers.RoundVector3(position,_precisionDigits);
 
 							Vector3 rotation = (node.HasValue("rotation")) ? ConfigNode.ParseVector3(node.GetValue("rotation")) : Vector3.zero;
 							Debugger.AdvDebug(string.Format("..node.HasValue(\"rotation\") {0}", node.HasValue("rotation")), _advancedDebug);
 							Debugger.AdvDebug(string.Format("..node rotation {0}", rotation.ToString("F3")), _advancedDebug);
 							setRelativeRotation(newpart, ref rotation);
-							info.rotation = WeldingHelpers.limitRotationAngle(rotation);
+							info.rotation = WeldingHelpers.RoundVector3(WeldingHelpers.limitRotationAngle(rotation),_precisionDigits);
 
 							Debugger.AdvDebug(string.Format("..node.HasValue(\"scale\") {0}", node.HasValue("scale")), _advancedDebug);
 							if (node.HasValue("scale"))
@@ -654,29 +651,7 @@ namespace UbioWeldingLtd
 							}
 							Debugger.AdvDebug(string.Format("..Childs count {0}", newpart.transform.childCount), _advancedDebug);
 
-
-							if (node.HasValue("scale"))
-							{
-								if (ConfigNode.ParseVector3(node.GetValue("scale")) * (newpart.rescaleFactor / _rescaleFactor) == newpart.transform.GetChild(0).localScale)
-								{
-									info.scale = Vector3.zero;
-								}
-								else
-								{
-									info.scale = newpart.transform.GetChild(0).localScale;
-								}
-							}
-							else
-							{
-								if ((newpart.rescaleFactor / _rescaleFactor) == 1 && WeldingHelpers.isVectorEqualOne(newpart.transform.GetChild(0).localScale))
-								{
-									info.scale = Vector3.zero;
-								}
-								else
-								{
-									info.scale = newpart.transform.GetChild(0).localScale;
-								}
-							}
+							info.scale = WeldingHelpers.RoundVector3(newpart.transform.GetChild(0).localScale,_precisionDigits);
 							//info.scale = (node.HasValue("scale")) ?
 							//				(ConfigNode.ParseVector3(node.GetValue("scale")) * (newpart.rescaleFactor / _rescaleFactor)) :
 							//				new Vector3(newpart.transform.GetChild(0).localScale.x,
@@ -720,9 +695,6 @@ namespace UbioWeldingLtd
 
 					if (runInTestMode)
 					{
-						//PartModuleList liveModuleList = newpart.Modules;
-						//PartModule liveModule = liveModuleList.GetModule(0);
-						//ConfigNode liveModuleNode = liveModule.snapshot.moduleValues;
 						mergeModules(partname, cfg, _modulelist, _advancedDebug);
 					}
 					else
@@ -1479,15 +1451,15 @@ namespace UbioWeldingLtd
 				{
 					node.AddValue("texture", tex);
 				}
-				if (!model.position.IsZero())
+				if (!model.position.Equals(Vector3.zero))
 				{
 					node.AddValue("position", ConfigNode.WriteVector(WeldingHelpers.RoundVector3(model.position,_precisionDigits)));
 				}
-				if (!model.scale.IsZero())
+				if (!model.scale.Equals(Vector3.zero))
 				{
 					node.AddValue("scale", ConfigNode.WriteVector(WeldingHelpers.RoundVector3(model.scale, _precisionDigits)));
 				}
-				if (!model.rotation.IsZero())
+				if (!model.rotation.Equals(Vector3.zero))
 				{
 					node.AddValue("rotation", ConfigNode.WriteVector(WeldingHelpers.RoundVector3(model.rotation, _precisionDigits)));
 				}

@@ -305,15 +305,15 @@ namespace UbioWeldingLtd
 		public static Vector3 limitRotationAngle(Vector3 inputVector)
 		{
 			bool[] angleLimiting = { false, false, false };
-			if (inputVector.x == 360)
+			if (RoundFloat(inputVector.x, 3).Equals(360))
 			{
 				angleLimiting[0] = true;
 			}
-			if (inputVector.y == 360)
+			if (RoundFloat(inputVector.y, 3).Equals(360))
 			{
 				angleLimiting[1] = true;
 			}
-			if (inputVector.z == 360)
+			if (RoundFloat(inputVector.z, 3).Equals(360))
 			{
 				angleLimiting[2] = true;
 			}
@@ -321,18 +321,18 @@ namespace UbioWeldingLtd
 		}
 
 
-		public static bool isVectorEqualOne(Vector3 inputVector)
+		public static bool isVectorEqualFactor(Vector3 inputVector, float factor)
 		{
 			bool[] isVectorEqual = { false, false, false };
-			if (inputVector.x == 1)
+			if (RoundFloat(inputVector.x, 3).Equals(RoundFloat(factor, 3)))
 			{
 				isVectorEqual[0] = true;
 			}
-			if (inputVector.x == 1)
+			if (RoundFloat(inputVector.y, 3).Equals(RoundFloat(factor, 3)))
 			{
 				isVectorEqual[1] = true;
 			}
-			if (inputVector.x == 1)
+			if (RoundFloat(inputVector.z, 3).Equals(RoundFloat(factor, 3)))
 			{
 				isVectorEqual[2] = true;
 			}
