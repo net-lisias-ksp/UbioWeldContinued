@@ -594,7 +594,9 @@ namespace UbioWeldingLtd
 						setRelativeRotation(newpart, ref rotation);
 						info.rotation = WeldingHelpers.RoundVector3(WeldingHelpers.limitRotationAngle(rotation), _precisionDigits);
 
-						info.scale = WeldingHelpers.RoundVector3(newpart.transform.GetChild(0).localScale * (newpart.rescaleFactor / _rescaleFactor),_precisionDigits);
+
+						Debugger.AdvDebug(string.Format("scaling info: rescaleFactor={0}| vector={1}", newpart.rescaleFactor, newpart.transform.GetChild(0).localScale.ToString("F3")), _advancedDebug);
+						info.scale = WeldingHelpers.RoundVector3(newpart.transform.GetChild(0).localScale * (newpart.rescaleFactor / _rescaleFactor), _precisionDigits);
 						if (WeldingHelpers.isVectorEqualFactor(info.scale, newpart.rescaleFactor))
 						{
 							info.scale = Vector3.zero;
@@ -651,7 +653,23 @@ namespace UbioWeldingLtd
 							}
 							Debugger.AdvDebug(string.Format("..Childs count {0}", newpart.transform.childCount), _advancedDebug);
 
-							info.scale = WeldingHelpers.RoundVector3(newpart.transform.GetChild(0).localScale,_precisionDigits);
+							Debugger.AdvDebug(string.Format("scaling info: rescaleFactor={0}| vector={1}| modelscale={2}", newpart.rescaleFactor, newpart.transform.GetChild(0).localScale.ToString("F3"), node.HasValue("scale") ? ConfigNode.ParseVector3(node.GetValue("scale")).ToString("F3") : Vector3.zero.ToString("F3")), _advancedDebug);
+							info.scale = WeldingHelpers.RoundVector3((node.HasValue("scale") ? WeldingHelpers.multiplyVector3(newpart.transform.GetChild(0).localScale, ConfigNode.ParseVector3(node.GetValue("scale"))) : newpart.transform.GetChild(0).localScale), _precisionDigits);
+							if (node.HasValue("scale"))
+							{
+								if (WeldingHelpers.RoundVector3(ConfigNode.ParseVector3(node.GetValue("scale")) * _rescaleFactor, _precisionDigits) == info.scale)
+								{
+									info.scale = Vector3.zero;
+								}
+							}
+							else
+							{
+								if (WeldingHelpers.isVectorEqualFactor(newpart.transform.GetChild(0).localScale, _rescaleFactor))
+								{
+									info.scale = Vector3.zero;
+								}
+							}
+							
 							//info.scale = (node.HasValue("scale")) ?
 							//				(ConfigNode.ParseVector3(node.GetValue("scale")) * (newpart.rescaleFactor / _rescaleFactor)) :
 							//				new Vector3(newpart.transform.GetChild(0).localScale.x,
