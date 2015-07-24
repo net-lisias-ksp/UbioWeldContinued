@@ -353,5 +353,37 @@ namespace UbioWeldingLtd
 		}
 
 
+		public static string loadListIntoString<T>(string buildingResult, List<T> list, string seperator)
+		{
+			foreach (T obj in list)
+			{
+				if (string.IsNullOrEmpty(buildingResult))
+				{
+					buildingResult = obj.ToString();
+				}
+				else
+				{
+					buildingResult += string.Format("{0} {1}", seperator, obj.ToString());
+				}
+			}
+			return buildingResult;
+		}
+
+
+		public static string writeVector(Vector3 inputvector)
+		{
+			List<float> components = new List<float>();
+			string output = string.Empty;
+
+			components.Add(inputvector.x);
+			components.Add(inputvector.y);
+			components.Add(inputvector.z);
+
+			output = loadListIntoString(output, components, Constants.weldedMeshSwitchSubSplitter);
+
+			return output;
+		}
+
+
 	}
 }

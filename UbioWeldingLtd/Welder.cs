@@ -423,24 +423,6 @@ namespace UbioWeldingLtd
 		}
 
 
-		private string loadListIntoString<T>(string buildingResult, List<T> list)
-		{
-			foreach (T obj in list)
-			{
-				if (string.IsNullOrEmpty(buildingResult))
-				{
-					buildingResult = obj.ToString();
-				}
-				else
-				{
-					buildingResult += Constants.weldedMeshSwitchSplitter + obj.ToString();
-				}
-			}
-			return buildingResult;
-		}
-
-
-
 		public void prepareWeldedMeshSwitchModule(List<ConfigNode> moduleList)
 		{
 			ConfigNode newWeldedMeshSwitch = new ConfigNode(Constants.weldModuleNode);
@@ -448,8 +430,8 @@ namespace UbioWeldingLtd
 			string indexString = string.Empty;
 			string transformNamesString = string.Empty;
 
-			indexString = loadListIntoString(indexString, _meshSwitchModelIndicies);
-			transformNamesString = loadListIntoString(transformNamesString, _meshSwitchTransformNames);
+			indexString = WeldingHelpers.loadListIntoString(indexString, _meshSwitchModelIndicies, Constants.weldedMeshSwitchSplitter);
+			transformNamesString = WeldingHelpers.loadListIntoString(transformNamesString, _meshSwitchTransformNames, Constants.weldedMeshSwitchSplitter);
 
 			newWeldedMeshSwitch.AddValue("name", Constants.weldedmeshSwitchModule);
 			newWeldedMeshSwitch.AddValue("objectIndicies", indexString);
@@ -1471,15 +1453,15 @@ namespace UbioWeldingLtd
 				}
 				if (!model.position.Equals(Vector3.zero))
 				{
-					node.AddValue("position", ConfigNode.WriteVector(WeldingHelpers.RoundVector3(model.position,_precisionDigits)));
+					node.AddValue("position", WeldingHelpers.writeVector(WeldingHelpers.RoundVector3(model.position,_precisionDigits)));
 				}
 				if (!model.scale.Equals(Vector3.zero))
 				{
-					node.AddValue("scale", ConfigNode.WriteVector(WeldingHelpers.RoundVector3(model.scale, _precisionDigits)));
+					node.AddValue("scale", WeldingHelpers.writeVector(WeldingHelpers.RoundVector3(model.scale, _precisionDigits)));
 				}
 				if (!model.rotation.Equals(Vector3.zero))
 				{
-					node.AddValue("rotation", ConfigNode.WriteVector(WeldingHelpers.RoundVector3(model.rotation, _precisionDigits)));
+					node.AddValue("rotation", WeldingHelpers.writeVector(WeldingHelpers.RoundVector3(model.rotation, _precisionDigits)));
 				}
 				if (!string.IsNullOrEmpty(model.parent))
 				{
@@ -1534,10 +1516,11 @@ namespace UbioWeldingLtd
 				}
 				orientation.Normalize();
 
-				partconfig.AddValue(string.Format("node_stack_{0}", node.id), string.Format("{0},{1},{2}", ConfigNode.WriteVector(WeldingHelpers.RoundVector3(node.position, _precisionDigits)), ConfigNode.WriteVector(WeldingHelpers.RoundVector3(orientation, _precisionDigits)), node.size));
+				//partconfig.AddValue(string.Format("node_stack_{0}", node.id), string.Format("{0}, {1}, {2}", ConfigNode.WriteVector(WeldingHelpers.RoundVector3(node.position, _precisionDigits)), ConfigNode.WriteVector(WeldingHelpers.RoundVector3(orientation, _precisionDigits)), node.size));
+				partconfig.AddValue(string.Format("node_stack_{0}", node.id), string.Format("{0}, {1}, {2}", WeldingHelpers.writeVector(WeldingHelpers.RoundVector3(node.position, _precisionDigits)), WeldingHelpers.writeVector(WeldingHelpers.RoundVector3(orientation, _precisionDigits)), node.size));
 			}
 			//add surface attach node
-			partconfig.AddValue("node_attach", string.Format("{0},{1},{2}", ConfigNode.WriteVector(WeldingHelpers.RoundVector3(_srfAttachNode.originalPosition, _precisionDigits)), ConfigNode.WriteVector(WeldingHelpers.RoundVector3(_srfAttachNode.originalOrientation, _precisionDigits)), _srfAttachNode.size));
+			partconfig.AddValue("node_attach", string.Format("{0}, {1}, {2}", WeldingHelpers.writeVector(WeldingHelpers.RoundVector3(_srfAttachNode.originalPosition, _precisionDigits)), WeldingHelpers.writeVector(WeldingHelpers.RoundVector3(_srfAttachNode.originalOrientation, _precisionDigits)), _srfAttachNode.size));
 
 			//merge fx
 			ConfigNode.Merge(partconfig, _fxData);
@@ -1553,11 +1536,11 @@ namespace UbioWeldingLtd
 			// Add Lifting Offsets
 			if (_CoLOffset != Vector3.zero)
 			{
-				partconfig.AddValue("CoLOffset", ConfigNode.WriteVector(WeldingHelpers.RoundVector3(_CoLOffset, _precisionDigits)));
+				partconfig.AddValue("CoLOffset", WeldingHelpers.writeVector(WeldingHelpers.RoundVector3(_CoLOffset, _precisionDigits)));
 			}
 			if (_CoPOffset != Vector3.zero)
 			{
-				partconfig.AddValue("CoPOffset", ConfigNode.WriteVector(WeldingHelpers.RoundVector3(_CoPOffset, _precisionDigits)));
+				partconfig.AddValue("CoPOffset", WeldingHelpers.writeVector(WeldingHelpers.RoundVector3(_CoPOffset, _precisionDigits)));
 			}
 
 
