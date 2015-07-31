@@ -12,6 +12,7 @@
 	imropved the rotation or models to be not set to 360 degrees
 	settings contains a precisionDigits value that will round the values of the new part to this amount of digits after the dot
 	saving the settings out of the game now makes them also the actual ones used
+	safety check in the weldedMeshSwitch to prevent nullpointer exeption at Heatshields
 2015-05-27 - Version 2.1.3 - Continued
 	Fixed a UI bug that prevented the saving of the weldment
 2015-05-27 - Version 2.1.2 - Continued

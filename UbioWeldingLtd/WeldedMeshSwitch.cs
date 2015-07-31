@@ -23,8 +23,7 @@ namespace UbioWeldingLtd
 		private List<Transform> parentTransforms = new List<Transform>();
 		private List<List<Transform>> objectTransforms = new List<List<Transform>>();
 		private bool initialized = false;
-
-		private string test = string.Empty;
+		private string[] dangerousModules = { "ModuleAblator" };
 
 
 		public override void OnStart(PartModule.StartState state)
@@ -36,7 +35,26 @@ namespace UbioWeldingLtd
 		public void initModule()
 		{
 			parseTranseforms();
+			checkForDangerousModules();
 			activateTransforms();
+		}
+
+
+		public void checkForDangerousModules()
+		{
+			if (destroyUnusedParts)
+			{
+				foreach (string s in dangerousModules)
+				{
+					if (part.Modules.Contains(s))
+					{
+						Debugger.AdvDebug("[WeldedMeshSwitch] Found a dangerous Module = " + s, advancedDebug);
+						destroyUnusedParts = false;
+						break;
+					}
+				}
+			}
+
 		}
 
 
