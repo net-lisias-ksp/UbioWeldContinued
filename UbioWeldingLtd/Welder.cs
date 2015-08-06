@@ -578,8 +578,8 @@ namespace UbioWeldingLtd
 
 
 						Debugger.AdvDebug(string.Format("scaling info: rescaleFactor={0}| vector={1}", newpart.rescaleFactor, newpart.transform.GetChild(0).localScale.ToString("F3")), _advancedDebug);
-						info.scale = WeldingHelpers.RoundVector3(newpart.transform.GetChild(0).localScale * (newpart.rescaleFactor / _rescaleFactor), _precisionDigits);
-						if (WeldingHelpers.isVectorEqualFactor(info.scale, newpart.rescaleFactor))
+						info.scale = WeldingHelpers.RoundVector3(cfg.config.HasValue("rescaleFactor") ? newpart.transform.GetChild(0).localScale * (newpart.rescaleFactor / _rescaleFactor) : newpart.transform.GetChild(0).localScale, _precisionDigits);
+						if (cfg.config.HasValue("rescaleFactor") && WeldingHelpers.isVectorEqualFactor(info.scale, newpart.rescaleFactor))
 						{
 							info.scale = Vector3.zero;
 						}
