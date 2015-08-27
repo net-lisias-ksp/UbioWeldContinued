@@ -465,24 +465,27 @@ namespace UbioWeldingLtd
 				GUILayout.Space(10.0f);
 				GUILayout.Label(" Vector Precision: " + _config.precisionDigits);
 				_config.precisionDigits = (int)GUILayout.HorizontalSlider(_config.precisionDigits, 1, 6);
+				Welder.precisionDigits = _config.precisionDigits;
 				GUILayout.Space(10.0f);
 				GUILayout.Label("Strength params calculation method");
 //				_config.StrengthCalcMethod = (StrengthParamsCalcMethod)GUILayout.SelectionGrid((int)_config.StrengthCalcMethod, Constants.StrengthParamsCalcMethodsGUIContent, 1, GUILayout.MaxWidth(140));
-				foreach (StrengthParamsCalcMethod Method in Enum.GetValues(typeof(StrengthParamsCalcMethod)))
+				foreach (StrengthParamsCalcMethod method in Enum.GetValues(typeof(StrengthParamsCalcMethod)))
 				{
-					if (GUILayout.Toggle((_config.StrengthCalcMethod == Method), Constants.StrengthParamsCalcMethodsGUIContent[(int)Method], _settingsToggleGroupStyle))
+					if (GUILayout.Toggle((_config.StrengthCalcMethod == method), Constants.StrengthParamsCalcMethodsGUIContent[(int)method], _settingsToggleGroupStyle))
 					{
-						_config.StrengthCalcMethod = Method;
+						_config.StrengthCalcMethod = method;
+						Welder.StrengthCalcMethod = method;
 					}
 				}
 				GUILayout.Space(10.0f);
 				GUILayout.Label("MaxTemp calculation method");
 //				_config.MaxTempCalcMethod = (MaxTempCalcMethod)GUILayout.SelectionGrid((int)_config.MaxTempCalcMethod, Constants.MaxTempCalcMethodsGUIContent, 1, GUILayout.MaxWidth(140));
-				foreach (MaxTempCalcMethod Method in Enum.GetValues(typeof(MaxTempCalcMethod)))
+				foreach (MaxTempCalcMethod method in Enum.GetValues(typeof(MaxTempCalcMethod)))
 				{
-					if (GUILayout.Toggle((_config.MaxTempCalcMethod == Method), Constants.MaxTempCalcMethodsGUIContent[(int)Method], _settingsToggleGroupStyle))
+					if (GUILayout.Toggle((_config.MaxTempCalcMethod == method), Constants.MaxTempCalcMethodsGUIContent[(int)method], _settingsToggleGroupStyle))
 					{
-						_config.MaxTempCalcMethod = Method;
+						_config.MaxTempCalcMethod = method;
+						Welder.MaxTempCalcMethod = method;
 					}
 				}
 				GUILayout.EndScrollView();

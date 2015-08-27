@@ -1,4 +1,4 @@
-2015-07-01 - Version 2.2.0 - Continued
+2015-08-27 - Version 2.2.0 - Continued
 	Compatibility with KSP 1.0.4
 	New WeldedMeshSwitch that is able to select the correct meshes for welded parts that contained the InterstellarMeshSwitch
 	Fixed a major bug that caused the Welding and UI to freeze
