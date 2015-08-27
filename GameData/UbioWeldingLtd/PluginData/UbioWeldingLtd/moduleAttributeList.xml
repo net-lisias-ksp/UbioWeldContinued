@@ -5,10 +5,12 @@
   </Vector2CurveModules>
   <Vector4CurveModules>
     <ModuleAttribute AttributeName="velocityCurve" />
+    <ModuleAttribute AttributeName="powerCurve" />
   </Vector4CurveModules>
   <SubModules>
     <ModuleAttribute AttributeName="RESOURCE" />
     <ModuleAttribute AttributeName="OUTPUT_RESOURCE" />
+    <ModuleAttribute AttributeName="INPUT_RESOURCE" />
     <ModuleAttribute AttributeName="PROPELLANT" />
   </SubModules>
   <ModulesToIgnore>
@@ -72,6 +74,7 @@
     <ModuleAttribute AttributeName="ModuleScienceExperiment_experimentID" />
     <ModuleAttribute AttributeName="DMModuleScienceAnimate_experimentID" />
     <ModuleAttribute AttributeName="ModuleDeployableSolarPanel_animationName" />
+    <ModuleAttribute AttributeName="ModuleFuelTanks_type" />
   </BreakingModuleAttributes>
 </ModuleAttributeLists>
 <!-- The ModuleAttributeList.xml gives you the ability to edit how the Weldingtool will process the merging of certain modules and their attributes. -->
