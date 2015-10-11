@@ -105,6 +105,7 @@ namespace UbioWeldingLtd
 		private static MaxTempCalcMethod _MaxTempCalcMethod = MaxTempCalcMethod.Lowest;
 		private int[] partsHashMap;
 		private static int _precisionDigits;
+		private static bool _fileSimplification;
 
 		private float _explosionPotential = 0;
 		private double _thermalMassModifier = 0;
@@ -183,6 +184,12 @@ namespace UbioWeldingLtd
 		{
 			get { return _runInTestMode; }
 			set { _runInTestMode = value; }
+		}
+
+		public static bool fileSimplification
+		{
+			get { return _fileSimplification; }
+			set { _fileSimplification = value; }
 		}
 
 		public static int precisionDigits
@@ -579,9 +586,12 @@ namespace UbioWeldingLtd
 
 						Debugger.AdvDebug(string.Format("scaling info: rescaleFactor={0}| vector={1}", newpart.rescaleFactor, newpart.transform.GetChild(0).localScale.ToString("F3")), _advancedDebug);
 						info.scale = WeldingHelpers.RoundVector3(cfg.config.HasValue("rescaleFactor") ? newpart.transform.GetChild(0).localScale * (newpart.rescaleFactor / _rescaleFactor) : newpart.transform.GetChild(0).localScale, _precisionDigits);
-						if (cfg.config.HasValue("rescaleFactor") && WeldingHelpers.isVectorEqualFactor(info.scale, newpart.rescaleFactor))
+						if (fileSimplification)
 						{
-							info.scale = Vector3.zero;
+							if (cfg.config.HasValue("rescaleFactor") && WeldingHelpers.isVectorEqualFactor(info.scale, newpart.rescaleFactor))
+							{
+								info.scale = Vector3.zero;
+							}
 						}
 
 						Debugger.AdvDebug(string.Format("..newpart position {0}", newpart.transform.position.ToString("F3")), _advancedDebug);
@@ -639,16 +649,22 @@ namespace UbioWeldingLtd
 							info.scale = WeldingHelpers.RoundVector3((node.HasValue("scale") ? WeldingHelpers.multiplyVector3(newpart.transform.GetChild(0).localScale, ConfigNode.ParseVector3(node.GetValue("scale"))) : newpart.transform.GetChild(0).localScale), _precisionDigits);
 							if (node.HasValue("scale"))
 							{
-								if (WeldingHelpers.RoundVector3(ConfigNode.ParseVector3(node.GetValue("scale")) * _rescaleFactor, _precisionDigits) == info.scale)
+								if (fileSimplification)
 								{
-									info.scale = Vector3.zero;
+									if (WeldingHelpers.RoundVector3(ConfigNode.ParseVector3(node.GetValue("scale")) * _rescaleFactor, _precisionDigits) == info.scale)
+									{
+										info.scale = Vector3.zero;
+									}
 								}
 							}
 							else
 							{
-								if (WeldingHelpers.isVectorEqualFactor(newpart.transform.GetChild(0).localScale, _rescaleFactor))
+								if (fileSimplification)
 								{
-									info.scale = Vector3.zero;
+									if (WeldingHelpers.isVectorEqualFactor(newpart.transform.GetChild(0).localScale, _rescaleFactor))
+									{
+										info.scale = Vector3.zero;
+									}
 								}
 							}
 							
