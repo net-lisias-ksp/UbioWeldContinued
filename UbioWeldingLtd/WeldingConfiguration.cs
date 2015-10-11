@@ -45,6 +45,7 @@ namespace UbioWeldingLtd
 		private MaxTempCalcMethod _MaxTempCalcMethod = MaxTempCalcMethod.Lowest;
 		private bool _clearEditor = true;
 		private bool _advancedDebug = false;
+		private bool _fileSimplification = false;
 		private string[] _vector2CurveModules;
 		private string[] _vector4CurveModules;
 		private string[] _subModules;
@@ -83,6 +84,12 @@ namespace UbioWeldingLtd
 		{
 			get { return _includeAllNodes; }
 			set { _includeAllNodes = value; }
+		}
+
+		public bool fileSimplification
+		{
+			get { return _fileSimplification; }
+			set { _fileSimplification = value; }
 		}
 
 		public bool allowCareerMode
