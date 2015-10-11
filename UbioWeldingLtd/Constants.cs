@@ -11,7 +11,7 @@ namespace UbioWeldingLtd
 	static class Constants
 	{
 		//Logs/debug constants
-		public const string logVersion ="v2.2.0 - 1.0.4 - Continued";
+		public const string logVersion ="v2.2.1 - 1.0.4 - Continued";
 		public const string logWarning		  = "WARNING ";
 		public const string logError			= "ERROR ";
 		public const string logPrefix		   = "[WeldingTool] ";
@@ -304,6 +304,7 @@ namespace UbioWeldingLtd
 		public static GUIContent guiWeldItButtonGUIContent = new GUIContent("Weld it", "Press \"Weld it\" button to weld whole craft or selected part of it");
 		public static GUIContent guiClearEditorGUIContent = new GUIContent("Clear editor after welding", "Clear editor after welding");
 		public static GUIContent guiAdvancedDebugGUIContent = new GUIContent("Advanced debug", "SPAM KSP.log with additional debug info");
+		public static GUIContent guiFileSimplificationGUIContent = new GUIContent("File Simplification", "tries to reduce the new part config file by removing certain config lines (for experienced config modders)");
 		public static GUIContent guiSelectPartGUIContent = new GUIContent("Select partbranch", "use 'ctrl + click' to select the partbranch that you want to weld into a new part, if no part is selected the whole craft will be welded");
 		public static GUIContent guiCloseGUIContent = new GUIContent("Close", "Closes the welding menu");
 		public static GUIContent guiSettingsGUIContent = new GUIContent("Settings", "Show/hide settings");
