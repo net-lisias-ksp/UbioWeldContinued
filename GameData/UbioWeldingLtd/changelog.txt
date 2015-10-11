@@ -1,3 +1,6 @@
+2015-10-11 - Version 2.2.1 - Continued
+	added file simplification for experienced users as config field in the settings.
+	improved config changes during play
 2015-08-27 - Version 2.2.0 - Continued
 	Compatibility with KSP 1.0.4
 	New WeldedMeshSwitch that is able to select the correct meshes for welded parts that contained the InterstellarMeshSwitch
