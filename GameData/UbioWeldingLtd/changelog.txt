@@ -1,3 +1,5 @@
+2015-11-11 - Version 2.2.1 - Continued
+	Recompiled for KSP 1.0.5
 2015-10-11 - Version 2.2.1 - Continued
 	added file simplification for experienced users as config field in the settings.
 	improved config changes during play
