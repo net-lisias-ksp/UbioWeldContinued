@@ -2,6 +2,7 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
+using KSP.UI.Screens;
 
 namespace UbioWeldingLtd
 {
@@ -109,7 +110,6 @@ namespace UbioWeldingLtd
 
 			initConfig();
 			_state = DisplayState.none;
-			RenderingManager.AddToPostDrawQueue(0, OnDraw);
 			_editorErrorDial = new Rect(Screen.width / 2 - Constants.guiDialogX, Screen.height / 2 - Constants.guiDialogY, Constants.guiDialogW, Constants.guiDialogH);
 			_editorWarningDial = new Rect(Screen.width / 2 - Constants.guiDialogX, Screen.height / 2 - Constants.guiDialogY, Constants.guiDialogW, Constants.guiDialogH);
 			_editorInfoWindow = new Rect(Screen.width / 2 - Constants.guiInfoWindowX, Screen.height / 2 - Constants.guiInfoWindowY, Constants.guiInfoWindowW, Constants.guiInfoWindowH);
@@ -161,16 +161,16 @@ namespace UbioWeldingLtd
 		private void initConfig()
 		{
 			KSP.IO.PluginConfiguration oldConfig = KSP.IO.PluginConfiguration.CreateForType<OldWeldingPluginConfig>();
-			bool oldConfigFound = System.IO.File.Exists(string.Concat(Constants.settingRuntimeDirectory, Constants.settingXmlFilePath, Constants.settingXmlOldConfigFileName));
+			bool oldConfigFound = File.Exists(string.Concat(Constants.settingRuntimeDirectory, Constants.settingXmlFilePath, Constants.settingXmlOldConfigFileName));
 			if (oldConfigFound)
 			{
 				oldConfig = KSP.IO.PluginConfiguration.CreateForType<OldWeldingPluginConfig>();
 				oldConfig.load();
-				System.IO.File.Delete(string.Concat(Constants.settingRuntimeDirectory, Constants.settingXmlFilePath, Constants.settingXmlOldConfigFileName));
+				File.Delete(string.Concat(Constants.settingRuntimeDirectory, Constants.settingXmlFilePath, Constants.settingXmlOldConfigFileName));
 				Debug.Log(string.Format("{0}old configfile found and deleted", Constants.logPrefix));
 			}
 
-			if (!System.IO.File.Exists(string.Concat(Constants.settingRuntimeDirectory, Constants.settingXmlFilePath, Constants.settingXmlConfigFileName)))
+			if (!File.Exists(string.Concat(Constants.settingRuntimeDirectory, Constants.settingXmlFilePath, Constants.settingXmlConfigFileName)))
 			{
 				_config = new WeldingConfiguration();
 				FileManager.saveConfig(_config);
@@ -267,6 +267,15 @@ namespace UbioWeldingLtd
 					enablePartHighlight(_selectedPartbranch);
 				}
 			}
+		}
+
+
+		/// <summary>
+		/// the Unity default method to draw any GUI on the Screen.
+		/// </summary>
+		public void OnGUI()
+		{
+			OnDraw();
 		}
 
 		/// <summary>
