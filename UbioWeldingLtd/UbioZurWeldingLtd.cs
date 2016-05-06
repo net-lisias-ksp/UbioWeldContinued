@@ -407,7 +407,8 @@ namespace UbioWeldingLtd
 				}
 			}
 			_welder.processNewCoM();
-			
+
+			_welder.prepDecals(_welder.moduleList);
 			if (_welder.isMeshSwitchRequired)
 			{
 				_welder.prepareWeldedMeshSwitchModule(_welder.moduleList);
@@ -533,6 +534,7 @@ namespace UbioWeldingLtd
 					{
 						_selectedPartbranch = EditorLogic.RootPart;
 					}
+					repositionPreWeldment(_selectedPartbranch);
 					weldPart(_selectedPartbranch);
 				}
 			}
@@ -549,6 +551,19 @@ namespace UbioWeldingLtd
 
 			GUI.DragWindow();
         } //private void OnMainWindow()
+
+
+
+		/// <summary>
+		/// resets the partbranch in the editor to a position that is centered at x and z
+		/// </summary>
+		/// <param name="rootpart"></param>
+		private static void repositionPreWeldment(Part rootpart)
+		{
+			float yPos = EditorLogic.fetch.ship.shipSize.y + EditorLogic.fetch.initialPodPosition.y;
+			rootpart.transform.position = new Vector3(0, yPos, 0);
+		}
+
 
 		/*
 		 * Error Message
@@ -880,12 +895,10 @@ namespace UbioWeldingLtd
 		 */
 		private void WriteCfg( string filepath)
 		{
-#if (DEBUG)
 			Debug.Log(string.Format("{0}{1}{2}", Constants.logPrefix, Constants.logWritingFile, filepath));
-#endif
-
 			_welder.CreateFullConfigNode();
 			_welder.FullConfigNode.Save(filepath);
+			Debug.Log(string.Format("{0}{1}{2} successful", Constants.logPrefix, Constants.logWritingFile, filepath));
 
 			if (_config.dataBaseAutoReload)
 			{

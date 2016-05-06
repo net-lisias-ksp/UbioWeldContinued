@@ -11,7 +11,7 @@ namespace UbioWeldingLtd
 	static class Constants
 	{
 		//Logs/debug constants
-		public const string logVersion ="v2.3.0 - 1.1.0 - Continued";
+		public const string logVersion ="v2.3.1 - 1.1.2 - Continued";
 		public const string logWarning		  = "WARNING ";
 		public const string logError			= "ERROR ";
 		public const string logPrefix		   = "[WeldingTool] ";
@@ -137,6 +137,7 @@ namespace UbioWeldingLtd
 		public const string weldModelNode	   = "MODEL";
 		public const string weldResNode		 = "RESOURCE";
 		public const string weldModuleNode	  = "MODULE";
+		public const string weldModuleNodeName = "name";
 		public const string weldOutResNode	  = "OUTPUT_RESOURCE";
 		public const string weldEngineProp	  = "PROPELLANT";
 		public const string weldEngineAtmCurve  = "atmosphereCurve";
@@ -148,8 +149,12 @@ namespace UbioWeldingLtd
 
 		public const string weldedMeshSwitchSubSplitter = ",";
 		public const string weldedMeshSwitchSplitter = ";";
-		public const string interstellarMeshSwitchModule = "InterstellarMeshSwitch";
+		public static string[] interstellarMeshSwitchModule = { "InterstellarMeshSwitch", "ModuleB9PartSwitch" };
 		public const string weldedmeshSwitchModule = "WeldedMeshSwitch";
+
+		public const string originalDecalModule = "FlagDecal";
+		public const string weldedDecalModule = "WeldedFlagDecal";
+		public const string weldedDecalModuleValueName = "textureQuadName";
 
 		//module name
 		public const string modStockSas		 = "ModuleSAS";
@@ -213,6 +218,7 @@ namespace UbioWeldingLtd
 		{
 			"RESOURCE",
 			"OUTPUT_RESOURCE",
+			"INPUT_RESOURCE",
 			"PROPELLANT"
 		};
 
@@ -287,7 +293,9 @@ namespace UbioWeldingLtd
 			"FNAntimatterReactor_radius",
 			"ModuleScienceExperiment_experimentID",
 			"DMModuleScienceAnimate_experimentID",
-			"ModuleDeployableSolarPanel_animationName"
+			"ModuleDeployableSolarPanel_animationName",
+			"ModuleFuelTanks_type",
+			"FlagDecal_textureQuadName"
 		};
 
 		public static string CommentOutText(string text)

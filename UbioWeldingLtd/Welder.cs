@@ -251,7 +251,7 @@ namespace UbioWeldingLtd
 				int index = 0;
 				foreach (ConfigNode cfgnode in _modulelist)
 				{
-					moduleslist[index] = cfgnode.GetValue("name");
+					moduleslist[index] = cfgnode.GetValue(Constants.weldModuleNodeName);
 					++index;
 				}
 				return moduleslist;
@@ -271,7 +271,7 @@ namespace UbioWeldingLtd
 				int index = 0;
 				foreach (ConfigNode cfgnode in _resourceslist)
 				{
-					resourceslist[index++] = cfgnode.GetValue("name");
+					resourceslist[index++] = cfgnode.GetValue(Constants.weldModuleNodeName);
 					resourceslist[index++] = string.Format("{0} / {1}", cfgnode.GetValue("amount"), cfgnode.GetValue("maxAmount"));
 				}
 				return resourceslist;
@@ -440,7 +440,7 @@ namespace UbioWeldingLtd
 			indexString = WeldingHelpers.loadListIntoString(indexString, _meshSwitchModelIndicies, Constants.weldedMeshSwitchSplitter);
 			transformNamesString = WeldingHelpers.loadListIntoString(transformNamesString, _meshSwitchTransformNames, Constants.weldedMeshSwitchSplitter);
 
-			newWeldedMeshSwitch.AddValue("name", Constants.weldedmeshSwitchModule);
+			newWeldedMeshSwitch.AddValue(Constants.weldModuleNodeName, Constants.weldedmeshSwitchModule);
 			newWeldedMeshSwitch.AddValue("objectIndicies", indexString);
 			newWeldedMeshSwitch.AddValue("objects", transformNamesString);
 			newWeldedMeshSwitch.AddValue("advancedDebug", _advancedDebug);
@@ -510,16 +510,52 @@ namespace UbioWeldingLtd
 		private bool doesPartContainMeshSwitch(UrlDir.UrlConfig partconfig)
 		{
 			ConfigNode[] originalModules = partconfig.config.GetNodes(Constants.weldModuleNode);
-			string moduleName = "";
+			string moduleName = string.Empty;
 			foreach (ConfigNode module in originalModules)
 			{
 				moduleName = module.GetValue(module.values.DistinctNames()[0]);
-				if (moduleName == Constants.interstellarMeshSwitchModule)
+				if (WeldingHelpers.isArrayContaining(moduleName, Constants.interstellarMeshSwitchModule))
 				{
 					return true;
 				}
 			}
 			return false;
+		}
+
+
+		/// <summary>
+		/// a method to check for decals and replaces them with the welded ones
+		/// </summary>
+		/// <param name="moduleList"></param>
+		public void prepDecals(List<ConfigNode> moduleList)
+		{
+			int decals = 0;
+			List<ConfigNode> decalsmodules = new List<ConfigNode>();
+			List<int> moduleIndicies = new List<int>();
+
+			for (int i =0; i < moduleList.Count;i++)
+			{
+				ConfigNode n = moduleList[i];
+				if(n.GetValue(n.values.DistinctNames()[0]) == Constants.originalDecalModule)
+				{
+					decals++;
+					decalsmodules.Add(n);
+					moduleIndicies.Add(i);
+				}
+			}
+
+			if(decals > 0)
+			{
+				for(int i =0; i<decalsmodules.Count; i++)
+				{
+					ConfigNode node = new ConfigNode(Constants.weldModuleNode);
+					node.AddValue(Constants.weldModuleNodeName, Constants.weldedDecalModule);
+					node.AddValue(Constants.weldedDecalModuleValueName, decalsmodules[i].GetValue(Constants.weldedDecalModuleValueName));
+
+					//moduleList.RemoveAt(moduleIndicies[i]);
+					moduleList.Add(node);
+				}
+			}
 		}
 
 
@@ -536,6 +572,7 @@ namespace UbioWeldingLtd
 			Debug.Log(string.Format("{0}{1}{2}",Constants.logPrefix,Constants.logWeldingPart,partname));
 			Debugger.AdvDebug(string.Format("..part rescaleFactor {0:F}", newpart.rescaleFactor), _advancedDebug);
 			Debugger.AdvDebug(string.Format("..part scaleFactor {0:F}", newpart.scaleFactor), _advancedDebug);
+			getAttachmentType(newpart);
 
 			//--- Find all the config file with the name
 			List<UrlDir.UrlConfig> matchingPartConfigs = new List<UrlDir.UrlConfig>();
@@ -973,7 +1010,7 @@ namespace UbioWeldingLtd
 				bool exist = false;
 				foreach (ConfigNode rescfg in resourcesList)
 				{
-					if (string.Equals(resourceName, rescfg.GetValue("name")))
+					if (string.Equals(resourceName, rescfg.GetValue(Constants.weldModuleNodeName)))
 					{
 						rescfg.SetValue("amount", (resourceAmount + float.Parse(rescfg.GetValue("amount"))).ToString());
 						rescfg.SetValue("maxAmount", (resourceMax + float.Parse(rescfg.GetValue("maxAmount"))).ToString());
@@ -985,7 +1022,7 @@ namespace UbioWeldingLtd
 				if (!exist)
 				{
 					ConfigNode resourceNode = new ConfigNode(Constants.weldResNode);
-					resourceNode.AddValue("name", resourceName);
+					resourceNode.AddValue(Constants.weldModuleNodeName, resourceName);
 					resourceNode.AddValue("amount", resourceAmount.ToString());
 					resourceNode.AddValue("maxAmount", resourceMax.ToString());
 					resourcesList.Add(resourceNode);
@@ -1162,7 +1199,7 @@ namespace UbioWeldingLtd
 									bool propexist = false;
 									foreach (ConfigNode cfgprop in cfgPropellant)
 									{
-										if (string.Equals(cfgprop.GetValue("name"), prop.GetValue("name")))
+										if (string.Equals(cfgprop.GetValue(Constants.weldModuleNodeName), prop.GetValue(Constants.weldModuleNodeName)))
 										{
 											float ratio = float.Parse(prop.GetValue("ratio")) + float.Parse(cfgprop.GetValue("ratio"));
 											cfgprop.SetValue("ratio", ratio.ToString());
@@ -1408,7 +1445,7 @@ namespace UbioWeldingLtd
 				}//foreach (ConfigNode existingNewModule in _modulelist)
 				if (!exist)
 				{
-					switch (newModule.GetValue("name"))
+					switch (newModule.GetValue(Constants.weldModuleNodeName))
 					{
 						//case Constants.modStockDecouple:
 						//	{
@@ -1454,7 +1491,7 @@ namespace UbioWeldingLtd
 			FullConfigNode.AddNode(Constants.weldPartNode);
 			ConfigNode partconfig = FullConfigNode.GetNode(Constants.weldPartNode);
 			// add name, module and author
-			partconfig.AddValue("name", _name);
+			partconfig.AddValue(Constants.weldModuleNodeName, _name);
 			partconfig.AddValue("module", _module);
 			partconfig.AddValue("author", Constants.weldAuthor);
 
@@ -1656,10 +1693,18 @@ namespace UbioWeldingLtd
 			partsHashMap[children.Length] = UbioZurWeldingLtd.instance.selectedPartBranch.GetHashCode();
 		}
 
+
 		private bool isChildPart(Part parentPart, Part partToSearch)
 		{
 			return partsHashMap.Contains<int>(partToSearch.GetHashCode());
 		}
+
+
+		private void getAttachmentType(Part part)
+		{
+			Debugger.AdvDebug(part.name + " Attache mode " + part.attachMode+" Attach method "+ part.attachMethod,_advancedDebug);
+		}
+
 
 	} //class Welder
 }

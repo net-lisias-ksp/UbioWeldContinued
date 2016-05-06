@@ -26,7 +26,7 @@ namespace UbioWeldingLtd
 		private string[] dangerousModules = { "ModuleAblator" };
 
 
-		public override void OnStart(PartModule.StartState state)
+		public override void OnStart(StartState state)
 		{
 			initModule();
 		}

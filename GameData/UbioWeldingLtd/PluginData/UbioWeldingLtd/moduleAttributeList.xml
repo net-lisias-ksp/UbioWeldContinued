@@ -75,6 +75,7 @@
     <ModuleAttribute AttributeName="DMModuleScienceAnimate_experimentID" />
     <ModuleAttribute AttributeName="ModuleDeployableSolarPanel_animationName" />
     <ModuleAttribute AttributeName="ModuleFuelTanks_type" />
+	<ModuleAttribute AttributeName="FlagDecal_textureQuadName" />
   </BreakingModuleAttributes>
 </ModuleAttributeLists>
 <!-- The ModuleAttributeList.xml gives you the ability to edit how the Weldingtool will process the merging of certain modules and their attributes. -->
