@@ -344,6 +344,7 @@ namespace UbioWeldingLtd
 		 */
 		private void setRelativePosition(Part part, ref Vector3 position)
 		{
+			Debugger.AdvDebug(string.Format("..set relative position ={0} | localroot={1}", part.transform.position.ToString("F3"), part.localRoot.transform.position.ToString("F3")), _advancedDebug);
 			position += part.transform.position - part.localRoot.transform.position;
 		}
 
@@ -927,8 +928,13 @@ namespace UbioWeldingLtd
 
 			_mass += partdrymass;
 			_fullmass += partwetmass;
-			_com = ((_com * oldmass) + (_coMOffset * partwetmass)) / _fullmass;
-			Debugger.AdvDebug(string.Format("AdvDebug(.New Center of Mass: {0}", _com.ToString()), _advancedDebug);
+
+			if (_fullmass > 0)
+			{
+				_com = ((_com * oldmass) + (_coMOffset * partwetmass)) / _fullmass;
+			}
+
+			Debugger.AdvDebug(string.Format("New Center of Mass: {0}", _com.ToString()), _advancedDebug);
 			//Drag (Add)
 			_minimumDrag = (_minimumDrag + newpart.minimum_drag) * 0.5f;
 			_maximumDrag = (_maximumDrag + newpart.maximum_drag) * 0.5f;
@@ -985,7 +991,7 @@ namespace UbioWeldingLtd
 				//TODO: Find where to find it in game. Would that be pre .15 stuff? http://forum.kerbalspaceprogram.com/threads/7529-Plugin-Posting-Rules-And-Official-Documentation?p=156430&viewfull=1#post156430
 				_module = "Part";
 				//
-				Debugger.AdvDebug(string.Format("AdvDebug(weldThisPart - newpart.partInfo.category: {0}", newpart.partInfo.category.ToString()), _advancedDebug);
+				Debugger.AdvDebug(string.Format("weldThisPart - newpart.partInfo.category: {0}", newpart.partInfo.category.ToString()), _advancedDebug);
 				_category = newpart.partInfo.category;
 				//TODO: better surface node managment
 				_srfAttachNode = newpart.srfAttachNode;

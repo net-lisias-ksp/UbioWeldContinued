@@ -11,7 +11,7 @@ namespace UbioWeldingLtd
 	static class Constants
 	{
 		//Logs/debug constants
-		public const string logVersion ="v2.3.1 - 1.1.2 - Continued";
+		public const string logVersion ="v2.3.2 - 1.1.2 - Continued";
 		public const string logWarning		  = "WARNING ";
 		public const string logError			= "ERROR ";
 		public const string logPrefix		   = "[WeldingTool] ";
@@ -222,25 +222,25 @@ namespace UbioWeldingLtd
 			"PROPELLANT"
 		};
 
-		public static string[] basicModulesToIgnore = 
+		public static string[] basicModulesToIgnore =
 		{
 			"TweakScale",
-			"FMRS_PM",   
-			"Variometer",   
-			"TrajectoriesVesselSettings",   
-			"TelemachusDataLink",   
-			"TelemachusPowerDrain",   
-			"ProbeControlRoomPart",   
-			"RasterPropMonitorComputer",   
-			"Proximity",   
-			"LazorSystemDockingCamera",   
-			"ModuleDockingNodeController",   
-			"ModuleDockingNodeNamed",   
-			"ModuleStagingToggle",   
-			"GoodspeedPump",   
-			"ModuleTweakableDockingNode",   
-			"KASModuleGrab",   
-			"ModuleTweakableRCS",   
+			"FMRS_PM",
+			"Variometer",
+			"TrajectoriesVesselSettings",
+			"TelemachusDataLink",
+			"TelemachusPowerDrain",
+			"ProbeControlRoomPart",
+			"RasterPropMonitorComputer",
+			"Proximity",
+			"LazorSystemDockingCamera",
+			"ModuleDockingNodeController",
+			"ModuleDockingNodeNamed",
+			"ModuleStagingToggle",
+			"GoodspeedPump",
+			"ModuleTweakableDockingNode",
+			"KASModuleGrab",
+			"ModuleTweakableRCS",
 			"ModuleTweakableSolarPanel",
 			"CModuleStrut",
 			"CModuleFuelLine",
@@ -254,7 +254,10 @@ namespace UbioWeldingLtd
 			"ModuleTweakableSAS",
 			"PilotRSASFix",
 			"ModuleTweakableFuelPump",
-			"CrewManifestModule"
+			"CrewManifestModule",
+			"FARPartModule",
+			"FARAeroPartModule",
+			"GeometryPartModule"
 		};
 
 		public static string[] basicModulesToMultiply =   
@@ -295,7 +298,9 @@ namespace UbioWeldingLtd
 			"DMModuleScienceAnimate_experimentID",
 			"ModuleDeployableSolarPanel_animationName",
 			"ModuleFuelTanks_type",
-			"FlagDecal_textureQuadName"
+			"FlagDecal_textureQuadName",
+			"OUTPUT_RESOURCE_ResourceName",
+			"INPUT_RESOURCE_ResourceName"
 		};
 
 		public static string CommentOutText(string text)

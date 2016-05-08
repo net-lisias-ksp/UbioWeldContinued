@@ -45,6 +45,9 @@
     <ModuleAttribute AttributeName="PilotRSASFix" />
     <ModuleAttribute AttributeName="ModuleTweakableFuelPump" />
     <ModuleAttribute AttributeName="CrewManifestModule" />
+    <ModuleAttribute AttributeName="FARPartModule" />
+    <ModuleAttribute AttributeName="FARAeroPartModule" />
+    <ModuleAttribute AttributeName="GeometryPartModule" />
   </ModulesToIgnore>
   <ModulesToMultiply>
     <ModuleAttribute AttributeName="AntimatterCollector" />
@@ -75,7 +78,9 @@
     <ModuleAttribute AttributeName="DMModuleScienceAnimate_experimentID" />
     <ModuleAttribute AttributeName="ModuleDeployableSolarPanel_animationName" />
     <ModuleAttribute AttributeName="ModuleFuelTanks_type" />
-	<ModuleAttribute AttributeName="FlagDecal_textureQuadName" />
+    <ModuleAttribute AttributeName="FlagDecal_textureQuadName" />
+    <ModuleAttribute AttributeName="OUTPUT_RESOURCE_ResourceName" />
+    <ModuleAttribute AttributeName="INPUT_RESOURCE_ResourceName" />
   </BreakingModuleAttributes>
 </ModuleAttributeLists>
 <!-- The ModuleAttributeList.xml gives you the ability to edit how the Weldingtool will process the merging of certain modules and their attributes. -->
