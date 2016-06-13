@@ -55,6 +55,9 @@
   <MaximizedModuleAttributes>
     <ModuleAttribute AttributeName="ModuleSAS_SASServiceLevel" />
   </MaximizedModuleAttributes>
+  <MinimizedModuleAttributes>
+	<ModuleAttribute AttributeName="ModuleCommand_minimumCrew" />
+  </MinimizedModuleAttributes>
   <AveragedModuleAttributes>
     <ModuleAttribute AttributeName="FNAntimatterReactor_ReactorTemp" />
     <ModuleAttribute AttributeName="FNAntimatterReactor_upgradedReactorTemp" />

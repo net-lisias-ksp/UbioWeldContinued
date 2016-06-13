@@ -358,15 +358,24 @@ namespace UbioWeldingLtd
 						}
 						else
 						{
-							if (WeldingHelpers.isArrayContaining(string.Concat(newModuleName, Constants.underline, ModuleAttribute), UbioZurWeldingLtd.instance.config.averagedModuleAttributes) && (newValue != 0 && existingValue != 0))
+							if (WeldingHelpers.isArrayContaining(string.Concat(newModuleName, Constants.underline, ModuleAttribute), UbioZurWeldingLtd.instance.config.minimizedModuleAttributes))
 							{
-								Debugger.AdvDebug(string.Format("| {0} - {1} - averaged", newModuleName, ModuleAttribute), advancedDebugging);
-								existingNewModule.SetValue(ModuleAttribute, ((newValue + existingValue) * 0.5f).ToString());
+								Debugger.AdvDebug(string.Format("| {0} - {1} - minimized", newModuleName, ModuleAttribute), advancedDebugging);
+								existingNewModule.SetValue(ModuleAttribute, (existingValue < newValue ? existingValue : newValue).ToString());
 							}
 							else
 							{
-								Debugger.AdvDebug(string.Format("| {0} - {1} - added", newModuleName, ModuleAttribute), advancedDebugging);
-								existingNewModule.SetValue(ModuleAttribute, (newValue + existingValue).ToString());
+
+								if (WeldingHelpers.isArrayContaining(string.Concat(newModuleName, Constants.underline, ModuleAttribute), UbioZurWeldingLtd.instance.config.averagedModuleAttributes) && (newValue != 0 && existingValue != 0))
+								{
+									Debugger.AdvDebug(string.Format("| {0} - {1} - averaged", newModuleName, ModuleAttribute), advancedDebugging);
+									existingNewModule.SetValue(ModuleAttribute, ((newValue + existingValue) * 0.5f).ToString());
+								}
+								else
+								{
+									Debugger.AdvDebug(string.Format("| {0} - {1} - added", newModuleName, ModuleAttribute), advancedDebugging);
+									existingNewModule.SetValue(ModuleAttribute, (newValue + existingValue).ToString());
+								}
 							}
 						}
 					}

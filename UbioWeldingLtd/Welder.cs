@@ -89,7 +89,8 @@ namespace UbioWeldingLtd
 		private bool _fuelCrossFeed = false;
 
 		private List<ConfigNode> _resourceslist = new List<ConfigNode>();
-		private List<ConfigNode> _modulelist = new List<ConfigNode>();
+		private List<ConfigNode> _moduleList = new List<ConfigNode>();
+		private List<ConfigNode> _internalList = new List<ConfigNode>();
 		private ConfigNode _fxData = new ConfigNode();
 
 		private Vector3 _coMOffset = Vector3.zero;
@@ -247,9 +248,9 @@ namespace UbioWeldingLtd
 		{
 			get
 			{
-				string[] moduleslist = new string[_modulelist.Count];
+				string[] moduleslist = new string[_moduleList.Count];
 				int index = 0;
-				foreach (ConfigNode cfgnode in _modulelist)
+				foreach (ConfigNode cfgnode in _moduleList)
 				{
 					moduleslist[index] = cfgnode.GetValue(Constants.weldModuleNodeName);
 					++index;
@@ -260,7 +261,7 @@ namespace UbioWeldingLtd
 
 		public List<ConfigNode> moduleList
 		{
-			get { return _modulelist; }
+			get { return _moduleList; }
 		}
 
 		public string[] Resources
@@ -601,6 +602,7 @@ namespace UbioWeldingLtd
 			else // 0 < matchingPartConfigs.Count
 			{
 				//Process Config Files
+				ModelInfo info = new ModelInfo();
 				foreach (UrlDir.UrlConfig cfg in matchingPartConfigs)
 				{
 					//MODEL
@@ -609,7 +611,7 @@ namespace UbioWeldingLtd
 						//Missing Model node
 						Debugger.AdvDebug(string.Format("..Config {0} has no {1} node", cfg.name, Constants.weldModelNode), _advancedDebug);
 
-						ModelInfo info = new ModelInfo();
+						info = new ModelInfo();
 						info.url = GetMeshurl(cfg);
 						Debugger.AdvDebug(string.Format("..{0}{1}", Constants.logModelUrl, info.url), _advancedDebug);
 
@@ -653,7 +655,7 @@ namespace UbioWeldingLtd
 						Vector3 _coMOffsetSum = Vector3.zero;
 						foreach (ConfigNode node in modelnodes)
 						{
-							ModelInfo info = new ModelInfo();
+							info = new ModelInfo();
 
 							if (node.HasValue("model"))
 							{
@@ -749,7 +751,8 @@ namespace UbioWeldingLtd
 
 					if (runInTestMode)
 					{
-						mergeModules(partname, cfg, _modulelist, _advancedDebug);
+						mergeModules(partname, cfg, _moduleList, _advancedDebug);
+						mergeInternals(info.position, cfg, _internalList, _advancedDebug);
 					}
 					else
 					{
@@ -1094,7 +1097,7 @@ namespace UbioWeldingLtd
 				string newModuleName = newModule.GetValue(newModule.values.DistinctNames()[0]);
 				bool exist = false;
 
-				foreach (ConfigNode existingNewModule in _modulelist)
+				foreach (ConfigNode existingNewModule in _moduleList)
 				{
 					if (string.Equals(newModuleName, existingNewModule.GetValue(existingNewModule.values.DistinctNames()[0])))
 					{
@@ -1479,7 +1482,7 @@ namespace UbioWeldingLtd
 								break;
 							}
 					}
-					_modulelist.Add(newModule);
+					_moduleList.Add(newModule);
 #if (DEBUG)
 					Debug.Log(string.Format("{0}..{1}{2}", Constants.logPrefix, Constants.logModAdd, newModuleName));
 #endif
@@ -1673,6 +1676,12 @@ namespace UbioWeldingLtd
 			// Add bulkheadProfile
 			partconfig.AddValue("bulkheadProfiles", _bulkheadProfiles);
 
+			//add INTERNAL
+			foreach (ConfigNode intern in _internalList)
+			{
+				partconfig.AddNode(intern);
+			}
+
 			//add RESOURCE
 			foreach (ConfigNode res in _resourceslist)
 			{
@@ -1680,7 +1689,7 @@ namespace UbioWeldingLtd
 			}
 
 			//add MODULE
-			foreach (ConfigNode mod in _modulelist)
+			foreach (ConfigNode mod in _moduleList)
 			{
 				partconfig.AddNode(mod);
 			}
@@ -1703,6 +1712,25 @@ namespace UbioWeldingLtd
 		private bool isChildPart(Part parentPart, Part partToSearch)
 		{
 			return partsHashMap.Contains<int>(partToSearch.GetHashCode());
+		}
+
+
+		public void mergeInternals(Vector3 position, UrlDir.UrlConfig configuration, List<ConfigNode> internalList, bool advancedDebugging)
+		{
+			ConfigNode[] internals = configuration.config.GetNodes(Constants.weldInternalNode);
+			Vector3 offset = position;
+
+			foreach(ConfigNode c in internals)
+			{
+				if (c.HasNode(Constants.weldOffsetName))
+				{
+					offset += ConfigNode.ParseVector3(c.GetValue(Constants.weldOffsetName));
+				}
+				ConfigNode node = new ConfigNode(Constants.weldInternalNode);
+				node.AddValue(Constants.weldModuleNodeName, c.GetValue(c.values.DistinctNames()[0]));
+				node.AddValue(Constants.weldOffsetName, WeldingHelpers.writeVector(offset));
+				internalList.Add(node);
+			}
 		}
 
 

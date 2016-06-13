@@ -442,11 +442,12 @@ namespace UbioWeldingLtd
 			}
 		}
 
+
 		/*
 		 * Main window
 		 */
-        private void OnMainWindow(int windowID)
-        {
+		private void OnMainWindow(int windowID)
+		{
 			GUIStyle _settingsToggleGroupStyle = new GUIStyle(GUI.skin.toggle);
 			_settingsToggleGroupStyle.margin.left += 40;
 

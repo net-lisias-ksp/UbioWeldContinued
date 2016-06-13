@@ -11,7 +11,7 @@ namespace UbioWeldingLtd
 	static class Constants
 	{
 		//Logs/debug constants
-		public const string logVersion ="v2.3.2 - 1.1.2 - Continued";
+		public const string logVersion ="v2.3.3 - 1.1.2 - Continued";
 		public const string logWarning		  = "WARNING ";
 		public const string logError			= "ERROR ";
 		public const string logPrefix		   = "[WeldingTool] ";
@@ -126,26 +126,28 @@ namespace UbioWeldingLtd
 		public const string msgWarnModLandLegs  = "Multiple ModuleLandingLeg with the same animName is not supported by the game";
 
 		//Weld
-		public const string weldPartPath		= "GameData/UbioWeldingLtd/Parts/";
-		public const string weldPartDefaultFile	= "/part.cfg";
-		public const string weldAuthor		  = "UbioZurWeldingLtd";
-		public const string weldManufacturer	= "UbioZur Welding Ltd";
-		public const string weldDefaultName	 = "weldedpart";
-		public const string weldDefaultTitle	= "My welded part";
-		public const string weldDefaultDesc	 = "Warranty void during re-entry.";
-		public const string weldPartNode		= "PART";
-		public const string weldModelNode	   = "MODEL";
-		public const string weldResNode		 = "RESOURCE";
-		public const string weldModuleNode	  = "MODULE";
+		public const string weldPartPath = "GameData/UbioWeldingLtd/Parts/";
+		public const string weldPartDefaultFile = "/part.cfg";
+		public const string weldAuthor = "UbioZurWeldingLtd";
+		public const string weldManufacturer = "UbioZur Welding Ltd";
+		public const string weldDefaultName = "weldedpart";
+		public const string weldDefaultTitle = "My welded part";
+		public const string weldDefaultDesc = "Warranty void during re-entry.";
+		public const string weldPartNode = "PART";
+		public const string weldModelNode = "MODEL";
+		public const string weldResNode = "RESOURCE";
+		public const string weldModuleNode = "MODULE";
+		public const string weldInternalNode = "INTERNAL";
 		public const string weldModuleNodeName = "name";
-		public const string weldOutResNode	  = "OUTPUT_RESOURCE";
-		public const string weldEngineProp	  = "PROPELLANT";
-		public const string weldEngineAtmCurve  = "atmosphereCurve";
+		public const string weldOffsetName = "offset";
+		public const string weldOutResNode = "OUTPUT_RESOURCE";
+		public const string weldEngineProp = "PROPELLANT";
+		public const string weldEngineAtmCurve = "atmosphereCurve";
 		public const string weldEngineVelCurve = "velocityCurve";
-		public const string weldSubcat		  = "0";
-		public const float weldRescaleFactor	= 1.0f;
-		public const int weldDefaultPysicsSign  = -1;
-		public const int weldDefaultEntryCost   = 0;
+		public const string weldSubcat = "0";
+		public const float weldRescaleFactor = 1.0f;
+		public const int weldDefaultPysicsSign = -1;
+		public const int weldDefaultEntryCost = 0;
 
 		public const string weldedMeshSwitchSubSplitter = ",";
 		public const string weldedMeshSwitchSplitter = ";";
@@ -268,6 +270,11 @@ namespace UbioWeldingLtd
 		public static string[] basicMaximizedModuleAttributes =   
 		{   
 			"ModuleSAS_SASServiceLevel"
+		};
+
+		public static string[] basicMinimizedModuleAttributes =
+		{
+			"ModuleCommand_minimumCrew"
 		};
 
 		public static string[] basicAveragedModuleAttributes =
