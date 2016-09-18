@@ -1,3 +1,4 @@
+	Adapted for KSP 1.2.0
 2016-06-13 - Version 2.3.3 - Continued
 	Merging of multiple Internals added
 	Added minimized values

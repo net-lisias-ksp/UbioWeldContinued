@@ -3,6 +3,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace UbioWeldingLtd
@@ -1009,9 +1010,9 @@ namespace UbioWeldingLtd
 
 		private void mergeResources(Part newpart, List<ConfigNode> resourcesList)
 		{
-			List<PartResource> partResourcesList = newpart.Resources.list;
-			Debugger.AdvDebug(string.Format("..Part {0} has {1} {2} node", newpart.partName, partResourcesList.Count, Constants.weldResNode), _advancedDebug);
-			foreach (PartResource partRes in partResourcesList)
+			List<PartResource> newPartResourcesList = newpart.Resources.ToList();
+			Debugger.AdvDebug(string.Format("..Part {0} has {1} {2} node", newpart.partName, newPartResourcesList.Count, Constants.weldResNode), _advancedDebug);
+			foreach (PartResource partRes in newPartResourcesList)
 			{
 				string resourceName = partRes.resourceName;
 				float resourceAmount = float.Parse(partRes.amount.ToString());
