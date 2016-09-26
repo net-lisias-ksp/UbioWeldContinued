@@ -68,20 +68,14 @@ namespace UbioWeldingLtd
 									}
 									if (exist)
 									{
-										mergeModuleAttributes(newModuleName, newModule, existingNewModule, advancedDebugging);
-										mergeSubModules(newModule, existingNewModule, advancedDebugging);
-										mergeVector2Modules(newModule, existingNewModule);
-										mergeVector4Modules(newModule, existingNewModule);
+										mergeContents(newModuleName, newModule, existingNewModule, advancedDebugging);
 										exist = true;
 										break;
 									}
 								}
 								else
 								{
-									mergeModuleAttributes(newModuleName, newModule, existingNewModule, advancedDebugging);
-									mergeSubModules(newModule, existingNewModule, advancedDebugging);
-									mergeVector2Modules(newModule, existingNewModule);
-									mergeVector4Modules(newModule, existingNewModule);
+									mergeContents(newModuleName, newModule, existingNewModule, advancedDebugging);
 									exist = true;
 									break;
 								}
@@ -139,7 +133,7 @@ namespace UbioWeldingLtd
 		/// </summary>
 		/// <param name="newModule"></param>
 		/// <param name="existingNewModule"></param>
-		private void mergeVector2Modules(ConfigNode newModule, ConfigNode existingNewModule)
+		private void mergeVector2Modules(ConfigNode newModule, ConfigNode existingNewModule, bool advancedDebugging)
 		{
 			//Debug.LogError(string.Format("{0}| Merging Vector2Modules Start", Constants.logPrefix));
 			foreach (string subModule in UbioZurWeldingLtd.instance.config.vector2CurveModules)
@@ -216,20 +210,14 @@ namespace UbioWeldingLtd
 							}
 							if (exist)
 							{
-								mergeModuleAttributes(newSubModuleName, newNode, existingNode, advancedDebugging);
-								mergeSubModules(newNode, existingNode, advancedDebugging);
-								mergeVector2Modules(newNode, existingNode);
-								mergeVector4Modules(newNode, existingNode);
+								mergeContents(newSubModuleName, newNode, existingNode, advancedDebugging);
 								exist = true;
 								break;
 							}
 						}
 						else
 						{
-							mergeModuleAttributes(newSubModuleName, newNode, existingNode, advancedDebugging);
-							mergeSubModules(newNode, existingNode, advancedDebugging);
-							mergeVector2Modules(newNode, existingNode);
-							mergeVector4Modules(newNode, existingNode);
+							mergeContents(newSubModuleName, newNode, existingNode, advancedDebugging);
 							exist = true;
 							break;
 						}
@@ -245,6 +233,21 @@ namespace UbioWeldingLtd
 			}
 			//Debug.LogError(string.Format("{0}| Merging SubModules End", Constants.logPrefix));
 		}
+
+		private void mergeContents(string newSubModuleName, ConfigNode newNode, ConfigNode existingNode, bool advancedDebugging)
+		{
+			Debugger.AdvDebug(string.Format("Pre mergeModuleAttributes"), advancedDebugging);
+			mergeModuleAttributes(newSubModuleName, newNode, existingNode, advancedDebugging);
+			Debugger.AdvDebug(string.Format("Pre mergeSubModules"), advancedDebugging);
+			mergeSubModules(newNode, existingNode, advancedDebugging);
+			Debugger.AdvDebug(string.Format("Pre mergeVector2Modules"), advancedDebugging);
+			mergeVector2Modules(newNode, existingNode, advancedDebugging);
+			Debugger.AdvDebug(string.Format("Pre mergeVector4Modules"), advancedDebugging);
+			mergeVector4Modules(newNode, existingNode);
+			Debugger.AdvDebug(string.Format("Values done"), advancedDebugging);
+		}
+
+
 
 
 		/// <summary>

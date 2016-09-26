@@ -2,10 +2,14 @@
 <ModuleAttributeLists xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="KSP-Forum">
   <Vector2CurveModules>
     <ModuleAttribute AttributeName="atmosphereCurve" />
+	<ModuleAttribute AttributeName="alphaCurve" />
   </Vector2CurveModules>
   <Vector4CurveModules>
     <ModuleAttribute AttributeName="velocityCurve" />
     <ModuleAttribute AttributeName="powerCurve" />
+	<ModuleAttribute AttributeName="redCurve" />
+	<ModuleAttribute AttributeName="greenCurve" />
+	<ModuleAttribute AttributeName="blueCurve" />
   </Vector4CurveModules>
   <SubModules>
     <ModuleAttribute AttributeName="RESOURCE" />
@@ -84,6 +88,7 @@
     <ModuleAttribute AttributeName="FlagDecal_textureQuadName" />
     <ModuleAttribute AttributeName="OUTPUT_RESOURCE_ResourceName" />
     <ModuleAttribute AttributeName="INPUT_RESOURCE_ResourceName" />
+	<ModuleAttribute AttributeName="PROPELLANT_name" />
   </BreakingModuleAttributes>
 </ModuleAttributeLists>
 <!-- The ModuleAttributeList.xml gives you the ability to edit how the Weldingtool will process the merging of certain modules and their attributes. -->

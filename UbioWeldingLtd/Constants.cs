@@ -208,12 +208,17 @@ namespace UbioWeldingLtd
 
 		public static string[] basicVector2CurveModules =
 		{
-			"atmosphereCurve"
+			"atmosphereCurve",
+			"alphaCurve"
 		};
 
 		public static string[] basicVector4CurveModules =
 		{
-			"velocityCurve"
+			"velocityCurve",
+			"powerCurve",
+			"redCurve",
+			"greenCurve",
+			"blueCurve",
 		};
 
 		public static string[] basicSubModules =
@@ -259,7 +264,8 @@ namespace UbioWeldingLtd
 			"CrewManifestModule",
 			"FARPartModule",
 			"FARAeroPartModule",
-			"GeometryPartModule"
+			"GeometryPartModule",
+			"ModuleJettison"
 		};
 
 		public static string[] basicModulesToMultiply =   
@@ -307,7 +313,9 @@ namespace UbioWeldingLtd
 			"ModuleFuelTanks_type",
 			"FlagDecal_textureQuadName",
 			"OUTPUT_RESOURCE_ResourceName",
-			"INPUT_RESOURCE_ResourceName"
+			"INPUT_RESOURCE_ResourceName",
+			"UPGRADE_name__",
+			"PROPELLANT_name"
 		};
 
 		public static string CommentOutText(string text)
