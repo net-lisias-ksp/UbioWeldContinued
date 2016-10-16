@@ -58,9 +58,14 @@
   </ModulesToMultiply>
   <MaximizedModuleAttributes>
     <ModuleAttribute AttributeName="ModuleSAS_SASServiceLevel" />
+	<ModuleAttribute AttributeName="ModuleKerbNetAccess_EnhancedMaximumFoV" />
+	<ModuleAttribute AttributeName="ModuleKerbNetAccess_MaximumFoV" />
+	<ModuleAttribute AttributeName="ModuleResourceScanner_MaxAbundanceAltitude" />
   </MaximizedModuleAttributes>
   <MinimizedModuleAttributes>
 	<ModuleAttribute AttributeName="ModuleCommand_minimumCrew" />
+	<ModuleAttribute AttributeName="ModuleKerbNetAccess_EnhancedMinimumFoV" />
+	<ModuleAttribute AttributeName="ModuleKerbNetAccess_MinimumFoV" />
   </MinimizedModuleAttributes>
   <AveragedModuleAttributes>
     <ModuleAttribute AttributeName="FNAntimatterReactor_ReactorTemp" />
@@ -89,6 +94,7 @@
     <ModuleAttribute AttributeName="OUTPUT_RESOURCE_ResourceName" />
     <ModuleAttribute AttributeName="INPUT_RESOURCE_ResourceName" />
 	<ModuleAttribute AttributeName="PROPELLANT_name" />
+	<ModuleAttribute AttributeName="UPGRADE_name__" />
   </BreakingModuleAttributes>
 </ModuleAttributeLists>
 <!-- The ModuleAttributeList.xml gives you the ability to edit how the Weldingtool will process the merging of certain modules and their attributes. -->
