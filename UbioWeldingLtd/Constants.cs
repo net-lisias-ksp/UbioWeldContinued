@@ -11,7 +11,7 @@ namespace UbioWeldingLtd
 	static class Constants
 	{
 		//Logs/debug constants
-		public const string logVersion ="v2.3.4.0 - 1.2.0 - Continued";
+		public const string logVersion ="v2.4.0.0 - 1.2.1 - Continued";
 		public const string logWarning		  = "WARNING ";
 		public const string logError			= "ERROR ";
 		public const string logPrefix		   = "[WeldingTool] ";
@@ -320,7 +320,8 @@ namespace UbioWeldingLtd
 			"OUTPUT_RESOURCE_ResourceName",
 			"INPUT_RESOURCE_ResourceName",
 			"UPGRADE_name__",
-			"PROPELLANT_name"
+			"PROPELLANT_name",
+			"ModuleEnviroSensor_sensorType"
 		};
 
 		public static string CommentOutText(string text)

@@ -341,13 +341,23 @@ namespace UbioWeldingLtd
         }
 
 
+		private Quaternion worldOrientation = new Quaternion();
+		private Quaternion rotationMatrix;
+
+		public void init()
+		{
+			rotationMatrix = Quaternion.Inverse(worldOrientation);
+		}
+
+
 		/*
 		 * Set relative position
 		 */
 		private void setRelativePosition(Part part, ref Vector3 position)
 		{
 			Debugger.AdvDebug(string.Format("..set relative position ={0} | localroot={1}", part.transform.position.ToString("F3"), part.localRoot.transform.position.ToString("F3")), _advancedDebug);
-			position += part.transform.position - part.localRoot.transform.position;
+			//position += part.transform.position - part.localRoot.transform.position;
+			position += rotationMatrix * part.transform.position;
 		}
 
 
@@ -617,7 +627,7 @@ namespace UbioWeldingLtd
 						Debugger.AdvDebug(string.Format("..{0}{1}", Constants.logModelUrl, info.url), _advancedDebug);
 
 						Vector3 position = Vector3.zero;
-						setRelativePosition(newpart, ref position);
+						position = newpart.transform.position;
 						info.position = WeldingHelpers.RoundVector3(position, _precisionDigits);
 
 						Vector3 rotation = newpart.localRoot.transform.eulerAngles;
@@ -626,7 +636,10 @@ namespace UbioWeldingLtd
 
 
 						Debugger.AdvDebug(string.Format("scaling info: rescaleFactor={0}| vector={1}", newpart.rescaleFactor, newpart.transform.GetChild(0).localScale.ToString("F3")), _advancedDebug);
-						info.scale = WeldingHelpers.RoundVector3(cfg.config.HasValue("rescaleFactor") ? newpart.transform.GetChild(0).localScale * (newpart.rescaleFactor / _rescaleFactor) : newpart.transform.GetChild(0).localScale, _precisionDigits);
+
+						//info.scale = WeldingHelpers.RoundVector3(cfg.config.HasValue("rescaleFactor") ? newpart.transform.GetChild(0).localScale * (newpart.rescaleFactor / _rescaleFactor) : newpart.transform.GetChild(0).localScale, _precisionDigits);
+						Vector3 scale = newpart.partTransform.FindChild("model").localScale;
+						info.scale = WeldingHelpers.RoundVector3(scale, _precisionDigits);
 						if (fileSimplification)
 						{
 							if (cfg.config.HasValue("rescaleFactor") && WeldingHelpers.isVectorEqualFactor(info.scale, newpart.rescaleFactor))
@@ -654,6 +667,7 @@ namespace UbioWeldingLtd
 						Debugger.AdvDebug(string.Format("..Config {0} has {1} {2} node", cfg.name, modelnodes.Length, Constants.weldModelNode), _advancedDebug);
 
 						Vector3 _coMOffsetSum = Vector3.zero;
+						int subModelIndex = 0;
 						foreach (ConfigNode node in modelnodes)
 						{
 							info = new ModelInfo();
@@ -670,13 +684,13 @@ namespace UbioWeldingLtd
 							Vector3 position = (node.HasValue("position")) ? (ConfigNode.ParseVector3(node.GetValue("position")) * newpart.rescaleFactor) : Vector3.zero;
 							Debugger.AdvDebug(string.Format("..node.HasValue(\"position\") {0}", node.HasValue("position")), _advancedDebug);
 							Debugger.AdvDebug(string.Format("..node position {0}", position.ToString("F3")), _advancedDebug);
-							setRelativePosition(newpart, ref position);
+							position = newpart.FindModelTransform(Constants.weldModelNode.ToLower()).GetChild(subModelIndex).position;
 							info.position = WeldingHelpers.RoundVector3(position,_precisionDigits);
 
 							Vector3 rotation = (node.HasValue("rotation")) ? ConfigNode.ParseVector3(node.GetValue("rotation")) : Vector3.zero;
 							Debugger.AdvDebug(string.Format("..node.HasValue(\"rotation\") {0}", node.HasValue("rotation")), _advancedDebug);
 							Debugger.AdvDebug(string.Format("..node rotation {0}", rotation.ToString("F3")), _advancedDebug);
-							setRelativeRotation(newpart, ref rotation);
+							rotation = newpart.FindModelTransform(Constants.weldModelNode.ToLower()).GetChild(subModelIndex).rotation.eulerAngles;
 							info.rotation = WeldingHelpers.RoundVector3(WeldingHelpers.limitRotationAngle(rotation),_precisionDigits);
 
 							Debugger.AdvDebug(string.Format("..node.HasValue(\"scale\") {0}", node.HasValue("scale")), _advancedDebug);
@@ -686,8 +700,10 @@ namespace UbioWeldingLtd
 							}
 							Debugger.AdvDebug(string.Format("..Childs count {0}", newpart.transform.childCount), _advancedDebug);
 
-							Debugger.AdvDebug(string.Format("scaling info: rescaleFactor={0}| vector={1}| modelscale={2}", newpart.rescaleFactor, newpart.transform.GetChild(0).localScale.ToString("F3"), node.HasValue("scale") ? ConfigNode.ParseVector3(node.GetValue("scale")).ToString("F3") : Vector3.zero.ToString("F3")), _advancedDebug);
-							info.scale = WeldingHelpers.RoundVector3((node.HasValue("scale") ? WeldingHelpers.multiplyVector3(newpart.transform.GetChild(0).localScale, ConfigNode.ParseVector3(node.GetValue("scale"))) : newpart.transform.GetChild(0).localScale), _precisionDigits);
+							Debugger.AdvDebug(string.Format("scaling info: rescaleFactor={0}| scale={1}| config.scale={2}", newpart.rescaleFactor, newpart.scaleFactor, node.HasValue("scale") ? ConfigNode.ParseVector3(node.GetValue("scale")).ToString("F3") : Vector3.zero.ToString("F3")), _advancedDebug);
+							//info.scale = WeldingHelpers.RoundVector3((node.HasValue("scale") ? WeldingHelpers.multiplyVector3(newpart.transform.GetChild(0).localScale, ConfigNode.ParseVector3(node.GetValue("scale"))) : newpart.transform.GetChild(0).localScale), _precisionDigits);
+							Vector3 scale = newpart.partTransform.FindChild("model").localScale * newpart.scaleFactor * newpart.rescaleFactor;
+							info.scale = WeldingHelpers.RoundVector3(scale, _precisionDigits);
 							if (node.HasValue("scale"))
 							{
 								if (fileSimplification)
@@ -709,12 +725,6 @@ namespace UbioWeldingLtd
 								}
 							}
 							
-							//info.scale = (node.HasValue("scale")) ?
-							//				(ConfigNode.ParseVector3(node.GetValue("scale")) * (newpart.rescaleFactor / _rescaleFactor)) :
-							//				new Vector3(newpart.transform.GetChild(0).localScale.x,
-							//							newpart.transform.GetChild(0).localScale.y,
-							//							newpart.transform.GetChild(0).localScale.z);
-
 							Debugger.AdvDebug(string.Format("..newpart position {0}", newpart.transform.position.ToString("F3")), _advancedDebug);
 							Debugger.AdvDebug(string.Format("..newpart rotation {0}", newpart.transform.rotation.ToString("F3")), _advancedDebug);
 							Debugger.AdvDebug(string.Format("..newpart rotation.eulerAngles {0}", newpart.transform.rotation.eulerAngles.ToString("F3")), _advancedDebug);
@@ -739,9 +749,10 @@ namespace UbioWeldingLtd
 							}
 							addNewModel(info, doesPartContainMeshSwitch(cfg), newpart);
 							_coMOffsetSum += info.position;
-						} //foreach (ConfigNode node in modelnodes)
+							subModelIndex++;
+						}
 						_coMOffset = _coMOffsetSum / modelnodes.Length;
-					} // else of if ( !cfg.config.HasNode(Constants.weldModelNode) )
+					}
 
 					mergeResources(newpart, _resourceslist);
 
@@ -923,10 +934,10 @@ namespace UbioWeldingLtd
 			float olddrymass = _mass;
 			float partdrymass = 0.0f;
 			// if part's PhysicsSignificance = 1, then this part is "massless" and its mass would be ignored in stock KSP
-			if ((!dontProcessMasslessParts) || (newpart.PhysicsSignificance != 1))
-			{
+			//if ((!dontProcessMasslessParts) || (newpart.PhysicsSignificance != 1))
+			//{
 				partdrymass = newpart.mass;
-			}
+			//}
 
 			float partwetmass = partdrymass + newpart.GetResourceMass();
 
@@ -935,7 +946,10 @@ namespace UbioWeldingLtd
 
 			if (_fullmass > 0)
 			{
-				_com = ((_com * oldmass) + (_coMOffset * partwetmass)) / _fullmass;
+				if ((!dontProcessMasslessParts) || (newpart.PhysicsSignificance != 1))
+				{
+					_com = ((_com * oldmass) + (_coMOffset * partwetmass)) / _fullmass;
+				}
 			}
 
 			Debugger.AdvDebug(string.Format("New Center of Mass: {0}", _com.ToString()), _advancedDebug);

@@ -359,6 +359,7 @@ namespace UbioWeldingLtd
 #endif
 			bool warning = false;
 			_welder = new Welder(_config.advancedDebug);
+			_welder.init();
 
 			partToWeld.transform.eulerAngles = Vector3.zero;
 			WeldingReturn ret = 0;
