@@ -1,10 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Xml;
-using System.Xml.Serialization;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Xml.Serialization;
 using UnityEngine;
 
 namespace UbioWeldingLtd
@@ -87,12 +81,6 @@ namespace UbioWeldingLtd
 			set { _includeAllNodes = value; }
 		}
 
-		public bool fileSimplification
-		{
-			get { return _fileSimplification; }
-			set { _fileSimplification = value; }
-		}
-
 		public bool allowCareerMode
 		{
 			get { return _allowCareerMode; }
@@ -146,7 +134,13 @@ namespace UbioWeldingLtd
 			get { return _advancedDebug; }
 			set { _advancedDebug = value; }
 		}
-		
+
+		public bool fileSimplification
+		{
+			get { return _fileSimplification; }
+			set { _fileSimplification = value; }
+		}
+
 		public string[] vector2CurveModules
 		{
 			get { return _vector2CurveModules; }

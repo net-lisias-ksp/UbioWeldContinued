@@ -636,15 +636,46 @@ namespace UbioWeldingLtd
 
 
 						Debugger.AdvDebug(string.Format("scaling info: rescaleFactor={0}| vector={1}", newpart.rescaleFactor, newpart.transform.GetChild(0).localScale.ToString("F3")), _advancedDebug);
-
 						//info.scale = WeldingHelpers.RoundVector3(cfg.config.HasValue("rescaleFactor") ? newpart.transform.GetChild(0).localScale * (newpart.rescaleFactor / _rescaleFactor) : newpart.transform.GetChild(0).localScale, _precisionDigits);
-						Vector3 scale = newpart.partTransform.FindChild("model").localScale;
-						info.scale = WeldingHelpers.RoundVector3(scale, _precisionDigits);
-						if (fileSimplification)
+						//Vector3 scale = newpart.partTransform.FindChild("model").localScale;
+						//info.scale = WeldingHelpers.RoundVector3(scale, _precisionDigits);
+						//if (fileSimplification)
+						//{
+						//	if (cfg.config.HasValue("rescaleFactor") && WeldingHelpers.isVectorEqualFactor(info.scale, newpart.rescaleFactor))
+						//	{
+						//		info.scale = Vector3.zero;
+						//	}
+						//}
+						Transform modelTransform = newpart.partTransform.FindChild(Constants.weldModelNode.ToLower());
+						Vector3 scale = modelTransform.GetChild(0).localScale;
+						//Debugger.AdvDebug(string.Format("scale = {0} | localScale = {1} | lossyScale = {0}", scale,modelTransform.GetChild(subModelIndex).localScale, modelTransform.GetChild(subModelIndex).lossyScale), true);
+						Transform parentTransform = modelTransform;
+						while (parentTransform != newpart.transform)
 						{
-							if (cfg.config.HasValue("rescaleFactor") && WeldingHelpers.isVectorEqualFactor(info.scale, newpart.rescaleFactor))
+							scale = Vector3.Scale(scale, parentTransform.localScale);
+							parentTransform = parentTransform.parent;
+							//Debugger.AdvDebug(string.Format("scale = {0} | localScale = {1} | lossyScale = {0}", scale, parentTransform.localScale, parentTransform.lossyScale), true);
+						}
+						scale = Vector3.Scale(scale, newpart.transform.localScale);
+						//Debugger.AdvDebug(string.Format("scale = {0} | localScale = {1} | lossyScale = {0}", scale, newpart.transform.localScale, newpart.transform.lossyScale), true);
+						info.scale = WeldingHelpers.RoundVector3(scale, _precisionDigits);
+
+						//Debugger.AdvDebug("fileSimplification = " + _fileSimplification, true);
+						if (_fileSimplification)
+						{
+							//Debugger.AdvDebug("simplified", true);
+							if (newpart.rescaleFactor == _rescaleFactor)
 							{
-								info.scale = Vector3.zero;
+								//Debugger.AdvDebug("rescaleFactor", true);
+								if (newpart.scaleFactor == 1)
+								{
+									//Debugger.AdvDebug("scaleFactor", true);
+									if (info.scale == Vector3.one)
+									{
+										//Debugger.AdvDebug("Vector3.one", true);
+										info.scale = Vector3.zero;
+									}
+								}
 							}
 						}
 
@@ -701,30 +732,39 @@ namespace UbioWeldingLtd
 							Debugger.AdvDebug(string.Format("..Childs count {0}", newpart.transform.childCount), _advancedDebug);
 
 							Debugger.AdvDebug(string.Format("scaling info: rescaleFactor={0}| scale={1}| config.scale={2}", newpart.rescaleFactor, newpart.scaleFactor, node.HasValue("scale") ? ConfigNode.ParseVector3(node.GetValue("scale")).ToString("F3") : Vector3.zero.ToString("F3")), _advancedDebug);
-							//info.scale = WeldingHelpers.RoundVector3((node.HasValue("scale") ? WeldingHelpers.multiplyVector3(newpart.transform.GetChild(0).localScale, ConfigNode.ParseVector3(node.GetValue("scale"))) : newpart.transform.GetChild(0).localScale), _precisionDigits);
-							Vector3 scale = newpart.partTransform.FindChild("model").localScale * newpart.scaleFactor * newpart.rescaleFactor;
+							Transform modelTransform = newpart.partTransform.FindChild(Constants.weldModelNode.ToLower());
+							Vector3 scale = modelTransform.GetChild(subModelIndex).localScale;
+							//Debugger.AdvDebug(string.Format("scale = {0} | localScale = {1} | lossyScale = {0}", scale,modelTransform.GetChild(subModelIndex).localScale, modelTransform.GetChild(subModelIndex).lossyScale), true);
+							Transform parentTransform = modelTransform;
+							while (parentTransform != newpart.transform)
+							{
+								scale = Vector3.Scale(scale, parentTransform.localScale);
+								parentTransform = parentTransform.parent;
+								//Debugger.AdvDebug(string.Format("scale = {0} | localScale = {1} | lossyScale = {0}", scale, parentTransform.localScale, parentTransform.lossyScale), true);
+							}
+							scale = Vector3.Scale(scale, newpart.transform.localScale);
+							//Debugger.AdvDebug(string.Format("scale = {0} | localScale = {1} | lossyScale = {0}", scale, newpart.transform.localScale, newpart.transform.lossyScale), true);
 							info.scale = WeldingHelpers.RoundVector3(scale, _precisionDigits);
-							if (node.HasValue("scale"))
+
+							//Debugger.AdvDebug("fileSimplification = " + _fileSimplification, true);
+							if (_fileSimplification)
 							{
-								if (fileSimplification)
+								//Debugger.AdvDebug("simplified", true);
+								if (newpart.rescaleFactor == _rescaleFactor)
 								{
-									if (WeldingHelpers.RoundVector3(ConfigNode.ParseVector3(node.GetValue("scale")) * _rescaleFactor, _precisionDigits) == info.scale)
+									//Debugger.AdvDebug("rescaleFactor", true);
+									if (newpart.scaleFactor == 1)
 									{
-										info.scale = Vector3.zero;
+										//Debugger.AdvDebug("scaleFactor", true);
+										if (info.scale == Vector3.one || (node.HasValue("scale") && ConfigNode.ParseVector3(node.GetValue("scale")) * newpart.scaleFactor * newpart.rescaleFactor == info.scale))
+										{
+											//Debugger.AdvDebug("Vector3.one", true);
+											info.scale = Vector3.zero;
+										}
 									}
 								}
 							}
-							else
-							{
-								if (fileSimplification)
-								{
-									if (WeldingHelpers.isVectorEqualFactor(newpart.transform.GetChild(0).localScale, _rescaleFactor))
-									{
-										info.scale = Vector3.zero;
-									}
-								}
-							}
-							
+
 							Debugger.AdvDebug(string.Format("..newpart position {0}", newpart.transform.position.ToString("F3")), _advancedDebug);
 							Debugger.AdvDebug(string.Format("..newpart rotation {0}", newpart.transform.rotation.ToString("F3")), _advancedDebug);
 							Debugger.AdvDebug(string.Format("..newpart rotation.eulerAngles {0}", newpart.transform.rotation.eulerAngles.ToString("F3")), _advancedDebug);

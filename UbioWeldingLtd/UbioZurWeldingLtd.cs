@@ -478,6 +478,7 @@ namespace UbioWeldingLtd
 				_config.advancedDebug = GUILayout.Toggle(_config.advancedDebug, Constants.guiAdvancedDebugGUIContent);
 				_config.clearEditor = GUILayout.Toggle(_config.clearEditor, Constants.guiClearEditorGUIContent);
 				_config.fileSimplification = GUILayout.Toggle(_config.fileSimplification, Constants.guiFileSimplificationGUIContent);
+				Welder.fileSimplification = _config.fileSimplification;
 				GUILayout.Space(10.0f);
 				GUILayout.Label(" Vector Precision: " + _config.precisionDigits);
 				_config.precisionDigits = (int)GUILayout.HorizontalSlider(_config.precisionDigits, 1, 6);
