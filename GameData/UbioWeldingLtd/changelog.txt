@@ -1,3 +1,6 @@
+2016-11-08 - Version 2.4.2.0 - Continued
+	fixed scaling
+	CoM Offset for Models fixed
 2016-11-08 - Version 2.4.1.0 - Continued
 	fixed scaling
 2016-11-06 - Version 2.4.0.0 - Continued

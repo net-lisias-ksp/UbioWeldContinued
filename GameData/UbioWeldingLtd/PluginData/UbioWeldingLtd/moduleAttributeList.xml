@@ -93,8 +93,9 @@
     <ModuleAttribute AttributeName="FlagDecal_textureQuadName" />
     <ModuleAttribute AttributeName="OUTPUT_RESOURCE_ResourceName" />
     <ModuleAttribute AttributeName="INPUT_RESOURCE_ResourceName" />
-	<ModuleAttribute AttributeName="PROPELLANT_name" />
 	<ModuleAttribute AttributeName="UPGRADE_name__" />
+	<ModuleAttribute AttributeName="PROPELLANT_name" />
+	<ModuleAttribute AttributeName="ModuleEnviroSensor_sensorType" />
   </BreakingModuleAttributes>
 </ModuleAttributeLists>
 <!-- The ModuleAttributeList.xml gives you the ability to edit how the Weldingtool will process the merging of certain modules and their attributes. -->

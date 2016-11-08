@@ -589,7 +589,7 @@ namespace UbioWeldingLtd
 
 			//--- Find all the config file with the name
 			List<UrlDir.UrlConfig> matchingPartConfigs = new List<UrlDir.UrlConfig>();
-			foreach (UrlDir.UrlConfig config in GameDatabase.Instance.GetConfigs(Constants.weldPartNode))
+			foreach (UrlDir.UrlConfig config in GameDatabase.Instance.root.GetConfigs(Constants.weldPartNode))
 			{
 				string newconfigname = config.name.Replace('_', '.');
 
@@ -636,18 +636,8 @@ namespace UbioWeldingLtd
 
 
 						Debugger.AdvDebug(string.Format("scaling info: rescaleFactor={0}| vector={1}", newpart.rescaleFactor, newpart.transform.GetChild(0).localScale.ToString("F3")), _advancedDebug);
-						//info.scale = WeldingHelpers.RoundVector3(cfg.config.HasValue("rescaleFactor") ? newpart.transform.GetChild(0).localScale * (newpart.rescaleFactor / _rescaleFactor) : newpart.transform.GetChild(0).localScale, _precisionDigits);
-						//Vector3 scale = newpart.partTransform.FindChild("model").localScale;
-						//info.scale = WeldingHelpers.RoundVector3(scale, _precisionDigits);
-						//if (fileSimplification)
-						//{
-						//	if (cfg.config.HasValue("rescaleFactor") && WeldingHelpers.isVectorEqualFactor(info.scale, newpart.rescaleFactor))
-						//	{
-						//		info.scale = Vector3.zero;
-						//	}
-						//}
 						Transform modelTransform = newpart.partTransform.FindChild(Constants.weldModelNode.ToLower());
-						Vector3 scale = modelTransform.GetChild(0).localScale;
+						Vector3 scale = modelTransform.localScale;
 						//Debugger.AdvDebug(string.Format("scale = {0} | localScale = {1} | lossyScale = {0}", scale,modelTransform.GetChild(subModelIndex).localScale, modelTransform.GetChild(subModelIndex).lossyScale), true);
 						Transform parentTransform = modelTransform;
 						while (parentTransform != newpart.transform)
@@ -690,14 +680,12 @@ namespace UbioWeldingLtd
 						Debugger.AdvDebug(string.Format("..scale {0}", info.scale.ToString("F3")), _advancedDebug);
 
 						addNewModel(info, doesPartContainMeshSwitch(cfg), newpart);
-						_coMOffset += info.position;
 					}
 					else //cfg.config.HasNode(Constants.weldModelNode)
 					{
 						ConfigNode[] modelnodes = cfg.config.GetNodes(Constants.weldModelNode);
 						Debugger.AdvDebug(string.Format("..Config {0} has {1} {2} node", cfg.name, modelnodes.Length, Constants.weldModelNode), _advancedDebug);
 
-						Vector3 _coMOffsetSum = Vector3.zero;
 						int subModelIndex = 0;
 						foreach (ConfigNode node in modelnodes)
 						{
@@ -788,11 +776,10 @@ namespace UbioWeldingLtd
 								info.parent = node.GetValue("parent");
 							}
 							addNewModel(info, doesPartContainMeshSwitch(cfg), newpart);
-							_coMOffsetSum += info.position;
 							subModelIndex++;
 						}
-						_coMOffset = _coMOffsetSum / modelnodes.Length;
 					}
+					_coMOffset += newpart.transform.position;
 
 					mergeResources(newpart, _resourceslist);
 
