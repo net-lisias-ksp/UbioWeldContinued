@@ -151,7 +151,7 @@ namespace UbioWeldingLtd
 
 		public const string weldedMeshSwitchSubSplitter = ",";
 		public const string weldedMeshSwitchSplitter = ";";
-		public static string[] interstellarMeshSwitchModule = { "InterstellarMeshSwitch", "ModuleB9PartSwitch" };
+		public static string[] interstellarMeshSwitchModule = { "InterstellarMeshSwitch", "ModuleB9PartSwitch", weldedmeshSwitchModule };
 		public const string weldedmeshSwitchModule = "WeldedMeshSwitch";
 
 		public const string originalDecalModule = "FlagDecal";
@@ -265,7 +265,13 @@ namespace UbioWeldingLtd
 			"FARPartModule",
 			"FARAeroPartModule",
 			"GeometryPartModule",
-			"ModuleJettison"
+			"ModuleJettison",
+			"SCANRPMStorage",
+			"ModuleTCA",
+			"ModuleB9PartSwitch",
+			"ModuleB9PartInfo",
+			weldedmeshSwitchModule,
+			weldedDecalModule
 		};
 
 		public static string[] basicModulesToMultiply =   

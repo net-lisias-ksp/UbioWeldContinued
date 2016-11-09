@@ -29,6 +29,7 @@ namespace UbioWeldingLtd
 			switchDecalRenderMode();
 		}
 
+
 		private void switchDecalRenderMode()
 		{
 			if (renderers != null && renderers.Count > 0)
@@ -40,18 +41,13 @@ namespace UbioWeldingLtd
 			}
 		}
 
+
 		public void Start()
 		{
 			initModule();
 			switchDecalRenderMode();
 		}
-
-
-		//public override void onstart(startstate state)
-		//{
-		//	initmodule();
-		//}
-
+		
 
 		public void initModule()
 		{

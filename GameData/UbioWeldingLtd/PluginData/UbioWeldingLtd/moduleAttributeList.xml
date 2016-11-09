@@ -52,6 +52,13 @@
     <ModuleAttribute AttributeName="FARPartModule" />
     <ModuleAttribute AttributeName="FARAeroPartModule" />
     <ModuleAttribute AttributeName="GeometryPartModule" />
+	<ModuleAttribute AttributeName="ModuleJettison" />
+	<ModuleAttribute AttributeName="SCANRPMStorage" />
+    <ModuleAttribute AttributeName="ModuleTCA" />
+	<ModuleAttribute AttributeName="ModuleB9PartSwitch" />
+	<ModuleAttribute AttributeName="ModuleB9PartInfo" />
+    <ModuleAttribute AttributeName="WeldedMeshSwitch" />
+	<ModuleAttribute AttributeName="WeldedFlagDecal" />
   </ModulesToIgnore>
   <ModulesToMultiply>
     <ModuleAttribute AttributeName="AntimatterCollector" />
