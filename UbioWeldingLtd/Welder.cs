@@ -639,7 +639,7 @@ namespace UbioWeldingLtd
 						Transform modelTransform = newpart.partTransform.FindChild(Constants.weldModelNode.ToLower());
 						Vector3 scale = modelTransform.localScale;
 						//Debugger.AdvDebug(string.Format("scale = {0} | localScale = {1} | lossyScale = {0}", scale,modelTransform.GetChild(subModelIndex).localScale, modelTransform.GetChild(subModelIndex).lossyScale), true);
-						Transform parentTransform = modelTransform;
+						Transform parentTransform = modelTransform.parent;
 						while (parentTransform != newpart.transform)
 						{
 							scale = Vector3.Scale(scale, parentTransform.localScale);
