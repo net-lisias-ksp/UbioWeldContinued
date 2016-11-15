@@ -1,3 +1,5 @@
+2016-11-15 - Version 2.4.4.0 - Continued
+	fixed NPE with certain parts
 2016-11-10 - Version 2.4.3.0 - Continued
 	fixed scaling with parts that only contain a mesh
 2016-11-08 - Version 2.4.2.0 - Continued

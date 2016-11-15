@@ -473,9 +473,12 @@ namespace UbioWeldingLtd
 			List<string> transformList = new List<string>();
 			string listEntry = string.Empty;
 
-			while (modelTransform.childCount < 2)
+			while (modelTransform.childCount < 2 && modelTransform.childCount != 0)
 			{
-				modelTransform = modelTransform.GetChild(0);
+				if (modelTransform.GetChild(0) != null)
+				{
+					modelTransform = modelTransform.GetChild(0);
+				}
 			}
 
 			foreach (Transform t in modelTransform)
