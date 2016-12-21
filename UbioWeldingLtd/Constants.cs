@@ -11,7 +11,7 @@ namespace UbioWeldingLtd
 	static class Constants
 	{
 		//Logs/debug constants
-		public const string logVersion ="v2.4.4.0 - 1.2.1 - Continued";
+		public const string logVersion ="v2.4.5.0 - 1.2.1 - Continued";
 		public const string logWarning		  = "WARNING ";
 		public const string logError			= "ERROR ";
 		public const string logPrefix		   = "[WeldingTool] ";
@@ -284,14 +284,16 @@ namespace UbioWeldingLtd
 			"ModuleSAS_SASServiceLevel",
 			"ModuleKerbNetAccess_EnhancedMaximumFoV",
 			"ModuleKerbNetAccess_MaximumFoV",
-			"ModuleResourceScanner_MaxAbundanceAltitude"
+			"ModuleResourceScanner_MaxAbundanceAltitude",
+			"ModuleReactionWheel_torqueResponseSpeed"
 		};
 
 		public static string[] basicMinimizedModuleAttributes =
 		{
 			"ModuleCommand_minimumCrew",
 			"ModuleKerbNetAccess_EnhancedMinimumFoV",
-			"ModuleKerbNetAccess_MinimumFoV"
+			"ModuleKerbNetAccess_MinimumFoV",
+			"ModuleResourceConverter_FillAmount"
 		};
 
 		public static string[] basicAveragedModuleAttributes =

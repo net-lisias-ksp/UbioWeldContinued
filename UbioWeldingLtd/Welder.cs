@@ -76,8 +76,8 @@ namespace UbioWeldingLtd
 		private List<string> _listedVesselTypes = new List<string>();
 		private int _entryCost = Constants.weldDefaultEntryCost;
 
-		private float _mass = 0.0f;
-		private float _fullmass = 0.0f;
+		private double _mass = 0.0d;
+		private double _fullmass = 0.0d;
 		private string _dragModel = string.Empty;
 		private float _minimumDrag = 0.0f;
 		private float _maximumDrag = 0.0f;
@@ -234,8 +234,8 @@ namespace UbioWeldingLtd
 		public string Title { get { return _title; } set { _title = value; } }
 		public string Description { get { return _description; } set { _description = value; } }
 		public int Cost { get { return _cost; } }
-		public float Mass { get { return _mass; } }
-		public float WetMass { get { return _fullmass; } }
+		public double Mass { get { return _mass; } }
+		public double WetMass { get { return _fullmass; } }
 		public bool FuelCrossFeed { get { return _fuelCrossFeed; } set { _fuelCrossFeed = value; } }
 		public float MinDrag { get { return _minimumDrag; } }
 		public float MaxDrag { get { return _maximumDrag; } }
@@ -960,16 +960,16 @@ namespace UbioWeldingLtd
 			_attachrules.stack = _attachrules.stack || newpart.attachRules.stack;
 
 			//mass
-			float oldmass = _fullmass;
-			float olddrymass = _mass;
-			float partdrymass = 0.0f;
+			double oldmass = _fullmass;
+			double olddrymass = _mass;
+			double partdrymass = 0.0f;
 			// if part's PhysicsSignificance = 1, then this part is "massless" and its mass would be ignored in stock KSP
 			//if ((!dontProcessMasslessParts) || (newpart.PhysicsSignificance != 1))
 			//{
 				partdrymass = newpart.mass;
 			//}
 
-			float partwetmass = partdrymass + newpart.GetResourceMass();
+			double partwetmass = partdrymass + newpart.GetResourceMass();
 
 			_mass += partdrymass;
 			_fullmass += partwetmass;
@@ -978,7 +978,7 @@ namespace UbioWeldingLtd
 			{
 				if ((!dontProcessMasslessParts) || (newpart.PhysicsSignificance != 1))
 				{
-					_com = ((_com * oldmass) + (_coMOffset * partwetmass)) / _fullmass;
+					_com = ((_com * (float)oldmass) + (_coMOffset * (float)partwetmass)) / (float)_fullmass;
 				}
 			}
 
@@ -1000,9 +1000,9 @@ namespace UbioWeldingLtd
 					_breakingTorque = (_partNumber == 0) ? newpart.breakingTorque : (_breakingTorque + newpart.breakingTorque) * 0.75f;
 					break;
 				case StrengthParamsCalcMethod.WeightedAverage:
-					_crashTolerance = (_partNumber == 0) ? newpart.crashTolerance : (_crashTolerance * olddrymass + newpart.crashTolerance * newpart.mass) / (olddrymass + newpart.mass);
-					_breakingForce = (_partNumber == 0) ? newpart.breakingForce : (_breakingForce * olddrymass + newpart.breakingForce * newpart.mass) / (olddrymass + newpart.mass);
-					_breakingTorque = (_partNumber == 0) ? newpart.breakingTorque : (_breakingTorque * olddrymass + newpart.breakingTorque * newpart.mass) / (olddrymass + newpart.mass);
+					_crashTolerance = (_partNumber == 0) ? newpart.crashTolerance : (_crashTolerance * (float)olddrymass + newpart.crashTolerance * newpart.mass) / ((float)olddrymass + newpart.mass);
+					_breakingForce = (_partNumber == 0) ? newpart.breakingForce : (_breakingForce * (float)olddrymass + newpart.breakingForce * newpart.mass) / ((float)olddrymass + newpart.mass);
+					_breakingTorque = (_partNumber == 0) ? newpart.breakingTorque : (_breakingTorque * (float)olddrymass + newpart.breakingTorque * newpart.mass) / ((float)olddrymass + newpart.mass);
 					break;
 				case StrengthParamsCalcMethod.ArithmeticMean:
 					_crashTolerance = (_partNumber == 0) ? newpart.crashTolerance : (_crashTolerance + newpart.crashTolerance) * 0.5f;
@@ -1023,7 +1023,7 @@ namespace UbioWeldingLtd
 					_maxTemp = (_partNumber == 0) ? (float)newpart.maxTemp : (float)Math.Min(_maxTemp, newpart.maxTemp);
 					break;
 				case MaxTempCalcMethod.WeightedAverage:
-					_maxTemp = (_partNumber == 0) ? (float)newpart.maxTemp : (float)(_maxTemp * olddrymass + newpart.maxTemp * newpart.mass) / (olddrymass + newpart.mass);
+					_maxTemp = (_partNumber == 0) ? (float)newpart.maxTemp : (float)(_maxTemp * (float)olddrymass + newpart.maxTemp * newpart.mass) / ((float)olddrymass + newpart.mass);
 					break;
 			}
 			Debugger.AdvDebug(string.Format("Part maxTemp: {0} - Global maxTemp: {1} - method: {2}", newpart.maxTemp, _maxTemp, _MaxTempCalcMethod), _advancedDebug);
@@ -1671,7 +1671,7 @@ namespace UbioWeldingLtd
 			partconfig.AddValue("attachRules", _attachrules.String());
 
 			//Add the mass
-			partconfig.AddValue("mass", _mass);
+			partconfig.AddValue("mass", Math.Round(_mass,9,MidpointRounding.ToEven));
 
 			//Add the vesseltype if there is one
 			if (vesselTypeList.Count > 0)

@@ -68,11 +68,13 @@
 	<ModuleAttribute AttributeName="ModuleKerbNetAccess_EnhancedMaximumFoV" />
 	<ModuleAttribute AttributeName="ModuleKerbNetAccess_MaximumFoV" />
 	<ModuleAttribute AttributeName="ModuleResourceScanner_MaxAbundanceAltitude" />
+	<ModuleAttribute AttributeName="ModuleReactionWheel_torqueResponseSpeed" />
   </MaximizedModuleAttributes>
   <MinimizedModuleAttributes>
 	<ModuleAttribute AttributeName="ModuleCommand_minimumCrew" />
 	<ModuleAttribute AttributeName="ModuleKerbNetAccess_EnhancedMinimumFoV" />
 	<ModuleAttribute AttributeName="ModuleKerbNetAccess_MinimumFoV" />
+	<ModuleAttribute AttributeName="ModuleResourceConverter_FillAmount" />
   </MinimizedModuleAttributes>
   <AveragedModuleAttributes>
     <ModuleAttribute AttributeName="FNAntimatterReactor_ReactorTemp" />
