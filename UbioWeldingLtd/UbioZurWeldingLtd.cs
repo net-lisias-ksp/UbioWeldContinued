@@ -58,17 +58,7 @@ namespace UbioWeldingLtd
 		static public bool isReloading = false;
 		private string filepath
 		{
-			get
-			{
-				if (_config.useNamedCfgFile)
-				{
-					return string.Format("{0}{1}/{2}/{3}.cfg", Constants.weldPartPath, _welder.Category.ToString(), _welder.Name, _welder.Name);
-				}
-				else
-				{
-					return string.Format("{0}{1}/{2}{3}", Constants.weldPartPath, _welder.Category.ToString(), _welder.Name, Constants.weldPartDefaultFile);
-				}
-			}
+			get { return string.Format("{0}{1}", Constants.weldPartPath, _welder.Category.ToString()); }
 		}
 
 		public Rect editorInfoWindow
@@ -619,7 +609,9 @@ namespace UbioWeldingLtd
 			GUILayout.BeginVertical();
 			GUILayout.BeginHorizontal();
 			GUILayout.Label(Constants.guiDialOverwrite);
-			GUILayout.Label(filepath);
+			GUILayout.EndHorizontal();
+			GUILayout.BeginHorizontal();
+			GUILayout.Label(_config.useNamedCfgFile ? string.Format("{0}/{1}/{2}.cfg", filepath, _welder.Name, _welder.Name) : string.Format("{0}/{1}{2}", filepath, _welder.Name, Constants.weldPartDefaultFile));
 			GUILayout.EndHorizontal();
 			GUILayout.BeginHorizontal();
 			GUILayout.EndHorizontal();
@@ -830,14 +822,14 @@ namespace UbioWeldingLtd
 				{
 					//check if the file exist
 					string dirpath = string.Format("{0}{1}/{2}", Constants.weldPartPath, _welder.Category.ToString(), _welder.Name);
-					if (!System.IO.File.Exists(filepath))
+					if (!System.IO.File.Exists(_config.useNamedCfgFile ? string.Format("{0}/{1}/{2}.cfg", filepath, _welder.Name, _welder.Name) : string.Format("{0}/{1}{2}", filepath, _welder.Name, Constants.weldPartDefaultFile)))
 					{
 						if (!Directory.Exists(dirpath))
 						{
 							Directory.CreateDirectory(dirpath);
 						}
 						//create the file
-						StreamWriter partfile = System.IO.File.CreateText(filepath);
+						StreamWriter partfile = System.IO.File.CreateText(_config.useNamedCfgFile ? string.Format("{0}/{1}/{2}.cfg", filepath, _welder.Name, _welder.Name) : string.Format("{0}/{1}{2}", filepath, _welder.Name, Constants.weldPartDefaultFile));
 						partfile.Close();
 						WriteCfg(filepath);
 						_state = DisplayState.savedWindow;
@@ -877,7 +869,6 @@ namespace UbioWeldingLtd
 		}
 
 
-
 		private bool isSymmetryNumber()
 		{
 			int result;
@@ -898,16 +889,21 @@ namespace UbioWeldingLtd
 		 */
 		private void WriteCfg( string filepath)
 		{
-			Debug.Log(string.Format("{0}{1}{2}", Constants.logPrefix, Constants.logWritingFile, filepath));
+			string filename = _config.useNamedCfgFile ? string.Format("{0}/{1}/{2}.cfg", filepath, _welder.Name, _welder.Name) : string.Format("{0}/{1}{2}", filepath, _welder.Name, Constants.weldPartDefaultFile);
+			Debug.Log(string.Format("{0}{1}{2}", Constants.logPrefix, Constants.logWritingFile, filename));
 			_welder.CreateFullConfigNode();
-			_welder.FullConfigNode.Save(filepath);
-			Debug.Log(string.Format("{0}{1}{2} successful", Constants.logPrefix, Constants.logWritingFile, filepath));
+			_welder.FullConfigNode.Save(filename);
+			Debug.Log(string.Format("{0}{1}{2} successful", Constants.logPrefix, Constants.logWritingFile, filename));
+			filename = _config.useNamedCfgFile ? string.Format("{0}/{1}/{2}.cfg", filepath, _welder.Name, _welder.Name + "Internal") : string.Format("{0}/{1}{2}", filepath, _welder.Name, Constants.weldPartInternalDefaultFile);
+			_welder.FullInternalNode.Save(filename);
+			Debug.Log(string.Format("{0}{1}{2} successful", Constants.logPrefix, Constants.logWritingFile, filename));
 
 			if (_config.dataBaseAutoReload)
 			{
 				StartCoroutine(DatabaseHandler.DatabaseReloadWithMM());
 			}
 		}
+
 
 		/*
 		 * Free and clear the editor
@@ -929,6 +925,7 @@ namespace UbioWeldingLtd
 			}
 		}
 
+
 		/*
 		 * Lock editor if mouse pointer is inside window rect
 		 */
@@ -947,5 +944,6 @@ namespace UbioWeldingLtd
 			}
 		}
 	} //public class UbioZurWeldingLtd : MonoBehaviour
+
 
 } //namespace UbioWeldingLtd

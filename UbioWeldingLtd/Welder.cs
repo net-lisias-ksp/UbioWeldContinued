@@ -91,7 +91,7 @@ namespace UbioWeldingLtd
 
 		private List<ConfigNode> _resourceslist = new List<ConfigNode>();
 		private List<ConfigNode> _moduleList = new List<ConfigNode>();
-		private List<ConfigNode> _internalList = new List<ConfigNode>();
+		private ConfigNode _internalStorageNode = new ConfigNode();
 		private ConfigNode _fxData = new ConfigNode();
 
 		private Vector3 _coMOffset = Vector3.zero;
@@ -100,6 +100,7 @@ namespace UbioWeldingLtd
         private Char _filePathDelimiter;
 		private bool _advancedDebug = false;
 		public ConfigNode FullConfigNode = new ConfigNode(Constants.weldPartNode);
+		public ConfigNode FullInternalNode = new ConfigNode(Constants.weldInternalNode);
 		private static bool _includeAllNodes = false;
 		private static bool _dontProcessMasslessParts = false;
 		private static bool _runInTestMode = false;
@@ -108,6 +109,7 @@ namespace UbioWeldingLtd
 		private int[] partsHashMap;
 		private static int _precisionDigits;
 		private static bool _fileSimplification;
+		private string _Internal = string.Empty;
 
 		private float _explosionPotential = 0;
 		private double _thermalMassModifier = 0;
@@ -244,6 +246,7 @@ namespace UbioWeldingLtd
 		public float BreakingTorque { get { return _breakingTorque; } }
 		public float MaxTemp { get { return _maxTemp; } }
 		public float NbParts { get { return _partNumber; } }
+		public string Internal { get { return _Internal; } set { _Internal = value; } }
 
 		public string[] Modules
 		{
@@ -386,6 +389,22 @@ namespace UbioWeldingLtd
 			foreach (AttachNode node in _attachNodes)
 			{
 				node.position -= _com;
+			}
+			processInternalToCoM(_internalStorageNode);
+		}
+
+
+
+		public void processInternalToCoM(ConfigNode controlNode)
+		{
+			Vector3 pos;
+			foreach (ConfigNode node in controlNode.GetNodes())
+			{
+				if(node.HasValue("position"))
+				{
+					pos = ConfigNode.ParseVector3(node.GetValue("position"));
+					node.SetValue("position", new Vector3(pos.x - _com.x, pos.y - _com.z, pos.z - _com.y));
+				}
 			}
 		}
 
@@ -592,16 +611,27 @@ namespace UbioWeldingLtd
 
 			//--- Find all the config file with the name
 			List<UrlDir.UrlConfig> matchingPartConfigs = new List<UrlDir.UrlConfig>();
+			List<UrlDir.UrlConfig> matchingInternalConfigs = new List<UrlDir.UrlConfig>();
 			foreach (UrlDir.UrlConfig config in GameDatabase.Instance.root.GetConfigs(Constants.weldPartNode))
 			{
 				string newconfigname = config.name.Replace('_', '.');
 
-//Girka2K - too many spam in LOG from here
-				//AdvDebug(tring.Format(".config name {0}", newconfigname));
-
 				if (System.String.Equals(partname, newconfigname, System.StringComparison.Ordinal))
 				{
 					matchingPartConfigs.Add(config);
+					if (config.config.HasNode(Constants.weldInternalNode))
+					{
+						foreach (UrlDir.UrlConfig cfg in GameDatabase.Instance.root.GetConfigs(Constants.weldInternalNode))
+						{
+							foreach (ConfigNode node in config.config.GetNodes(Constants.weldInternalNode))
+							{
+								if (System.String.Equals(node.GetValues()[0], cfg.name, System.StringComparison.Ordinal))
+								{
+									matchingInternalConfigs.Add(cfg);
+								}
+							}
+						}
+					}
 				}
 			}
 
@@ -794,7 +824,13 @@ namespace UbioWeldingLtd
 					if (runInTestMode)
 					{
 						mergeModules(partname, cfg, _moduleList, _advancedDebug);
-						mergeInternals(info.position, cfg, _internalList, _advancedDebug);
+
+						newpart.CreateInternalModel();
+
+						if (cfg.config.HasNode(Constants.weldInternalNode))
+						{
+							mergeInternals(newpart, matchingInternalConfigs);
+						}
 					}
 					else
 					{
@@ -1052,6 +1088,151 @@ namespace UbioWeldingLtd
 			return ret;
 		}
 
+
+		/// <summary>
+		/// merges all the internal model merging
+		/// </summary>
+		/// <param name="_newpart"></param>
+		/// <param name="_matchingInternalConfigs"></param>
+		private void mergeInternals(Part _newpart, List<UrlDir.UrlConfig> _matchingInternalConfigs)
+		{
+			foreach (UrlDir.UrlConfig internalNode in _matchingInternalConfigs)
+			{
+				Vector3 relPos = (rotationMatrix * _newpart.transform.position);
+				Quaternion relRot = _newpart.transform.rotation;
+				relRot.eulerAngles += new Vector3(0, 0, 180);
+				relRot.eulerAngles = new Vector3(relRot.eulerAngles.x, relRot.eulerAngles.z, relRot.eulerAngles.y);
+				Debugger.AdvDebug("pos = " + relPos + " | rot = " + relRot, _advancedDebug);
+
+				if (!internalNode.config.HasNode(Constants.weldModelNode))
+				{
+					Debugger.AdvDebug("- No Model in Internal found, locating modelfile", _advancedDebug);
+					Debugger.AdvDebug(string.Format("- {0}{1}", Constants.logModelUrl, GetMeshurl(internalNode)), _advancedDebug);
+					ConfigNode newNode = new ConfigNode(Constants.weldModelNode);
+					newNode.AddValue("model", GetMeshurl(internalNode));
+					if (relPos != Vector3.zero)
+					{
+						newNode.AddValue("position", new Vector3(relPos.x, relPos.z, relPos.y));
+						Debugger.AdvDebug("- position = " + (relPos - _com), _advancedDebug);
+					}
+					if (relRot.eulerAngles != Vector3.zero)
+					{
+						newNode.AddValue("rotation", relRot.eulerAngles);
+						Debugger.AdvDebug("- rotation = " + relRot.eulerAngles, _advancedDebug);
+					}
+					_internalStorageNode.AddNode(newNode);
+				}
+				foreach (ConfigNode n in internalNode.config.GetNodes())
+				{
+					ConfigNode node = n.CreateCopy();
+					Debugger.AdvDebug("- " + node.name, _advancedDebug);
+
+					if (!node.name.Equals(Constants.weldModuleNode))
+					{
+						assignInternalRotation(relRot, node);
+						assignInternalPosition(relPos, relRot, node);
+					}
+					_internalStorageNode.AddNode(node);
+				}
+			}
+		}
+
+
+		/// <summary>
+		/// manages the rotating of the internal models
+		/// </summary>
+		/// <param name="_relRot"></param>
+		/// <param name="_node"></param>
+		private void assignInternalRotation(Quaternion _relRot, ConfigNode _node)
+		{
+			if (_node.name.Equals(Constants.weldModelNode))
+			{
+				if (_node.HasValue("rotation"))
+				{
+					Vector3 eul = ConfigNode.ParseVector3(_node.GetValue("rotation"));
+					_node.SetValue("rotation", WeldingHelpers.limitRotationAngle(eul + _relRot.eulerAngles));
+					Debugger.AdvDebug("- rotation found | euler in config " + eul + " | _relative euler " + _relRot.eulerAngles + " | result " + WeldingHelpers.limitRotationAngle(eul + _relRot.eulerAngles), _advancedDebug);
+				}
+				else
+				{
+					Debugger.AdvDebug("- no rotation in config " + _relRot.eulerAngles, _advancedDebug);
+					_node.AddValue("rotation", WeldingHelpers.limitRotationAngle(_relRot.eulerAngles));
+				}
+			}
+			if (_node.name.Equals(Constants.weldPropNode))
+			{
+				if (_node.HasValue("rotation"))
+				{
+					Quaternion rot = ConfigNode.ParseQuaternion(_node.GetValue("rotation"));
+					rot.eulerAngles += _relRot.eulerAngles;
+					_node.SetValue("rotation", rot);
+				}
+				else
+				{
+					_node.AddValue("rotation", _relRot);
+				}
+			}
+		}
+
+
+		/// <summary>
+		/// manages the positioning of the internal models
+		/// </summary>
+		/// <param name="_relPos"></param>
+		/// <param name="_node"></param>
+		private void assignInternalPosition(Vector3 _relPos, Quaternion _relRot, ConfigNode _node)
+		{
+			if (_node.name.Equals(Constants.weldModelNode))
+			{
+				_relPos = new Vector3(_relPos.x, _relPos.z, _relPos.y);
+				if (_node.HasValue("position"))
+				{
+					if (_relPos != Vector3.zero)
+					{
+						Vector3 _pos = ConfigNode.ParseVector3(_node.GetValue("position"));
+						_node.SetValue("position", (_pos + _relPos));
+						Debugger.AdvDebug("- updated internal position = " + (_pos + _relPos), _advancedDebug);
+					}
+				}
+				else
+				{
+					if (_relPos != Vector3.zero)
+					{
+						_node.AddValue("position", _relPos);
+						Debugger.AdvDebug("- new internal position = " + _relPos, _advancedDebug);
+					}
+				}
+			}
+			if (_node.name.Equals(Constants.weldPropNode))
+			{
+				Vector3 _newPos = (Quaternion.Inverse(_relRot) * _relPos);
+				_newPos = new Vector3(_newPos.x, _newPos.z, _newPos.y);
+				if (_node.HasValue("position"))
+				{
+					if (_relPos != Vector3.zero)
+					{
+						Vector3 _pos = ConfigNode.ParseVector3(_node.GetValue("position"));
+						_node.SetValue("position", (_pos + _newPos));
+						Debugger.AdvDebug("- updated internal position = " + (_pos + _newPos), _advancedDebug);
+					}
+				}
+				else
+				{
+					if (_relPos != Vector3.zero)
+					{
+						_node.AddValue("position", _newPos);
+						Debugger.AdvDebug("- new internal position = " + _newPos, _advancedDebug);
+					}
+				}
+			}
+		}
+
+
+		/// <summary>
+		/// manages the merging of the resources of all parts
+		/// </summary>
+		/// <param name="newpart"></param>
+		/// <param name="resourcesList"></param>
 		private void mergeResources(Part newpart, List<ConfigNode> resourcesList)
 		{
 			List<PartResource> newPartResourcesList = newpart.Resources.ToList();
@@ -1722,9 +1903,20 @@ namespace UbioWeldingLtd
 			partconfig.AddValue("bulkheadProfiles", _bulkheadProfiles);
 
 			//add INTERNAL
-			foreach (ConfigNode intern in _internalList)
+
+			if (_internalStorageNode.CountNodes > 0)
 			{
-				partconfig.AddNode(intern);
+				ConfigNode internalNode = new ConfigNode(Constants.weldInternalNode);
+				if (_internalStorageNode.CountNodes > 1)
+				{
+					internalNode.AddValue(Constants.weldModuleNodeName, _name + "Internal");
+					CreateFullInternalNode();
+				}
+				else
+				{
+					internalNode.AddValue(Constants.weldModuleNodeName, _internalStorageNode.GetNodes()[0].GetValue(_internalStorageNode.GetNodes()[0].GetValues()[0]));
+				}
+				partconfig.AddNode(internalNode);
 			}
 
 			//add RESOURCE
@@ -1738,6 +1930,64 @@ namespace UbioWeldingLtd
 			{
 				partconfig.AddNode(mod);
 			}
+		}
+
+
+		public void CreateFullInternalNode()
+		{
+			FullInternalNode = new ConfigNode(_name + "Internal");
+			FullInternalNode.AddNode(Constants.weldInternalNode);
+			ConfigNode internalConfig = FullInternalNode.GetNode(Constants.weldInternalNode);
+			internalConfig.AddValue(Constants.weldModuleNodeName, _name + "Internal");
+
+			List<ConfigNode> tempList = new List<ConfigNode>();
+			//add MODEL
+			Debugger.AdvDebug("sorting Internal MODELs",_advancedDebug);
+			if (_internalStorageNode.HasNode(Constants.weldModelNode))
+			{
+				foreach (ConfigNode c in _internalStorageNode.GetNodes(Constants.weldModelNode))
+				{
+					tempList.Add(c);
+				}
+			}
+			foreach (ConfigNode n in tempList)
+			{
+				internalConfig.AddNode(n);
+			}
+			Debugger.AdvDebug("sorting Internal MODELs complete", _advancedDebug);
+			tempList.Clear();
+
+			//add MODULE
+			Debugger.AdvDebug("sorting Internal MODULEs", _advancedDebug);
+			if (_internalStorageNode.HasNode(Constants.weldModuleNode))
+			{
+				foreach (ConfigNode c in _internalStorageNode.GetNodes(Constants.weldModuleNode))
+				{
+					tempList.Add(c);
+				}
+			}
+			foreach (ConfigNode n in tempList)
+			{
+				internalConfig.AddNode(n);
+			}
+			Debugger.AdvDebug("sorting Internal MODULEs complete", _advancedDebug);
+			tempList.Clear();
+
+			//add PROP
+			Debugger.AdvDebug("sorting Internal PROPs", _advancedDebug);
+			if (_internalStorageNode.HasNode(Constants.weldPropNode))
+			{
+				foreach (ConfigNode c in _internalStorageNode.GetNodes(Constants.weldPropNode))
+				{
+					tempList.Add(c);
+				}
+			}
+			foreach (ConfigNode n in tempList)
+			{
+				internalConfig.AddNode(n);
+			}
+			Debugger.AdvDebug("sorting Internal PROPs complete", _advancedDebug);
+			tempList.Clear();
 		}
 
 
@@ -1760,25 +2010,6 @@ namespace UbioWeldingLtd
 		}
 
 
-		public void mergeInternals(Vector3 position, UrlDir.UrlConfig configuration, List<ConfigNode> internalList, bool advancedDebugging)
-		{
-			ConfigNode[] internals = configuration.config.GetNodes(Constants.weldInternalNode);
-			Vector3 offset = position;
-
-			foreach(ConfigNode c in internals)
-			{
-				if (c.HasNode(Constants.weldOffsetName))
-				{
-					offset += ConfigNode.ParseVector3(c.GetValue(Constants.weldOffsetName));
-				}
-				ConfigNode node = new ConfigNode(Constants.weldInternalNode);
-				node.AddValue(Constants.weldModuleNodeName, c.GetValue(c.values.DistinctNames()[0]));
-				node.AddValue(Constants.weldOffsetName, WeldingHelpers.writeVector(offset));
-				internalList.Add(node);
-			}
-		}
-
-
 		private void getAttachmentType(Part part)
 		{
 			Debugger.AdvDebug(part.name + " Attache mode " + part.attachMode+" Attach method "+ part.attachMethod,_advancedDebug);
@@ -1787,3 +2018,4 @@ namespace UbioWeldingLtd
 
 	} //class Welder
 }
+

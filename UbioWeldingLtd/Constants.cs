@@ -11,7 +11,7 @@ namespace UbioWeldingLtd
 	static class Constants
 	{
 		//Logs/debug constants
-		public const string logVersion ="v2.4.5.0 - 1.2.1 - Continued";
+		public const string logVersion ="v2.5.0.0 - 1.2.2 - Continued";
 		public const string logWarning		  = "WARNING ";
 		public const string logError			= "ERROR ";
 		public const string logPrefix		   = "[WeldingTool] ";
@@ -128,6 +128,7 @@ namespace UbioWeldingLtd
 		//Weld
 		public const string weldPartPath = "GameData/UbioWeldingLtd/Parts/";
 		public const string weldPartDefaultFile = "/part.cfg";
+		public const string weldPartInternalDefaultFile = "/internal.cfg";
 		public const string weldAuthor = "UbioZurWeldingLtd";
 		public const string weldManufacturer = "UbioZur Welding Ltd";
 		public const string weldDefaultName = "weldedpart";
@@ -138,6 +139,7 @@ namespace UbioWeldingLtd
 		public const string weldResNode = "RESOURCE";
 		public const string weldModuleNode = "MODULE";
 		public const string weldInternalNode = "INTERNAL";
+		public const string weldPropNode = "PROP";
 		public const string weldModuleNodeName = "name";
 		public const string weldOffsetName = "offset";
 		public const string weldOutResNode = "OUTPUT_RESOURCE";
