@@ -11,7 +11,7 @@ namespace UbioWeldingLtd
 	static class Constants
 	{
 		//Logs/debug constants
-		public const string logVersion ="v2.5.0.0 - 1.2.2 - Continued";
+		public const string logVersion ="v2.5.1.0 - 1.3.0 - Continued";
 		public const string logWarning		  = "WARNING ";
 		public const string logError			= "ERROR ";
 		public const string logPrefix		   = "[WeldingTool] ";

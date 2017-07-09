@@ -31,16 +31,17 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Assembly-CSharp, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Assembly-CSharp, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>D:\Games\KSP Source Projects\AssemblyReferences\1.2\Assembly-CSharp.dll</HintPath>
+      <HintPath>D:\Games\KSP Source Projects\AssemblyReferences\1.3\Assembly-CSharp.dll</HintPath>
     </Reference>
-    <Reference Include="Assembly-CSharp-firstpass, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Assembly-CSharp-firstpass, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>D:\Games\KSP Source Projects\AssemblyReferences\1.2\Assembly-CSharp-firstpass.dll</HintPath>
+      <HintPath>D:\Games\KSP Source Projects\AssemblyReferences\1.3\Assembly-CSharp-firstpass.dll</HintPath>
     </Reference>
-    <Reference Include="KSPAssets">
-      <HintPath>D:\Games\KSP Source Projects\AssemblyReferences\1.2\KSPAssets.dll</HintPath>
+    <Reference Include="KSPAssets, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>D:\Games\KSP Source Projects\AssemblyReferences\1.3\KSPAssets.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -50,10 +51,15 @@
     <Reference Include="System.Xml" />
     <Reference Include="UnityEngine, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>D:\Games\KSP Source Projects\AssemblyReferences\1.2\UnityEngine.dll</HintPath>
+      <HintPath>D:\Games\KSP Source Projects\AssemblyReferences\1.3\UnityEngine.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.Networking">
-      <HintPath>D:\Games\KSP Source Projects\AssemblyReferences\1.2\UnityEngine.Networking.dll</HintPath>
+    <Reference Include="UnityEngine.Networking, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>D:\Games\KSP Source Projects\AssemblyReferences\1.3\UnityEngine.Networking.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UI, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>D:\Games\KSP Source Projects\AssemblyReferences\1.3\UnityEngine.UI.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

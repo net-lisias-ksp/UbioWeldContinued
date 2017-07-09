@@ -514,8 +514,11 @@ namespace UbioWeldingLtd
 					}
 				}
 			}
-			_meshSwitchModelIndicies.Add(_modelIndex);
-			_meshSwitchTransformNames.Add(listEntry);
+			if (listEntry.Length > 0)
+			{
+				_meshSwitchModelIndicies.Add(_modelIndex);
+				_meshSwitchTransformNames.Add(listEntry);
+			}
 		}
 
 
