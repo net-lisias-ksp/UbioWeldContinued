@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Reflection;
 using System.Xml;
 using System.Xml.Serialization;
 using System.Collections.Generic;
@@ -10,8 +11,8 @@ namespace UbioWeldingLtd
 	public static class FileManager
 	{
 
-		private static string _configFile = string.Concat(Constants.settingRuntimeDirectory, Constants.settingXmlFilePath, Constants.settingXmlConfigFileName);
-		private static string _moduleListFile = string.Concat(Constants.settingRuntimeDirectory, Constants.settingXmlFilePath, Constants.settingXmlListFileName);
+		private static string _configFile = FileManager.FULLPATHNAME(Constants.settingXmlFilePath, Constants.settingXmlConfigFileName);
+		private static string _moduleListFile = FileManager.FULLPATHNAME(Constants.settingXmlFilePath, Constants.settingXmlListFileName);
 
 		private static string[] comments =
 			{
@@ -181,5 +182,28 @@ namespace UbioWeldingLtd
 			Debug.Log(string.Format("{0} Config was saved", Constants.logPrefix));
 		}
 
+		private static string root_dir = null;
+		public static string FULLPATHNAME(string pathname)
+		{
+			if (null == root_dir) {
+				root_dir = Assembly.GetExecutingAssembly().Location
+								   .Replace(new FileInfo(Assembly.GetExecutingAssembly().Location).Name, "")
+								   .Replace(Constants.GAMEDATA, "")
+								   .Replace(Constants.ROOT, "")
+								   .Replace(Constants.BASE, "")
+								   ;
+			}
+			return Path.Combine(root_dir, pathname);
+		}
+
+		public static string FULLPATHNAME(string basedir, string pathname)
+		{
+			return FULLPATHNAME(Path.Combine(basedir, pathname));
+		}
+
+		public static string PATHNAME(string basedir, string dir, string filename)
+		{
+			return Path.Combine(Path.Combine(basedir, dir), filename);
+		}
 	}
 }
