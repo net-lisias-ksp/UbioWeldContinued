@@ -13,7 +13,7 @@ namespace UbioWeldingLtd
 		private ApplicationLauncher _toolbar = ApplicationLauncher.Instance;
 		private ApplicationLauncherButton _toolbarButton;
 		private bool _isEnabled = false;
-
+		private Texture2D _iconTexture;
 
 		/// <summary>
 		/// public access for initializing the toolbar
@@ -82,7 +82,7 @@ namespace UbioWeldingLtd
 					null,
 					null,
 					ApplicationLauncher.AppScenes.VAB | ApplicationLauncher.AppScenes.SPH,
-					GameDatabase.Instance.GetTexture(Constants.settingIconGetPath, false)
+					this._iconTexture = GameDatabase.Instance.GetTexture(Constants.settingIconGetPath, false)
 					);
 				this._isEnabled = true;
 				Debug.Log(string.Format("{0}-> OnGuiAppLauncherReady done", Constants.logPrefix));
