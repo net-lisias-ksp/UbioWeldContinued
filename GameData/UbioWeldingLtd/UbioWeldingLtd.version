@@ -1,17 +1,17 @@
 {
-    "NAME":"UbioWeldingLtd-Continued",
-    "URL":"https://raw.githubusercontent.com/UbioWeldingLtd/UbioWeldContinued/dev-1.0/GameData/UbioWeldingLtd/UbioWeldingLtd.version",
+    "NAME":"UbioWeldingLtd-Continuum",
+    "URL":"https://raw.githubusercontent.com/net.lisias.ksp/UbioWeldContinuum/master/GameData/UbioWeldingLtd/UbioWeldingLtd.version",
     "GITHUB":
     {
-        "USERNAME":"UbioWeldingLtd",
-        "REPOSITORY":"UbioWeldContinued",
+        "USERNAME":"met.lisias.ksp",
+        "REPOSITORY":"UbioWeldContinuum",
         "ALLOW_PRE_RELEASE":false,
     },
     "VERSION":
     {
         "MAJOR":2,
-        "MINOR":5,
-        "PATCH":2,
+        "MINOR":6,
+        "PATCH":0,
         "BUILD":0
     },
     "KSP_VERSION":

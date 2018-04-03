@@ -22,7 +22,7 @@ namespace UbioWeldingLtd
 		public const string USERDATA 	= GAMEDATA + LOCAL + BASE;
 
 		//Logs/debug constants
-		public const string logVersion 		= "v2.5.2.0 - 1.3.1 - Continued";
+		public const string logVersion 		= "v" + Version.Text + " - 1.4.1 - Continuum";
 		public const string logWarning		= "WARNING ";
 		public const string logError		= "ERROR ";
 		public const string logPrefix		= "[WeldingTool] ";
