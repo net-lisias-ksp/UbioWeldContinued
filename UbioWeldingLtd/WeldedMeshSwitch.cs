@@ -101,7 +101,7 @@ namespace UbioWeldingLtd
 									{
 										newTransform = newTransform.GetChild(0);
 									}
-									Transform newFinalTransform = newTransform.FindChild(finalName.Trim(' '));
+									Transform newFinalTransform = newTransform.Find(finalName.Trim(' '));
 									if (newFinalTransform == null)
 									{
 										Debugger.AdvDebug("[WeldedMeshSwitch] could not find Transform " + finalName, advancedDebug);
