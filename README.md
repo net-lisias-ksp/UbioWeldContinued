@@ -9,7 +9,18 @@ Further reading:
 * [ChangeLog](./GameData/UbioWeldingLtd/changelog.txt)
 * [Licensing Terms](./GameData/UbioWeldingLtd/CC_BY-NC-SA-3_0.txt.txt)
 	+ [Further Copyright notices](./GameData/UbioWeldingLtd/license.txt)
-* [Parent Repository](https://github.com/UbioWeldingLtd/UbioWeldContinued).
+* Official Distribution Sites:
+	+ [L Aerospace KSP Division](http://ksp.lisias.net/content/add-ons/UbioWeldContinuum/README.md)
+	+ [Source on GitHub](https://github.com/net-lisias-ksp/UbioWeldContinuum)
+
+INSTALL
+-------
+
+1. Delete all previous content from GameData/net.lisias.ksp/UbioWeldingLtd
+2. Make a backup copy from PluginData/UbioWeldingLtd
+3. Unzip the distribution zipfile on the KSP's root dir.
+    * Do not overwrite PluginData/UbioWeldingLtd contents if you want to preserve your current settings
+
 
 UbioZur Welding Ltd. Continued
 ------------------------------
