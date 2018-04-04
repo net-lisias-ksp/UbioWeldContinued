@@ -6,7 +6,7 @@ namespace UbioWeldingLtd
 	{
 		static class ModuleManager {
 			public static readonly string name = "ModuleManager";
-			public static readonly System.Version minVersion = new System.Version(2, 3, 1, 0);			
+			public static readonly System.Version minVersion = new System.Version(3, 0, 5, 0);			
 		}
 		static class ToobarControl
 		{
