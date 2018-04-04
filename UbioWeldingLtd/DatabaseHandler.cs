@@ -32,19 +32,28 @@ namespace UbioWeldingLtd
 		public static void initMMAssembly()
 		{
 			Assembly _MMAssembly = null;
+			Assembly _TBAssembly = null;
 			// Walk through asseblies looking for ModuleManager* name
 			foreach (AssemblyLoader.LoadedAssembly lAssembly in AssemblyLoader.loadedAssemblies)
 			{
 				Assembly assembly = lAssembly.assembly;
 				System.Version aVersion = assembly.GetName().Version;
 
-				if (assembly.GetName().Name.StartsWith("ModuleManager") &&
+				if (assembly.GetName().Name.StartsWith(Dependencies.ModuleManager.name) &&
 				    (((_MMAssembly == null) && (aVersion >= Dependencies.ModuleManager.minVersion)) || //first instance of ModuleManager
 						(_MMAssembly.GetName().Version < aVersion)))	//in case was loaded multiple versions of ModuleManager
 				{
 					_MMAssembly = assembly;
 				}
+				else if (assembly.GetName().Name.StartsWith(Dependencies.ToobarControl.name) &&
+				    (((_TBAssembly == null) && (aVersion >= Dependencies.ToobarControl.minVersion)) || 
+				    	(_TBAssembly.GetName().Version < aVersion)))
+				{
+					_TBAssembly = assembly;
+				}
+				Debug.Log(assembly.GetName().Name);
 			}
+
 			if (_MMAssembly != null)
 			{
 				Debug.Log(string.Format("{0} ModuleManager assembly was found: {1} (version {2})", Constants.logPrefix, _MMAssembly.GetName().Name, _MMAssembly.GetName().Version));
@@ -67,8 +76,16 @@ namespace UbioWeldingLtd
 			{
 				Debug.Log(string.Format("{0} ModuleManager assembly was not found!", Constants.logPrefix));
 			}
-		}
 
+			if (_TBAssembly != null)
+			{
+				Debug.Log(string.Format("{0} ToolbarControl assembly was found: {1} (version {2})", Constants.logPrefix, _TBAssembly.GetName().Name, _TBAssembly.GetName().Version));
+			}
+			else
+			{
+				Debug.Log(string.Format("{0} ToolbarControl assembly was not found!", Constants.logPrefix));
+			}
+		}
 
 		/// <summary>
 		/// this will dynamically invoke _MethodName_ method of ModuleManager.MMPatchLoader
