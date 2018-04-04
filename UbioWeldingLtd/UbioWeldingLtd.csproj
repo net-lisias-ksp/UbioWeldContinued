@@ -76,6 +76,9 @@
     <Reference Include="UnityEngine.ParticleSystemModule">
       <HintPath>..\..\..\runtime\KSP.app\Contents\Resources\Data\Managed\UnityEngine.ParticleSystemModule.dll</HintPath>
     </Reference>
+    <Reference Include="ToolbarControl">
+      <HintPath>..\..\..\runtime\GameData\001_ToolbarControl\Plugins\ToolbarControl.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdvancedGUITextArea.cs" />
