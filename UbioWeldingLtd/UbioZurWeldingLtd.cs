@@ -19,7 +19,7 @@ namespace UbioWeldingLtd
 			infoWindow,
 			savedWindow,
 			overwriteDial,
-            mainWindow,
+			mainWindow,
 			partSelection
 		}
 
@@ -30,7 +30,7 @@ namespace UbioWeldingLtd
 		private Rect _editorInfoWindow;
 		private Rect _editorOverwriteDial;
 		private Rect _editorSavedDial;
-        private Rect _editorMainWindow;
+		private Rect _editorMainWindow;
 		private Welder _welder;
 		private DisplayState _state;
 		private List<GUIContent> _catNames = new List<GUIContent>();
@@ -96,7 +96,7 @@ namespace UbioWeldingLtd
 		{
 			instance = this;
 			Debug.Log(string.Format("{0}- {1} => Awake", Constants.logPrefix, instance.GetType()));
-            Debug.Log(string.Format("{0} Platform is {1}", Constants.logPrefix, Application.platform));
+			Debug.Log(string.Format("{0} Platform is {1}", Constants.logPrefix, Application.platform));
 
 			initConfig();
 			_state = DisplayState.none;
@@ -105,7 +105,7 @@ namespace UbioWeldingLtd
 			_editorInfoWindow = new Rect(Screen.width / 2 - Constants.guiInfoWindowX, Screen.height / 2 - Constants.guiInfoWindowY, Constants.guiInfoWindowW, Constants.guiInfoWindowH);
 			_editorOverwriteDial = new Rect(Screen.width / 2 - Constants.guiDialogX, Screen.height / 2 - Constants.guiDialogY, Constants.guiDialogW, Constants.guiDialogH);
 			_editorSavedDial = new Rect(Screen.width / 2 - Constants.guiDialogX, Screen.height / 2 - Constants.guiDialogY, Constants.guiDialogW, Constants.guiDialogH);
-            _editorMainWindow = new Rect(_config.MainWindowXPosition, _config.MainWindowYPosition, Constants.guiMainWindowW, Constants.guiMainWindowH);
+			_editorMainWindow = new Rect(_config.MainWindowXPosition, _config.MainWindowYPosition, Constants.guiMainWindowW, Constants.guiMainWindowH);
 
 			_catNames = WeldingHelpers.initPartCategories(_catNames);
 			_guiStyle = WeldingHelpers.initGuiStyle(_guiStyle);
@@ -307,25 +307,25 @@ namespace UbioWeldingLtd
 						EditorLockManager.unlockEditor(Constants.settingWeldingLock);
 						break;
 					case DisplayState.weldError :
-                        _editorErrorDial = GUILayout.Window((int)_state, _editorErrorDial, OnErrorDisplay, Constants.weldManufacturer);
+						_editorErrorDial = GUILayout.Window((int)_state, _editorErrorDial, OnErrorDisplay, Constants.weldManufacturer);
 						break;
 					case DisplayState.weldWarning :
-                        _editorWarningDial = GUILayout.Window((int)_state, _editorWarningDial, OnWarningDisplay, Constants.weldManufacturer);
+						_editorWarningDial = GUILayout.Window((int)_state, _editorWarningDial, OnWarningDisplay, Constants.weldManufacturer);
 						break;
 					case DisplayState.infoWindow :
 						_editorInfoWindow = GUI.Window((int)_state, _editorInfoWindow, OnInfoWindow, Constants.weldManufacturer);
 						PreventClickThrough(_editorInfoWindow);
 						break;
 					case DisplayState.savedWindow :
-                        _editorSavedDial = GUILayout.Window((int)_state, _editorSavedDial, OnSavedDisplay, Constants.weldManufacturer);
+						_editorSavedDial = GUILayout.Window((int)_state, _editorSavedDial, OnSavedDisplay, Constants.weldManufacturer);
 						break;
 					case DisplayState.overwriteDial :
-                        _editorOverwriteDial = GUILayout.Window((int)_state, _editorOverwriteDial, OnOverwriteDisplay, Constants.weldManufacturer);
+						_editorOverwriteDial = GUILayout.Window((int)_state, _editorOverwriteDial, OnOverwriteDisplay, Constants.weldManufacturer);
 						break;
-                    case DisplayState.mainWindow :
+					case DisplayState.mainWindow :
 						_editorMainWindow = GUI.Window((int)_state, _editorMainWindow, OnMainWindow, Constants.weldManufacturer);
 						PreventClickThrough(_editorMainWindow);
-                        break;
+						break;
 					case DisplayState.partSelection:
 						ScreenMessages.PostScreenMessage(Constants.guiScreenMessagePartSelection, Time.deltaTime, ScreenMessageStyle.UPPER_CENTER);
 						break;
@@ -428,7 +428,7 @@ namespace UbioWeldingLtd
 #if (DEBUG)
 				Debug.Log(string.Format("{0} welder.Category: {1}", Constants.logPrefix, (int)_welder.Category));
 #endif
-                _catDropdown.SelectedItemIndex = (int)_welder.Category;
+				_catDropdown.SelectedItemIndex = (int)_welder.Category;
 				_state = DisplayState.infoWindow;
 			}
 		}
@@ -447,8 +447,8 @@ namespace UbioWeldingLtd
 			_config.MainWindowYPosition = (int)_editorMainWindow.yMin;
 
 			GUILayout.BeginVertical();
-            GUILayout.EndVertical();
-            GUILayout.BeginVertical();
+			GUILayout.EndVertical();
+			GUILayout.BeginVertical();
 
 			if (GUILayout.Button(Constants.guiSettingsGUIContent, GUILayout.MaxWidth(160)))
 			{
@@ -540,10 +540,10 @@ namespace UbioWeldingLtd
 			GUIStyle VersionLabelGUIStyle = new GUIStyle(GUI.skin.label);
 			VersionLabelGUIStyle.fontSize = 12;
 			GUILayout.Label(Constants.logVersion, VersionLabelGUIStyle);
-            GUILayout.EndVertical();
+			GUILayout.EndVertical();
 
 			GUI.DragWindow();
-        } //private void OnMainWindow()
+		} //private void OnMainWindow()
 
 
 
@@ -611,10 +611,10 @@ namespace UbioWeldingLtd
 			GUILayout.Label(Constants.guiDialOverwrite);
 			GUILayout.EndHorizontal();
 			GUILayout.BeginHorizontal();
-			GUILayout.Label(_config.useNamedCfgFile 
-			                ? FileManager.PATHNAME(filepath, _welder.Name, string.Format("{0}.cfg", _welder.Name))
-                            : FileManager.PATHNAME(filepath, _welder.Name, Constants.weldPartDefaultFile)
-			               );
+			GUILayout.Label(_config.useNamedCfgFile
+							? FileManager.PATHNAME(filepath, _welder.Name, string.Format("{0}.cfg", _welder.Name))
+							: FileManager.PATHNAME(filepath, _welder.Name, Constants.weldPartDefaultFile)
+						   );
 			GUILayout.EndHorizontal();
 			GUILayout.BeginHorizontal();
 			GUILayout.EndHorizontal();
@@ -826,7 +826,7 @@ namespace UbioWeldingLtd
 					//check if the file exist
 					string dirpath = FileManager.PATHNAME(Constants.weldPartPath, _welder.Category.ToString(), _welder.Name);
 					if (!System.IO.File.Exists(
-						_config.useNamedCfgFile 
+						_config.useNamedCfgFile
 							? FileManager.PATHNAME(filepath, _welder.Name, string.Format("{0}.cfg", _welder.Name))
 							: FileManager.PATHNAME(filepath, _welder.Name, Constants.weldPartDefaultFile)
 						))
@@ -836,10 +836,10 @@ namespace UbioWeldingLtd
 							Directory.CreateDirectory(dirpath);
 						}
 						//create the file
-						StreamWriter partfile = System.IO.File.CreateText(_config.useNamedCfgFile 
-						                                                ? FileManager.PATHNAME(filepath, _welder.Name, string.Format("{0}.cfg", _welder.Name))
-						                                                : FileManager.PATHNAME(filepath, _welder.Name, Constants.weldPartDefaultFile)
-					                                                 );
+						StreamWriter partfile = System.IO.File.CreateText(_config.useNamedCfgFile
+																		? FileManager.PATHNAME(filepath, _welder.Name, string.Format("{0}.cfg", _welder.Name))
+																		: FileManager.PATHNAME(filepath, _welder.Name, Constants.weldPartDefaultFile)
+																	 );
 						partfile.Close();
 						WriteCfg(filepath);
 						_state = DisplayState.savedWindow;
@@ -900,17 +900,17 @@ namespace UbioWeldingLtd
 		private void WriteCfg( string filepath)
 		{
 			string filename = _config.useNamedCfgFile
-			                         	? FileManager.PATHNAME(filepath, _welder.Name, string.Format("{0}.cfg", _welder.Name))
-			                         	: FileManager.PATHNAME(filepath, _welder.Name, Constants.weldPartDefaultFile)
+										? FileManager.PATHNAME(filepath, _welder.Name, string.Format("{0}.cfg", _welder.Name))
+										: FileManager.PATHNAME(filepath, _welder.Name, Constants.weldPartDefaultFile)
 									;
 			Debug.Log(string.Format("{0}{1}{2}", Constants.logPrefix, Constants.logWritingFile, filename));
 			_welder.CreateFullConfigNode();
 			_welder.FullConfigNode.Save(filename);
 			Debug.Log(string.Format("{0}{1}{2} successful", Constants.logPrefix, Constants.logWritingFile, filename));
-			filename = _config.useNamedCfgFile 
-			                  			? FileManager.PATHNAME(filepath, _welder.Name, _welder.Name + "Internal" + ".cfg")
-				                        : FileManager.PATHNAME(filepath, _welder.Name, Constants.weldPartInternalDefaultFile)
-			                  		;
+			filename = _config.useNamedCfgFile
+										? FileManager.PATHNAME(filepath, _welder.Name, _welder.Name + "Internal" + ".cfg")
+										: FileManager.PATHNAME(filepath, _welder.Name, Constants.weldPartInternalDefaultFile)
+									;
 			_welder.FullInternalNode.Save(filename);
 			Debug.Log(string.Format("{0}{1}{2} successful", Constants.logPrefix, Constants.logWritingFile, filename));
 			if (_config.dataBaseAutoReload)
@@ -947,12 +947,12 @@ namespace UbioWeldingLtd
 		private void PreventClickThrough(Rect rect)
 		{
 			Vector2 pointerPos = Mouse.screenPos;
-			//            if (rect.Contains(pointerPos) && !EditorLogic.softLock)
+			//			  if (rect.Contains(pointerPos) && !EditorLogic.softLock)
 			if (rect.Contains(pointerPos))
 			{
 				EditorLockManager.lockEditor(Constants.settingPreventClickThroughLock);
 			}
-			//            else if (!rect.Contains(pointerPos) && EditorLogic.softLock)
+			//			  else if (!rect.Contains(pointerPos) && EditorLogic.softLock)
 			else if (!rect.Contains(pointerPos))
 			{
 				EditorLockManager.unlockEditor(Constants.settingPreventClickThroughLock);
