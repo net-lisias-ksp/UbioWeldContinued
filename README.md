@@ -26,8 +26,8 @@ INSTALL
     * Do not overwrite PluginData/UbioWeldingLtd contents if you want to preserve your current settings
 
 
-DEPENDECIES
------------
+DEPENDENCIES
+------------
 
 This add-on depends from the following ones (that should be installed, and **are not** embedded):
 
