@@ -106,6 +106,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>cp "$(TargetPath)" "$(SolutionDir)..\..\..\runtime\GameData\net.lisias.ksp\$(SolutionName)\" </PostBuildEvent>
+    <PostBuildEvent>cp "$(TargetPath)" "$(SolutionDir)..\GameData\net.lisias.ksp\$(SolutionName)\" </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
