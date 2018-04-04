@@ -1,10 +1,11 @@
 Welding Ltd. Continuum
 ======================
 
-This is a (non official) fork from Continued version by Lisias.
+This is a (non official) fork by Lisias from the Continued fork, currently the Official fork from Ubiozor's "UbioWeldingLtd".
 
 Further reading:
 
+* Manual (Work in Progress)
 * [ChangeLog](./GameData/UbioWeldingLtd/changelog.txt)
 * [Licensing Terms](./GameData/UbioWeldingLtd/CC_BY-NC-SA-3_0.txt.txt)
 	+ [Further Copyright notices](./GameData/UbioWeldingLtd/license.txt)
