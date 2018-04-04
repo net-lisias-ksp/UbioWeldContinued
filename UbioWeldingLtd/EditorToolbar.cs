@@ -1,6 +1,7 @@
 ﻿using System;
 using UnityEngine;
 using KSP.UI.Screens;
+using ToolbarControl_NS;
 
 namespace UbioWeldingLtd
 {
@@ -11,9 +12,8 @@ namespace UbioWeldingLtd
 		public static EditorToolbar instance { get; private set; }
 
 		private ApplicationLauncher _toolbar = ApplicationLauncher.Instance;
-		private ApplicationLauncherButton _toolbarButton;
+		private ToolbarControl _toolbarControl;
 		private bool _isEnabled = false;
-		private Texture2D _iconTexture;
 
 		/// <summary>
 		/// public access for initializing the toolbar
@@ -34,7 +34,7 @@ namespace UbioWeldingLtd
 		/// </summary>
 		private void Start()
 		{
-			if (_toolbarButton == null)
+			if (null == this._toolbarControl)
 			{
 				OnGuiAppLauncherReady();
 			}
@@ -57,7 +57,6 @@ namespace UbioWeldingLtd
 						initToolbar();
 					}
 				}
-				//this._iconTexture = GameDatabase.Instance.GetTexture(Constants.settingIconGetPath, false);
 			}
 			catch (Exception exception)
 			{
@@ -74,15 +73,15 @@ namespace UbioWeldingLtd
 		{
 			try
 			{
-				this._toolbarButton = this._toolbar.AddModApplication(
-					useToolbarButton,
-					null,
-					null,
-					null,
-					null,
-					null,
+				this._toolbarControl = gameObject.AddComponent<ToolbarControl>();
+				this._toolbarControl.AddToAllToolbars(
+					useToolbarButton, null,
 					ApplicationLauncher.AppScenes.VAB | ApplicationLauncher.AppScenes.SPH,
-					this._iconTexture = GameDatabase.Instance.GetTexture(Constants.settingIconGetPath, false)
+					"UbioWeldingLtd",
+					"UbioWeldingLtdButton",				
+					Constants.settingLargeIconGetPath,
+				    Constants.settingSmallIconGetPath,
+					Constants.weldManufacturer
 					);
 				this._isEnabled = true;
 				Debug.Log(string.Format("{0}-> OnGuiAppLauncherReady done", Constants.logPrefix));
@@ -104,7 +103,7 @@ namespace UbioWeldingLtd
 			try
 			{
 				UbioZurWeldingLtd.instance.stockToolbarButtonUsed();
-				this._toolbarButton.SetFalse();
+				this._toolbarControl.SetFalse();
 			}
 			catch (Exception exception)
 			{
@@ -122,11 +121,12 @@ namespace UbioWeldingLtd
 			try
 			{
 				GameEvents.onGUIApplicationLauncherReady.Remove(this.OnGuiAppLauncherReady);
-				if (_toolbarButton != null)
+				if (null != this._toolbarControl)
 				{
-					ApplicationLauncher.Instance.RemoveModApplication(_toolbarButton);
 					this._isEnabled = false;
-					_toolbarButton = null;
+					this._toolbarControl.OnDestroy();
+					Destroy(this._toolbar);
+					this._toolbarControl = null;
 				}
 				Debug.Log("BuildToolbar->OnDestroy");
 			}
@@ -145,19 +145,12 @@ namespace UbioWeldingLtd
 		{
 			try
 			{
-				if (this._toolbarButton == null)
+				if (null == this._toolbarControl)
 				{
 					return;
 				}
 
-				if (EditorLogic.fetch != null && EditorLogic.fetch.ship.parts.Count > 0)
-				{
-					this._toolbarButton.Enable();
-				}
-				else
-				{
-					this._toolbarButton.Disable();
-				}
+				this._toolbarControl.Enabled = (null != EditorLogic.fetch && EditorLogic.fetch.ship.parts.Count > 0);
 			}
 			catch (Exception exception)
 			{
