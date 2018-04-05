@@ -22,7 +22,7 @@ namespace UbioWeldingLtd
 				}
 				else
 				{
-					Debugger.AdvDebug("[WeldedParseTools] invalid integer: " + valueArray[i], true);
+					Dbg.log("[WeldedParseTools] invalid integer: " + valueArray[i], true);
 				}
 			}
 			return newIntList;

@@ -345,7 +345,6 @@ namespace UbioWeldingLtd
 
 			Debug.Log(string.Format("{0}{1}", Constants.logPrefix, Constants.logVersion));
 			Debug.Log(string.Format("{0}{1}", Constants.logPrefix, Constants.logStartWeld));
-
 #endif
 			bool warning = false;
 			_welder = new Welder(_config.advancedDebug);

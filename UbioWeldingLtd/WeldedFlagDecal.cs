@@ -68,7 +68,7 @@ namespace UbioWeldingLtd
 
 		public void clearDecalModule()
 		{
-			Debugger.AdvDebug("clearDecalModule start", advancedDebug);
+			Dbg.log("clearDecalModule start", advancedDebug);
 			PartModuleList modules = part.Modules;
 			PartModule pm;
 			for(int i =0; i < part.Modules.Count; i++)
@@ -78,26 +78,26 @@ namespace UbioWeldingLtd
 				{
 					if (((FlagDecal)pm).textureQuadName == textureQuadName)
 					{
-						Debugger.AdvDebug("clearDecalModule flagDecal found", advancedDebug);
+						Dbg.log("clearDecalModule flagDecal found", advancedDebug);
 						part.Modules.Remove(pm);
 						Destroy(pm);
-						Debugger.AdvDebug("clearDecalModule flagDecal marked for destroy", advancedDebug);
+						Dbg.log("clearDecalModule flagDecal marked for destroy", advancedDebug);
 						break;
 					}
 				}
 			}
 			if(HighLogic.LoadedSceneIsEditor)
 			{
-				Debugger.AdvDebug("clearDecalModule LoadedSceneIsEditor", advancedDebug);
+				Dbg.log("clearDecalModule LoadedSceneIsEditor", advancedDebug);
 				GameEvents.onEditorPartEvent.Fire(ConstructionEventType.PartTweaked, part);
 				GameEvents.onEditorShipModified.Fire(EditorLogic.fetch.ship);
 			}
 			else if(HighLogic.LoadedSceneIsFlight)
 			{
-				Debugger.AdvDebug("clearDecalModule LoadedSceneIsFlight", advancedDebug);
+				Dbg.log("clearDecalModule LoadedSceneIsFlight", advancedDebug);
 				GameEvents.onVesselWasModified.Fire(vessel);
 			}
-			Debugger.AdvDebug("clearDecalModule complete", advancedDebug);
+			Dbg.log("clearDecalModule complete", advancedDebug);
 		}
 
 

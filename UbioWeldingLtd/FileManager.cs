@@ -41,7 +41,7 @@ namespace UbioWeldingLtd
 		private static void serializer_UnknownNode
 		(object sender, XmlNodeEventArgs e)
 		{
-			Console.WriteLine("Unknown Node:" + e.Name + "\t" + e.Text);
+			Dbg.log("Unknown Node:" + e.Name + "\t" + e.Text);
 		}
 
 
@@ -54,8 +54,7 @@ namespace UbioWeldingLtd
 		(object sender, XmlAttributeEventArgs e)
 		{
 			System.Xml.XmlAttribute attr = e.Attr;
-			Console.WriteLine("Unknown attribute " +
-			attr.Name + "='" + attr.Value + "'");
+			Dbg.log("Unknown attribute " + attr.Name + "='" + attr.Value + "'");
 		}
 
 
