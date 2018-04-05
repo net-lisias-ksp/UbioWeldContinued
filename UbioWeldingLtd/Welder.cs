@@ -672,7 +672,7 @@ namespace UbioWeldingLtd
 
 
 						Debugger.AdvDebug(string.Format("scaling info: rescaleFactor={0}| vector={1}", newpart.rescaleFactor, newpart.transform.GetChild(0).localScale.ToString("F3")), _advancedDebug);
-						Transform modelTransform = newpart.partTransform.FindChild(Constants.weldModelNode.ToLower());
+						Transform modelTransform = newpart.partTransform.Find(Constants.weldModelNode.ToLower());
 						Vector3 scale = modelTransform.localScale;
 						//Debugger.AdvDebug(string.Format("scale = {0} | localScale = {1} | lossyScale = {0}", scale,modelTransform.GetChild(subModelIndex).localScale, modelTransform.GetChild(subModelIndex).lossyScale), true);
 						Transform parentTransform = modelTransform.parent;
@@ -756,7 +756,7 @@ namespace UbioWeldingLtd
 							Debugger.AdvDebug(string.Format("..Childs count {0}", newpart.transform.childCount), _advancedDebug);
 
 							Debugger.AdvDebug(string.Format("scaling info: rescaleFactor={0}| scale={1}| config.scale={2}", newpart.rescaleFactor, newpart.scaleFactor, node.HasValue("scale") ? ConfigNode.ParseVector3(node.GetValue("scale")).ToString("F3") : Vector3.zero.ToString("F3")), _advancedDebug);
-							Transform modelTransform = newpart.partTransform.FindChild(Constants.weldModelNode.ToLower());
+							Transform modelTransform = newpart.partTransform.Find(Constants.weldModelNode.ToLower());
 							Vector3 scale = modelTransform.GetChild(subModelIndex).localScale;
 							//Debugger.AdvDebug(string.Format("scale = {0} | localScale = {1} | lossyScale = {0}", scale,modelTransform.GetChild(subModelIndex).localScale, modelTransform.GetChild(subModelIndex).lossyScale), true);
 							Transform parentTransform = modelTransform;
