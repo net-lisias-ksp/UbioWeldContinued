@@ -37,47 +37,35 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="Assembly-CSharp-firstpass">
-      <HintPath>..\..\..\runtime\KSP.app\Contents\Resources\Data\Managed\Assembly-CSharp-firstpass.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.Networking">
-      <HintPath>..\..\..\runtime\KSP.app\Contents\Resources\Data\Managed\UnityEngine.Networking.dll</HintPath>
-    </Reference>
-    <Reference Include="KSPAssets">
-      <HintPath>..\..\..\runtime\KSP.app\Contents\Resources\Data\Managed\KSPAssets.dll</HintPath>
-    </Reference>
-    <Reference Include="KSPTrackIR">
-      <HintPath>..\..\..\runtime\KSP.app\Contents\Resources\Data\Managed\KSPTrackIR.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine">
-      <HintPath>..\..\..\runtime\KSP.app\Contents\Resources\Data\Managed\UnityEngine.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.CoreModule">
-      <HintPath>..\..\..\runtime\KSP.app\Contents\Resources\Data\Managed\UnityEngine.CoreModule.dll</HintPath>
-    </Reference>
-    <Reference Include="Assembly-CSharp">
-      <HintPath>..\..\..\runtime\KSP.app\Contents\Resources\Data\Managed\Assembly-CSharp.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.IMGUIModule">
-      <HintPath>..\..\..\runtime\KSP.app\Contents\Resources\Data\Managed\UnityEngine.IMGUIModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.PhysicsModule">
-      <HintPath>..\..\..\runtime\KSP.app\Contents\Resources\Data\Managed\UnityEngine.PhysicsModule.dll</HintPath>
-    </Reference>
     <Reference Include="UnityEngine.AnimationModule">
       <HintPath>..\..\..\runtime\KSP.app\Contents\Resources\Data\Managed\UnityEngine.AnimationModule.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.AudioModule">
-      <HintPath>..\..\..\runtime\KSP.app\Contents\Resources\Data\Managed\UnityEngine.AudioModule.dll</HintPath>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>..\..\..\runtime\1.4.1\KSP.app\Contents\Resources\Data\Managed\Assembly-CSharp.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.ParticlesLegacyModule">
-      <HintPath>..\..\..\runtime\KSP.app\Contents\Resources\Data\Managed\UnityEngine.ParticlesLegacyModule.dll</HintPath>
+    <Reference Include="UnityEngine.AnimationModule">
+      <HintPath>..\..\..\runtime\1.4.1\KSP.app\Contents\Resources\Data\Managed\UnityEngine.AnimationModule.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.ParticleSystemModule">
-      <HintPath>..\..\..\runtime\KSP.app\Contents\Resources\Data\Managed\UnityEngine.ParticleSystemModule.dll</HintPath>
+    <Reference Include="UnityEngine">
+      <HintPath>..\..\..\runtime\1.4.1\KSP.app\Contents\Resources\Data\Managed\UnityEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>..\..\..\runtime\1.4.1\KSP.app\Contents\Resources\Data\Managed\UnityEngine.CoreModule.dll</HintPath>
     </Reference>
     <Reference Include="ToolbarControl">
-      <HintPath>..\..\..\runtime\GameData\001_ToolbarControl\Plugins\ToolbarControl.dll</HintPath>
+      <HintPath>..\..\..\runtime\1.4.1\GameData\001_ToolbarControl\Plugins\ToolbarControl.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.IMGUIModule">
+      <HintPath>..\..\..\runtime\1.4.1\KSP.app\Contents\Resources\Data\Managed\UnityEngine.IMGUIModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.PhysicsModule">
+      <HintPath>..\..\..\runtime\1.4.1\KSP.app\Contents\Resources\Data\Managed\UnityEngine.PhysicsModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.ParticleSystemModule">
+      <HintPath>..\..\..\runtime\1.4.1\KSP.app\Contents\Resources\Data\Managed\UnityEngine.ParticleSystemModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.AudioModule">
+      <HintPath>..\..\..\runtime\1.4.1\KSP.app\Contents\Resources\Data\Managed\UnityEngine.AudioModule.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -109,7 +97,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>
-	cp "$(TargetPath)" "$(SolutionDir)..\..\..\runtime\GameData\net.lisias.ksp\$(SolutionName)\" ;
+	cp "$(TargetPath)" "$(SolutionDir)..\..\..\runtime\1.4.1\GameData\net.lisias.ksp\$(SolutionName)\" ;
 	cp "$(TargetPath)" "$(SolutionDir)..\GameData\net.lisias.ksp\$(SolutionName)\"
     </PostBuildEvent>
   </PropertyGroup>
