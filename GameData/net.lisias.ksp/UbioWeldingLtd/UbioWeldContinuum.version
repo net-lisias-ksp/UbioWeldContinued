@@ -2,11 +2,11 @@
 	"NAME"			: "UbioWeldingLtd-Continuum",
 	"URL"			: "https://ksp.lisias.net/add-ons/UbioWeldContinuum.version",
 	"DOWNLOAD"		: "https://ksp.lisias.net/add-ons/UbioWeldContinuum",
-	"CHANGE_LOG_URL		: "https://raw.githubusercontent.com/net-lisias-ksp/UbioWeldContinuum/master/GameData/net.lisias.ksp/UbioWeldingLtd/changelog.txt",
+	"CHANGE_LOG_URL"	: "https://raw.githubusercontent.com/net-lisias-ksp/UbioWeldContinuum/master/GameData/net.lisias.ksp/UbioWeldingLtd/changelog.txt",
 	"GITHUB": {
 		"USERNAME":"net.lisias.ksp",
 		"REPOSITORY":"UbioWeldContinuum",
-		"ALLOW_PRE_RELEASE":false,
+		"ALLOW_PRE_RELEASE":false
 	},
 	"VERSION": {
 		"MAJOR":2,
@@ -27,5 +27,5 @@
 		"MAJOR":1,
 		"MINOR":4,
 		"PATCH":2
-    }
+	}
 }
