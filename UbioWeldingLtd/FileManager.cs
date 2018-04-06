@@ -191,6 +191,8 @@ namespace UbioWeldingLtd
 								   .Replace(Constants.ROOT, "")
 								   .Replace(Constants.BASE, "")
 								   ;
+				// change this to KSPUtil.ApplicationRootPath - better!
+				// NOTE: But this will prevent the plugin from finding his way if someone move it out of the net.lisias.ksp rootdir...
 			}
 			return Path.Combine(root_dir, pathname);
 		}
