@@ -841,36 +841,36 @@ namespace UbioWeldingLtd
 					}
 
 					//manage the fx group
-					foreach (FXGroup fx in newpart.fxGroups)
-					{
-						Debugger.AdvDebug(string.Format("..Config {0} has {1} FXEmitters and {2} Sound in {3} FxGroups", cfg.name, fx.fxEmitters.Count, (null != fx.sfx) ? "1" : "0", fx.name), _advancedDebug);
+					//foreach (fxgroup fx in newpart.fxgroups)
+					//{
+					//	debugger.advdebug(string.format("..config {0} has {1} fxemitters and {2} sound in {3} fxgroups", cfg.name, fx.fxemitters.count, (null != fx.sfx) ? "1" : "0", fx.name), _advanceddebug);
 
-						if (!fx.name.Contains("rcsGroup")) //RCS Fx are not store in the config file
-						{
-							foreach (ParticleEmitter gobj in fx.fxEmitters)
-							{
-								string fxname = gobj.name;
-								WeldingHelpers.removeTextRegex(ref fxname, "(Clone)");
-								string fxvalue = cfg.config.GetValue(fxname);
-								string[] allvalue = Regex.Split(fxvalue, ", ");
-								Vector3 pos = new Vector3(float.Parse(allvalue[0]), float.Parse(allvalue[1]), float.Parse(allvalue[2]));
-								Vector3 ang = new Vector3(float.Parse(allvalue[3]), float.Parse(allvalue[4]), float.Parse(allvalue[5]));
-								setRelativePosition(newpart, ref pos);
-								fxvalue = string.Format("{0}, {1}, {2}, {3}, {4}, {5}, {6}", pos.x, pos.y, pos.z, ang.x, ang.y, ang.z, allvalue[6]);
-								for (int i = 7; i < allvalue.Length; ++i)
-								{
-									fxvalue = string.Format("{0}, {1}", fxvalue, allvalue[i]);
-								}
-								_fxData.AddValue(fxname, fxvalue);
-								Debugger.AdvDebug(string.Format("..{0}{1}", Constants.logFxAdd, fxname), _advancedDebug);
-							}
-							if (fx.sfx != null)
-							{
-								_fxData.AddValue(fx.sfx.name, fx.name);
-								Debugger.AdvDebug(string.Format("..{0}{1}", Constants.logFxAdd, fx.sfx.name), _advancedDebug);
-							}
-						}
-					} //foreach (FXGroup fx in newpart.fxGroups)
+					//	if (!fx.name.contains("rcsgroup")) //rcs fx are not store in the config file
+					//	{
+					//		foreach (particleemitter gobj in fx.fxemitters)
+					//		{
+					//			string fxname = gobj.name;
+					//			weldinghelpers.removetextregex(ref fxname, "(clone)");
+					//			string fxvalue = cfg.config.getvalue(fxname);
+					//			string[] allvalue = regex.split(fxvalue, ", ");
+					//			vector3 pos = new vector3(float.parse(allvalue[0]), float.parse(allvalue[1]), float.parse(allvalue[2]));
+					//			vector3 ang = new vector3(float.parse(allvalue[3]), float.parse(allvalue[4]), float.parse(allvalue[5]));
+					//			setrelativeposition(newpart, ref pos);
+					//			fxvalue = string.format("{0}, {1}, {2}, {3}, {4}, {5}, {6}", pos.x, pos.y, pos.z, ang.x, ang.y, ang.z, allvalue[6]);
+					//			for (int i = 7; i < allvalue.length; ++i)
+					//			{
+					//				fxvalue = string.format("{0}, {1}", fxvalue, allvalue[i]);
+					//			}
+					//			_fxdata.addvalue(fxname, fxvalue);
+					//			debugger.advdebug(string.format("..{0}{1}", constants.logfxadd, fxname), _advanceddebug);
+					//		}
+					//		if (fx.sfx != null)
+					//		{
+					//			_fxdata.addvalue(fx.sfx.name, fx.name);
+					//			debugger.advdebug(string.format("..{0}{1}", constants.logfxadd, fx.sfx.name), _advanceddebug);
+					//		}
+					//	}
+					//} //foreach (FXGroup fx in newpart.fxGroups)
 				} //foreach (UrlDir.UrlConfig cfg in matchingPartConfigs)
 			} //else of if (0 >= matchingPartConfigs.Count)
 
