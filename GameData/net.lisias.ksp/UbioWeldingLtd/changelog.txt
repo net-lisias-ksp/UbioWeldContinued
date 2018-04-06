@@ -1,3 +1,7 @@
+2018-04-05 - Version 2.6.0.1 - Continuum
+	Rebuilding under Windows' DLLs
+	Typo on .version file fixed
+	minor and unimportant internal enhancements
 2018-04-04 - Version 2.6.0.0 - Continuum
 	Adapted for KSP 1.4.1
 	Changing user files location to a more sensible place.
