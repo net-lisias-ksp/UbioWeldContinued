@@ -19,7 +19,7 @@ namespace UbioWeldingLtd
 		public const string LOCAL 		= "_LOCAL/";
 		public const string ROOT 		= "net.lisias.ksp/";
 		public const string BASE 		= "UbioWeldingLtd/";
-		public const string USERDATA 	= GAMEDATA + LOCAL + BASE;
+		public const string USERDATA 	= GAMEDATA + LOCAL;
 
 		//Logs/debug constants
 		public const string logVersion 		= "v" + Version.Text + " - 1.4.1 - Continuum";
