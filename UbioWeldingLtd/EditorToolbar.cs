@@ -20,7 +20,7 @@ namespace UbioWeldingLtd
 		/// </summary>
 		public void initToolbar()
 		{
-			Debug.Log(string.Format("{0}- {1} => initToolbar", Constants.logPrefix, instance.GetType()));
+			Log.dbg("{0} => initToolbar", instance.GetType());
 			if (!this._isEnabled)
 			{
 				GameEvents.onGUIApplicationLauncherReady.Add(this.OnGuiAppLauncherReady);
@@ -49,7 +49,7 @@ namespace UbioWeldingLtd
 			try
 			{
 				instance = this;
-				Debug.Log(string.Format("{0}- {1} => Awake", Constants.logPrefix, instance.GetType()));
+				Log.dbg("{0} => Awake", instance.GetType());
 				if (UbioZurWeldingLtd.instance != null)
 				{
 					if (UbioZurWeldingLtd.instance.config.useStockToolbar)
@@ -60,8 +60,8 @@ namespace UbioWeldingLtd
 			}
 			catch (Exception exception)
 			{
-				Debug.LogError(string.Format("{0}- {1} => Awake", Constants.logPrefix, instance.GetType()));
-				Debug.LogException(exception, this);
+				Log.err("{0} => Awake", instance.GetType());
+				Log.ex(exception, this);
 			}
 		}
 
@@ -84,12 +84,12 @@ namespace UbioWeldingLtd
 					Constants.weldManufacturer
 					);
 				this._isEnabled = true;
-				Debug.Log(string.Format("{0}-> OnGuiAppLauncherReady done", Constants.logPrefix));
+				Log.dbg("-> OnGuiAppLauncherReady done");
 			}
 			catch (Exception exception)
 			{
-				Debug.LogError(string.Format("{0}- {1} => OnGuiAppLauncherReady", Constants.logPrefix, instance.GetType()));
-				Debug.LogException(exception, this);
+				Log.err("{0} => OnGuiAppLauncherReady", instance.GetType());
+				Log.ex(exception, this);
 			}
 		}
 
@@ -107,8 +107,8 @@ namespace UbioWeldingLtd
 			}
 			catch (Exception exception)
 			{
-				Debug.LogError(string.Format("{0}- {1} => useToolbarButton", Constants.logPrefix, instance.GetType()));
-				Debug.LogException(exception, this);
+				Log.err("{0} => useToolbarButton", instance.GetType());
+				Log.ex(exception, this);
 			}
 		}
 
@@ -128,12 +128,12 @@ namespace UbioWeldingLtd
 					Destroy(this._toolbar);
 					this._toolbarControl = null;
 				}
-				Debug.Log("BuildToolbar->OnDestroy");
+				Log.dbg("BuildToolbar->OnDestroy");
 			}
 			catch (Exception exception)
 			{
-				Debug.LogError(string.Format("{0}- {1} => OnDestroy", Constants.logPrefix, instance.GetType()));
-				Debug.LogException(exception, this);
+				Log.err("{0} => OnDestroy", instance.GetType());
+				Log.ex(exception, this);
 			}
 		}
 
@@ -154,11 +154,9 @@ namespace UbioWeldingLtd
 			}
 			catch (Exception exception)
 			{
-				Debug.LogError(string.Format("{0}- {1} => Update", Constants.logPrefix, instance.GetType()));
-				Debug.LogException(exception, this);
+				Log.err("{0} => Update", instance.GetType());
+				Log.ex(exception, this);
 			}
 		}
-
-
 	}
 }

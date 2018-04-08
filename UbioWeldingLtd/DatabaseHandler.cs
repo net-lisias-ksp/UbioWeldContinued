@@ -51,12 +51,12 @@ namespace UbioWeldingLtd
 				{
 					_TBAssembly = assembly;
 				}
-				Debug.Log(assembly.GetName().Name);
+				Log.dbg(assembly.GetName().Name);
 			}
 
 			if (_MMAssembly != null)
 			{
-				Debug.Log(string.Format("{0} ModuleManager assembly was found: {1} (version {2})", Constants.logPrefix, _MMAssembly.GetName().Name, _MMAssembly.GetName().Version));
+				Log.info("ModuleManager assembly was found: {0} (version {1})", _MMAssembly.GetName().Name, _MMAssembly.GetName().Version);
 
 				// Walk through each type in the assembly looking for MMPatchLoader class
 				foreach (Type type in _MMAssembly.GetTypes())
@@ -70,20 +70,20 @@ namespace UbioWeldingLtd
 						}
 					}
 				}
-				Debug.Log(string.Format("{0} ModuleManager.MMPatchLoader object is found: {1}", Constants.logPrefix, (_MMPatchLoader != null)));
+				Log.info("ModuleManager.MMPatchLoader object is found: {0}", (_MMPatchLoader != null));
 			}
 			else
 			{
-				Debug.Log(string.Format("{0} ModuleManager assembly was not found!", Constants.logPrefix));
+				Log.info(string.Format("ModuleManager assembly was not found!"));
 			}
 
 			if (_TBAssembly != null)
 			{
-				Debug.Log(string.Format("{0} ToolbarControl assembly was found: {1} (version {2})", Constants.logPrefix, _TBAssembly.GetName().Name, _TBAssembly.GetName().Version));
+				Log.info("ToolbarControl assembly was found: {0} (version {1})", _TBAssembly.GetName().Name, _TBAssembly.GetName().Version);
 			}
 			else
 			{
-				Debug.Log(string.Format("{0} ToolbarControl assembly was not found!", Constants.logPrefix));
+				Log.info("ToolbarControl assembly was not found!");
 			}
 		}
 

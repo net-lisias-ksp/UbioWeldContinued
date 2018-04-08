@@ -41,7 +41,7 @@ namespace UbioWeldingLtd
 		private static void serializer_UnknownNode
 		(object sender, XmlNodeEventArgs e)
 		{
-			Dbg.log("Unknown Node:" + e.Name + "\t" + e.Text);
+			Log.dbg("Unknown Node:" + e.Name + "\t" + e.Text);
 		}
 
 
@@ -54,7 +54,7 @@ namespace UbioWeldingLtd
 		(object sender, XmlAttributeEventArgs e)
 		{
 			System.Xml.XmlAttribute attr = e.Attr;
-			Dbg.log("Unknown attribute " + attr.Name + "='" + attr.Value + "'");
+			Log.dbg("Unknown attribute " + attr.Name + "='" + attr.Value + "'");
 		}
 
 
@@ -123,7 +123,7 @@ namespace UbioWeldingLtd
 				configuration.unchangedModuleAttributes = Constants.basicUnchangedModuleAttributes;
 				configuration.breakingModuleAttributes = Constants.basicBreakingModuleAttributes;
 			}
-			Debug.Log(string.Format("{0} Config was loaded", Constants.logPrefix));
+			Log.dbg("Config was loaded");
 			return configuration;
 		}
 
@@ -178,7 +178,7 @@ namespace UbioWeldingLtd
 				fileStreamWriter.WriteLine(s);
 			}
 			fileStreamWriter.Close();
-			Debug.Log(string.Format("{0} Config was saved", Constants.logPrefix));
+			Log.dbg("Config was saved");
 		}
 
 		private static string root_dir = null;

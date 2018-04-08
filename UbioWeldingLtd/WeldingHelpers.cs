@@ -40,7 +40,7 @@ namespace UbioWeldingLtd
 
 			List<string> allVesselTypes = new List<string>(System.Enum.GetNames(typeof(VesselType)));
 
-			Debug.Log(string.Format("{0} vessel types Count = {1}", Constants.logPrefix, vesselTypeList.Count()));
+			Log.dbg("vessel types Count = {0}", vesselTypeList.Count());
 			foreach (string vesselTypeID in vesselTypeList)
 			{
 				string vesselTypeTitle = vesselTypeID; //for case, when techID will not be found - the length of the list of titles always must match the length of the list of techID's.
@@ -72,7 +72,7 @@ namespace UbioWeldingLtd
 
 			List<ProtoTechNode> rdTechs = AssetBase.RnDTechTree.GetTreeTechs().ToList();
 
-			Debug.Log(string.Format("{0} rdTechs.Count = {1}", Constants.logPrefix, rdTechs.Count()));
+			Log.dbg("rdTechs.Count = {0}", rdTechs.Count());
 			foreach (string techID in techList)
 			{
 				string techTitle = techID; //for case, when techID will not be found - the length of the list of titles always must match the length of the list of techID's.
@@ -151,7 +151,7 @@ namespace UbioWeldingLtd
 		/// <returns></returns>
 		public static string[] getSharedArrayValues(string[] attributesToCheck, string[] arrayToCompare)
 		{
-			//Debug.Log(string.Format("{0}| Checking Arrays - Array1 contains {1} Values - Array2 Contains {2} Values", Constants.logPrefix, attributesToCheck.Length, arrayToCompare.Length));
+			Log.dbg("| Checking Arrays - Array1 contains {0} Values - Array2 Contains {1} Values", attributesToCheck.Length, arrayToCompare.Length);
 			if (attributesToCheck.Length > 0 && arrayToCompare.Length > 0)
 			{
 				List<string> sharedValues = new List<string>();
@@ -159,14 +159,14 @@ namespace UbioWeldingLtd
 				{
 					foreach (string arrayEntryToCompare in arrayToCompare)
 					{
-						//Debug.Log(string.Format("{0}| Checking Arrays - Entry1 {1} - Entry2 {2}", Constants.logPrefix, attributeToCheck.Trim(), arrayEntryToCompare.Trim()));
+						Log.dbg("| Checking Arrays - Entry1 {0} - Entry2 {1}", attributeToCheck.Trim(), arrayEntryToCompare.Trim());
 						if (string.Equals(attributeToCheck.Trim(), arrayEntryToCompare.Trim()))
 						{
-							//Debug.Log(string.Format("{0}| Checking Arrays - shared Value found | {1}", Constants.logPrefix, attributeToCheck));
+							Log.dbg("| Checking Arrays - shared Value found | {0}", attributeToCheck);
 							if (!sharedValues.Contains(attributeToCheck))
 							{
 								sharedValues.Add(attributeToCheck);
-								//Debug.Log(string.Format("{0}| Checking Arrays - Value {1} added", Constants.logPrefix, attributeToCheck));
+								Log.dbg("| Checking Arrays - Value {0} added", attributeToCheck);
 							}
 						}
 					}

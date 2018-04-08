@@ -95,8 +95,8 @@ namespace UbioWeldingLtd
 		public void Awake()
 		{
 			instance = this;
-			Debug.Log(string.Format("{0}- {1} => Awake", Constants.logPrefix, instance.GetType()));
-			Debug.Log(string.Format("{0} Platform is {1}", Constants.logPrefix, Application.platform));
+			Log.dbg("{0} => Awake", instance.GetType());
+			Log.dbg("Platform is {0}", Application.platform);
 
 			initConfig();
 			_state = DisplayState.none;
@@ -150,17 +150,19 @@ namespace UbioWeldingLtd
 		/// </summary>
 		private void initConfig()
 		{
+			string xmlOldConfigFile = FileManager.FULLPATHNAME(Constants.settingXmlFilePath, Constants.settingXmlOldConfigFileName);
+
 			KSP.IO.PluginConfiguration oldConfig = KSP.IO.PluginConfiguration.CreateForType<OldWeldingPluginConfig>();
-			bool oldConfigFound = File.Exists(FileManager.FULLPATHNAME(Constants.settingXmlFilePath, Constants.settingXmlOldConfigFileName));
+			bool oldConfigFound = File.Exists(xmlOldConfigFile);
 			if (oldConfigFound)
 			{
 				oldConfig = KSP.IO.PluginConfiguration.CreateForType<OldWeldingPluginConfig>();
 				oldConfig.load();
-				File.Delete(FileManager.FULLPATHNAME(Constants.settingXmlFilePath, Constants.settingXmlOldConfigFileName));
-				Debug.Log(string.Format("{0}old configfile found and deleted", Constants.logPrefix));
+				File.Delete(xmlOldConfigFile);
+				Log.dbg("old configfile found and deleted");
 			}
 
-			if (!File.Exists(FileManager.FULLPATHNAME(Constants.settingXmlFilePath, Constants.settingXmlConfigFileName)))
+			if (!File.Exists(FileManager.CONFIG_FULLPATHNAME))
 			{
 				_config = new WeldingConfiguration();
 				FileManager.saveConfig(_config);
@@ -343,11 +345,11 @@ namespace UbioWeldingLtd
 #if (DEBUG)
 			Debug.ClearDeveloperConsole();
 
-			Debug.Log(string.Format("{0}{1}", Constants.logPrefix, Constants.logVersion));
-			Debug.Log(string.Format("{0}{1}", Constants.logPrefix, Constants.logStartWeld));
+			Log.dbg("{0}", Constants.logVersion);
+			Log.dbg("{0}", Constants.logStartWeld);
 #endif
 			bool warning = false;
-			_welder = new Welder(_config.advancedDebug);
+			_welder = new Welder();
 			_welder.init();
 
 			partToWeld.transform.eulerAngles = Vector3.zero;
@@ -360,9 +362,7 @@ namespace UbioWeldingLtd
 
 			if (ret < 0)
 			{
-#if (DEBUG)
-				Debug.Log(string.Format("{0}{1}", Constants.logPrefix, Constants.logEndWeld));
-#endif
+				Log.dbg("{0}", Constants.logEndWeld);
 				_state = DisplayState.weldError;
 				return;
 			}
@@ -384,9 +384,7 @@ namespace UbioWeldingLtd
 
 					if (ret< 0)
 					{
-#if (DEBUG)
-						Debug.Log(string.Format("{0}{1}", Constants.logPrefix, Constants.logEndWeld));
-#endif
+						Log.dbg("{0}", Constants.logEndWeld);
 						_state = DisplayState.weldError;
 						return;
 					}
@@ -413,20 +411,17 @@ namespace UbioWeldingLtd
 
 			_scrollMod = Vector2.zero;
 			_scrollRes = Vector2.zero;
-#if (DEBUG)
-			Debug.Log(string.Format("{0} {1} | {2} Parts welded", Constants.logPrefix, Constants.logEndWeld, _welder.NbParts));
 
-#endif
+			Log.dbg("{0} | {1} Parts welded", _welder.NbParts);
+
 			if (warning)
 			{
-				Debug.Log(string.Format("{0} {1} | Warning", Constants.logPrefix, Constants.logEndWeld));
+				Log.dbg(Constants.logEndWeld);
 				_state = DisplayState.weldWarning;
 			}
 			else
 			{
-#if (DEBUG)
-				Debug.Log(string.Format("{0} welder.Category: {1}", Constants.logPrefix, (int)_welder.Category));
-#endif
+				Log.dbg("welder.Category: {0}", (int)_welder.Category);
 				_catDropdown.SelectedItemIndex = (int)_welder.Category;
 				_state = DisplayState.infoWindow;
 			}
@@ -902,16 +897,16 @@ namespace UbioWeldingLtd
 										? FileManager.PATHNAME(filepath, _welder.Name, string.Format("{0}.cfg", _welder.Name))
 										: FileManager.PATHNAME(filepath, _welder.Name, Constants.weldPartDefaultFile)
 									;
-			Debug.Log(string.Format("{0}{1}{2}", Constants.logPrefix, Constants.logWritingFile, filename));
+			Log.dbg("{0}{1}", Constants.logWritingFile, filename);
 			_welder.CreateFullConfigNode();
 			_welder.FullConfigNode.Save(filename);
-			Debug.Log(string.Format("{0}{1}{2} successful", Constants.logPrefix, Constants.logWritingFile, filename));
+			Log.dbg("{0}{1} successful", Constants.logWritingFile, filename);
 			filename = _config.useNamedCfgFile
 										? FileManager.PATHNAME(filepath, _welder.Name, _welder.Name + "Internal" + ".cfg")
 										: FileManager.PATHNAME(filepath, _welder.Name, Constants.weldPartInternalDefaultFile)
 									;
 			_welder.FullInternalNode.Save(filename);
-			Debug.Log(string.Format("{0}{1}{2} successful", Constants.logPrefix, Constants.logWritingFile, filename));
+			Log.dbg("{0}{1} successful", Constants.logWritingFile, filename);
 			if (_config.dataBaseAutoReload)
 			{
 				StartCoroutine(DatabaseHandler.DatabaseReloadWithMM());
@@ -932,7 +927,7 @@ namespace UbioWeldingLtd
 				{
 					disablePartHighlight(_selectedPartbranch);
 					EditorLogic.fetch.OnSubassemblyDialogDismiss(EditorLogic.RootPart);
-					Debug.Log(string.Format("{0}{1} {2} - {3}", Constants.logPrefix, _config.clearEditor, _selectedPartbranch, EditorLogic.SelectedPart));
+					Log.dbg("{0} {1} - {2}", _config.clearEditor, _selectedPartbranch, EditorLogic.SelectedPart);
 					EditorLogic.DeletePart(EditorLogic.RootPart);
 					_selectedPartbranch = null;
 				}

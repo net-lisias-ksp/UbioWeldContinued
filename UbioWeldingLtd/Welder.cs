@@ -98,7 +98,6 @@ namespace UbioWeldingLtd
 		private Vector3 _com = Vector3.zero;
 
         private Char _filePathDelimiter;
-		private bool _advancedDebug = false;
 		public ConfigNode FullConfigNode = new ConfigNode(Constants.weldPartNode);
 		public ConfigNode FullInternalNode = new ConfigNode(Constants.weldInternalNode);
 		private static bool _includeAllNodes = false;
@@ -328,7 +327,7 @@ namespace UbioWeldingLtd
 		/*
 		 * Constructor
 		 */
-		public Welder(bool advancedDebug)
+		public Welder()
         {
             //in Linux and OSX delimiters in file path are '/', not '\'
             if ((Application.platform == RuntimePlatform.LinuxPlayer) || (Application.platform == RuntimePlatform.OSXPlayer))
@@ -339,7 +338,6 @@ namespace UbioWeldingLtd
             {
                 _filePathDelimiter = '\\';
             }
-			_advancedDebug = advancedDebug;
 			loadPartHashMap();
         }
 
@@ -358,7 +356,7 @@ namespace UbioWeldingLtd
 		 */
 		private void setRelativePosition(Part part, ref Vector3 position)
 		{
-			Dbg.log(string.Format("..set relative position ={0} | localroot={1}", part.transform.position.ToString("F3"), part.localRoot.transform.position.ToString("F3")), _advancedDebug);
+			Log.dbg("..set relative position ={0} | localroot={1}", part.transform.position.ToString("F3"), part.localRoot.transform.position.ToString("F3"));
 			//position += part.transform.position - part.localRoot.transform.position;
 			position += rotationMatrix * part.transform.position;
 		}
@@ -429,32 +427,32 @@ namespace UbioWeldingLtd
 			//in case the mesh name does not exist (.22 bug)
 			if (!File.Exists(filename))
 			{
-				Debug.LogWarning(string.Format("{0}{1}.!{2} {3}", Constants.logWarning, Constants.logPrefix, Constants.logWarnNoMesh, filename));
+				Log.warn("!{0} {1}", Constants.logWarnNoMesh, filename);
 				string[] files = Directory.GetFiles(cfgdir.parent.parent.path, "*.mu");
 				if (files.Length != 0)
 				{
-					Dbg.log(string.Format("..cfgdir.parent.parent.path {0}", cfgdir.parent.parent.path), _advancedDebug);
-					Dbg.log(string.Format("..files[0] {0}", files[0]), _advancedDebug);
-					Dbg.log(string.Format("..cfgdir.parent.parent.path.Length {0}", cfgdir.parent.parent.path.Length), _advancedDebug);
+					Log.dbg("..cfgdir.parent.parent.path {0}", cfgdir.parent.parent.path);
+					Log.dbg("..files[0] {0}", files[0]);
+					Log.dbg("..cfgdir.parent.parent.path.Length {0}", cfgdir.parent.parent.path.Length);
 					files[0] = files[0].Remove(0, cfgdir.parent.parent.path.Length);
 
-					Dbg.log(string.Format("{0}.New mesh name: {1}", Constants.logPrefix, files[0]), _advancedDebug);
+					Log.dbg(".New mesh name: {0}", files[0]);
 
 					char[] sep = { '\\','.', '/' };
 					string[] words = files[0].Split(sep);
 
-					Dbg.log(string.Format("..words[1] {0}", words[1]), _advancedDebug);
-					Dbg.log(string.Format("..mesh {0}", mesh), _advancedDebug);
+					Log.dbg("..words[1] {0}", words[1]);
+					Log.dbg("..mesh {0}", mesh);
 
 //					url = url.Replace(string.Format(@"{0}", mesh), words[1]);
 					url = url.Substring(0, url.LastIndexOf('/') + 1) + words[1];
 
-					Dbg.log(string.Format("..url {0}", url), _advancedDebug);
+					Log.dbg("..url {0}", url);
 
 				}
 				else
 				{
-					Debug.LogWarning(string.Format("{0}{1}.No mesh found, using default", Constants.logWarning, Constants.logPrefix));
+					Log.warn("No mesh found, using default");
 				}
 			}
 
@@ -475,7 +473,7 @@ namespace UbioWeldingLtd
 			newWeldedMeshSwitch.AddValue(Constants.weldModuleNodeName, Constants.weldedmeshSwitchModule);
 			newWeldedMeshSwitch.AddValue("objectIndicies", indexString);
 			newWeldedMeshSwitch.AddValue("objects", transformNamesString);
-			newWeldedMeshSwitch.AddValue("advancedDebug", _advancedDebug);
+			newWeldedMeshSwitch.AddValue("advancedDebug", Log.debug); //TODO; This is really necessary? Why add this to the module?
 			newWeldedMeshSwitch.AddValue("destroyUnusedParts", true);
 
 			moduleList.Add(newWeldedMeshSwitch);
@@ -607,9 +605,9 @@ namespace UbioWeldingLtd
 			string partname = (string)newpart.partInfo.partPrefab.name.Clone();
 			WeldingHelpers.removeTextRegex(ref partname, "(Clone)");
 
-			Debug.Log(string.Format("{0}{1}{2}",Constants.logPrefix,Constants.logWeldingPart,partname));
-			Dbg.log(string.Format("..part rescaleFactor {0:F}", newpart.rescaleFactor), _advancedDebug);
-			Dbg.log(string.Format("..part scaleFactor {0:F}", newpart.scaleFactor), _advancedDebug);
+			Log.dbg("{0}{1}",Constants.logWeldingPart,partname);
+			Log.dbg("..part rescaleFactor {0:F}", newpart.rescaleFactor);
+			Log.dbg("..part scaleFactor {0:F}", newpart.scaleFactor);
 			getAttachmentType(newpart);
 
 			//--- Find all the config file with the name
@@ -638,12 +636,12 @@ namespace UbioWeldingLtd
 				}
 			}
 
-			Dbg.log(string.Format(".Found {0} config files", matchingPartConfigs.Count), _advancedDebug);
+			Log.dbg(".Found {0} config files", matchingPartConfigs.Count);
 
 			if (matchingPartConfigs.Count < 1)
 			{
 				//Missing Config File: Error
-				Debug.LogError(string.Format("{0}{1}.{2} {3}", Constants.logError, Constants.logPrefix, Constants.msgCfgMissing, partname));
+				Log.err("{0} {1}", Constants.msgCfgMissing, partname);
 				return WeldingReturn.MissingCfg;
 			}
 			else // 0 < matchingPartConfigs.Count
@@ -656,11 +654,11 @@ namespace UbioWeldingLtd
 					if (!cfg.config.HasNode(Constants.weldModelNode))
 					{
 						//Missing Model node
-						Dbg.log(string.Format("..Config {0} has no {1} node", cfg.name, Constants.weldModelNode), _advancedDebug);
+						Log.dbg("..Config {0} has no {1} node", cfg.name, Constants.weldModelNode);
 
 						info = new ModelInfo();
 						info.url = GetMeshurl(cfg);
-						Dbg.log(string.Format("..{0}{1}", Constants.logModelUrl, info.url), _advancedDebug);
+						Log.dbg("..{0}{1}", Constants.logModelUrl, info.url);
 
 						Vector3 position = Vector3.zero;
 						position = newpart.transform.position;
@@ -671,56 +669,56 @@ namespace UbioWeldingLtd
 						info.rotation = WeldingHelpers.RoundVector3(WeldingHelpers.limitRotationAngle(rotation), _precisionDigits);
 
 
-						Dbg.log(string.Format("scaling info: rescaleFactor={0}| vector={1}", newpart.rescaleFactor, newpart.transform.GetChild(0).localScale.ToString("F3")), _advancedDebug);
+						Log.dbg("scaling info: rescaleFactor={0}| vector={1}", newpart.rescaleFactor, newpart.transform.GetChild(0).localScale.ToString("F3"));
 						Transform modelTransform = newpart.partTransform.Find(Constants.weldModelNode.ToLower());
 						Vector3 scale = modelTransform.localScale;
-						//Dbg.log(string.Format("scale = {0} | localScale = {1} | lossyScale = {0}", scale,modelTransform.GetChild(subModelIndex).localScale, modelTransform.GetChild(subModelIndex).lossyScale), true);
+						//Log.dbg("scale = {0} | localScale = {1} | lossyScale = {2}", scale,modelTransform.GetChild(subModelIndex).localScale, modelTransform.GetChild(subModelIndex).lossyScale);
 						Transform parentTransform = modelTransform.parent;
 						while (parentTransform != newpart.transform)
 						{
 							scale = Vector3.Scale(scale, parentTransform.localScale);
 							parentTransform = parentTransform.parent;
-							//Dbg.log(string.Format("scale = {0} | localScale = {1} | lossyScale = {0}", scale, parentTransform.localScale, parentTransform.lossyScale), true);
+							Log.dbg("scale = {0} | localScale = {1} | lossyScale = {2}", scale, parentTransform.localScale, parentTransform.lossyScale);
 						}
 						scale = Vector3.Scale(scale, newpart.transform.localScale);
-						//Dbg.log(string.Format("scale = {0} | localScale = {1} | lossyScale = {0}", scale, newpart.transform.localScale, newpart.transform.lossyScale), true);
+						Log.dbg("scale = {0} | localScale = {1} | lossyScale = {2}", scale, newpart.transform.localScale, newpart.transform.lossyScale);
 						info.scale = WeldingHelpers.RoundVector3(scale, _precisionDigits);
 
-						//Dbg.log("fileSimplification = " + _fileSimplification, true);
+						Log.dbg("fileSimplification = {0}", _fileSimplification);
 						if (_fileSimplification)
 						{
-							//Dbg.log("simplified", true);
+							Log.dbg("simplified");
 							if (newpart.rescaleFactor == _rescaleFactor)
 							{
-								//Dbg.log("rescaleFactor", true);
+								Log.dbg("rescaleFactor");
 								if (newpart.scaleFactor == 1)
 								{
-									//Dbg.log("scaleFactor", true);
+									Log.dbg("scaleFactor");
 									if (info.scale == Vector3.one)
 									{
-										//Dbg.log("Vector3.one", true);
+										Log.dbg("Vector3.one");
 										info.scale = Vector3.zero;
 									}
 								}
 							}
 						}
 
-						Dbg.log(string.Format("..newpart position {0}", newpart.transform.position.ToString("F3")), _advancedDebug);
-						Dbg.log(string.Format("..newpart rotation {0}", newpart.transform.rotation.ToString("F3")), _advancedDebug);
-						Dbg.log(string.Format("..newpart rotation.eulerAngles {0}", newpart.transform.rotation.eulerAngles.ToString("F3")), _advancedDebug);
-						Dbg.log(string.Format("..newpart rotation.localEulerAngles {0}", newpart.transform.localEulerAngles.ToString("F3")), _advancedDebug);
-						Dbg.log(string.Format("..newpart localRoot.rotation {0}", newpart.localRoot.transform.rotation.ToString("F3")), _advancedDebug);
-						Dbg.log(string.Format("..newpart localRoot.rotation.eulerAngles {0}", newpart.localRoot.transform.rotation.eulerAngles.ToString("F3")), _advancedDebug);
-						Dbg.log(string.Format("..position {0}", info.position.ToString("F3")), _advancedDebug);
-						Dbg.log(string.Format("..rotation {0}", info.rotation.ToString("F3")), _advancedDebug);
-						Dbg.log(string.Format("..scale {0}", info.scale.ToString("F3")), _advancedDebug);
+						Log.dbg("..newpart position {0}", newpart.transform.position.ToString("F3"));
+						Log.dbg("..newpart rotation {0}", newpart.transform.rotation.ToString("F3"));
+						Log.dbg("..newpart rotation.eulerAngles {0}", newpart.transform.rotation.eulerAngles.ToString("F3"));
+						Log.dbg("..newpart rotation.localEulerAngles {0}", newpart.transform.localEulerAngles.ToString("F3"));
+						Log.dbg("..newpart localRoot.rotation {0}", newpart.localRoot.transform.rotation.ToString("F3"));
+						Log.dbg("..newpart localRoot.rotation.eulerAngles {0}", newpart.localRoot.transform.rotation.eulerAngles.ToString("F3"));
+						Log.dbg("..position {0}", info.position.ToString("F3"));
+						Log.dbg("..rotation {0}", info.rotation.ToString("F3"));
+						Log.dbg("..scale {0}", info.scale.ToString("F3"));
 
 						addNewModel(info, doesPartContainMeshSwitch(cfg), newpart);
 					}
 					else //cfg.config.HasNode(Constants.weldModelNode)
 					{
 						ConfigNode[] modelnodes = cfg.config.GetNodes(Constants.weldModelNode);
-						Dbg.log(string.Format("..Config {0} has {1} {2} node", cfg.name, modelnodes.Length, Constants.weldModelNode), _advancedDebug);
+						Log.dbg("..Config {0} has {1} {2} node", cfg.name, modelnodes.Length, Constants.weldModelNode);
 
 						int subModelIndex = 0;
 						foreach (ConfigNode node in modelnodes)
@@ -735,76 +733,76 @@ namespace UbioWeldingLtd
 							{
 								info.url = GetMeshurl(cfg);
 							}
-							Dbg.log(string.Format("..{0}{1}", Constants.logModelUrl, info.url), _advancedDebug);
+							Log.dbg("..{0}{1}", Constants.logModelUrl, info.url);
 							Vector3 position = (node.HasValue("position")) ? (ConfigNode.ParseVector3(node.GetValue("position")) * newpart.rescaleFactor) : Vector3.zero;
-							Dbg.log(string.Format("..node.HasValue(\"position\") {0}", node.HasValue("position")), _advancedDebug);
-							Dbg.log(string.Format("..node position {0}", position.ToString("F3")), _advancedDebug);
+							Log.dbg("..node.HasValue(\"position\") {0}", node.HasValue("position"));
+							Log.dbg("..node position {0}", position.ToString("F3"));
 							position = newpart.FindModelTransform(Constants.weldModelNode.ToLower()).GetChild(subModelIndex).position;
 							info.position = WeldingHelpers.RoundVector3(position,_precisionDigits);
 
 							Vector3 rotation = (node.HasValue("rotation")) ? ConfigNode.ParseVector3(node.GetValue("rotation")) : Vector3.zero;
-							Dbg.log(string.Format("..node.HasValue(\"rotation\") {0}", node.HasValue("rotation")), _advancedDebug);
-							Dbg.log(string.Format("..node rotation {0}", rotation.ToString("F3")), _advancedDebug);
+							Log.dbg("..node.HasValue(\"rotation\") {0}", node.HasValue("rotation"));
+							Log.dbg("..node rotation {0}", rotation.ToString("F3"));
 							rotation = newpart.FindModelTransform(Constants.weldModelNode.ToLower()).GetChild(subModelIndex).rotation.eulerAngles;
 							info.rotation = WeldingHelpers.RoundVector3(WeldingHelpers.limitRotationAngle(rotation),_precisionDigits);
 
-							Dbg.log(string.Format("..node.HasValue(\"scale\") {0}", node.HasValue("scale")), _advancedDebug);
+							Log.dbg("..node.HasValue(\"scale\") {0}", node.HasValue("scale"));
 							if (node.HasValue("scale"))
 							{
-								Dbg.log(string.Format("..node scale {0}", node.GetValue("scale")), _advancedDebug);
+								Log.dbg("..node scale {0}", node.GetValue("scale"));
 							}
-							Dbg.log(string.Format("..Childs count {0}", newpart.transform.childCount), _advancedDebug);
+							Log.dbg("..Childs count {0}", newpart.transform.childCount);
 
-							Dbg.log(string.Format("scaling info: rescaleFactor={0}| scale={1}| config.scale={2}", newpart.rescaleFactor, newpart.scaleFactor, node.HasValue("scale") ? ConfigNode.ParseVector3(node.GetValue("scale")).ToString("F3") : Vector3.zero.ToString("F3")), _advancedDebug);
+							Log.dbg("scaling info: rescaleFactor={0}| scale={1}| config.scale={2}", newpart.rescaleFactor, newpart.scaleFactor, node.HasValue("scale") ? ConfigNode.ParseVector3(node.GetValue("scale")).ToString("F3") : Vector3.zero.ToString("F3"));
 							Transform modelTransform = newpart.partTransform.Find(Constants.weldModelNode.ToLower());
 							Vector3 scale = modelTransform.GetChild(subModelIndex).localScale;
-							//Dbg.log(string.Format("scale = {0} | localScale = {1} | lossyScale = {0}", scale,modelTransform.GetChild(subModelIndex).localScale, modelTransform.GetChild(subModelIndex).lossyScale), true);
+							Log.dbg("scale = {0} | localScale = {1} | lossyScale = {2}", scale,modelTransform.GetChild(subModelIndex).localScale, modelTransform.GetChild(subModelIndex).lossyScale);
 							Transform parentTransform = modelTransform;
 							while (parentTransform != newpart.transform)
 							{
 								scale = Vector3.Scale(scale, parentTransform.localScale);
 								parentTransform = parentTransform.parent;
-								//Dbg.log(string.Format("scale = {0} | localScale = {1} | lossyScale = {0}", scale, parentTransform.localScale, parentTransform.lossyScale), true);
+								Log.dbg("scale = {0} | localScale = {1} | lossyScale = {2}", scale, parentTransform.localScale, parentTransform.lossyScale);
 							}
 							scale = Vector3.Scale(scale, newpart.transform.localScale);
-							//Dbg.log(string.Format("scale = {0} | localScale = {1} | lossyScale = {0}", scale, newpart.transform.localScale, newpart.transform.lossyScale), true);
+							Log.dbg("scale = {0} | localScale = {1} | lossyScale = {2}", scale, newpart.transform.localScale, newpart.transform.lossyScale);
 							info.scale = WeldingHelpers.RoundVector3(scale, _precisionDigits);
 
-							//Dbg.log("fileSimplification = " + _fileSimplification, true);
+							Log.dbg("fileSimplification = {0}", _fileSimplification);
 							if (_fileSimplification)
 							{
-								//Dbg.log("simplified", true);
+								Log.dbg("simplified");
 								if (newpart.rescaleFactor == _rescaleFactor)
 								{
-									//Dbg.log("rescaleFactor", true);
+									Log.dbg("rescaleFactor");
 									if (newpart.scaleFactor == 1)
 									{
-										//Dbg.log("scaleFactor", true);
+										Log.dbg("scaleFactor");
 										if (info.scale == Vector3.one || (node.HasValue("scale") && ConfigNode.ParseVector3(node.GetValue("scale")) * newpart.scaleFactor * newpart.rescaleFactor == info.scale))
 										{
-											//Dbg.log("Vector3.one", true);
+											Log.dbg("Vector3.one");
 											info.scale = Vector3.zero;
 										}
 									}
 								}
 							}
 
-							Dbg.log(string.Format("..newpart position {0}", newpart.transform.position.ToString("F3")), _advancedDebug);
-							Dbg.log(string.Format("..newpart rotation {0}", newpart.transform.rotation.ToString("F3")), _advancedDebug);
-							Dbg.log(string.Format("..newpart rotation.eulerAngles {0}", newpart.transform.rotation.eulerAngles.ToString("F3")), _advancedDebug);
-							Dbg.log(string.Format("..newpart rotation.localEulerAngles {0}", newpart.transform.localEulerAngles.ToString("F3")), _advancedDebug);
-							Dbg.log(string.Format("..newpart localRoot.rotation {0}", newpart.localRoot.transform.rotation.ToString("F3")), _advancedDebug);
-							Dbg.log(string.Format("..newpart localRoot.rotation.eulerAngles {0}", newpart.localRoot.transform.rotation.eulerAngles.ToString("F3")), _advancedDebug);
-							Dbg.log(string.Format("..position {0}", info.position.ToString("F3")), _advancedDebug);
-							Dbg.log(string.Format("..rotation {0}", info.rotation.ToString("F3")), _advancedDebug);
-							Dbg.log(string.Format("..scale {0}", info.scale.ToString("F3")), _advancedDebug);
+							Log.dbg("..newpart position {0}", newpart.transform.position.ToString("F3"));
+							Log.dbg("..newpart rotation {0}", newpart.transform.rotation.ToString("F3"));
+							Log.dbg("..newpart rotation.eulerAngles {0}", newpart.transform.rotation.eulerAngles.ToString("F3"));
+							Log.dbg("..newpart rotation.localEulerAngles {0}", newpart.transform.localEulerAngles.ToString("F3"));
+							Log.dbg("..newpart localRoot.rotation {0}", newpart.localRoot.transform.rotation.ToString("F3"));
+							Log.dbg("..newpart localRoot.rotation.eulerAngles {0}", newpart.localRoot.transform.rotation.eulerAngles.ToString("F3"));
+							Log.dbg("..position {0}", info.position.ToString("F3"));
+							Log.dbg("..rotation {0}", info.rotation.ToString("F3"));
+							Log.dbg("..scale {0}", info.scale.ToString("F3"));
 
 							if (node.HasValue("texture"))
 							{
 								foreach (string tex in node.GetValues("texture"))
 								{
 									info.textures.Add(tex);
-									Dbg.log(string.Format("..texture {0}", tex), _advancedDebug);
+									Log.dbg("..texture {0}", tex);
 								}
 							}
 							if (node.HasValue("parent"))
@@ -821,12 +819,12 @@ namespace UbioWeldingLtd
 
 					//MODULE
 					ConfigNode[] originalModules = cfg.config.GetNodes(Constants.weldModuleNode);
-					Dbg.log(string.Format("..Config {0} has {1} {2} node", cfg.name, originalModules.Length, Constants.weldModuleNode), _advancedDebug);
-					Dbg.log(string.Format(".. running in Alewx Testmode = {0}", runInTestMode), _advancedDebug);
+					Log.dbg("..Config {0} has {1} {2} node", cfg.name, originalModules.Length, Constants.weldModuleNode);
+					Log.dbg(".. running in Alewx Testmode = {0}", runInTestMode);
 
 					if (runInTestMode)
 					{
-						mergeModules(partname, cfg, _moduleList, _advancedDebug);
+						mergeModules(partname, cfg, _moduleList);
 
 						newpart.CreateInternalModel();
 
@@ -843,7 +841,7 @@ namespace UbioWeldingLtd
 					//manage the fx group
 					foreach (FXGroup fx in newpart.fxGroups)
 					{
-						Dbg.log(string.Format("..Config {0} has {1} FXEmitters and {2} Sound in {3} FxGroups", cfg.name, fx.fxEmittersNewSystem.Count, (null != fx.sfx) ? "1" : "0", fx.name), _advancedDebug);
+						Log.dbg("..Config {0} has {1} FXEmitters and {2} Sound in {3} FxGroups", cfg.name, fx.fxEmittersNewSystem.Count, (null != fx.sfx) ? "1" : "0", fx.name);
 
 						if (!fx.name.Contains("rcsGroup")) //RCS Fx are not store in the config file
 						{
@@ -862,12 +860,12 @@ namespace UbioWeldingLtd
 									fxvalue = string.Format("{0}, {1}", fxvalue, allvalue[i]);
 								}
 								_fxData.AddValue(fxname, fxvalue);
-								Dbg.log(string.Format("..{0}{1}", Constants.logFxAdd, fxname), _advancedDebug);
+								Log.dbg("..{0}{1}", Constants.logFxAdd, fxname);
 							}
 							if (fx.sfx != null)
 							{
 								_fxData.AddValue(fx.sfx.name, fx.name);
-								Dbg.log(string.Format("..{0}{1}", Constants.logFxAdd, fx.sfx.name), _advancedDebug);
+								Log.dbg("..{0}{1}", Constants.logFxAdd, fx.sfx.name);
 							}
 						}
 					} //foreach (FXGroup fx in newpart.fxGroups)
@@ -875,7 +873,7 @@ namespace UbioWeldingLtd
 			} //else of if (0 >= matchingPartConfigs.Count)
 
 			//ATTACHNODE
-			Dbg.log(string.Format(".Part {0} has {1} Stack attach node(s)", partname, newpart.attachNodes.Count), _advancedDebug);
+			Log.dbg(".Part {0} has {1} Stack attach node(s)", partname, newpart.attachNodes.Count);
 
 			foreach (AttachNode partnode in newpart.attachNodes)
 			{
@@ -890,7 +888,7 @@ namespace UbioWeldingLtd
 					setRelativePosition(newpart, ref node.position);
 
 					_attachNodes.Add(node);
-					Dbg.log(string.Format(".{0}{1}", Constants.logNodeAdd, node.id), _advancedDebug);
+					Log.dbg(".{0}{1}", Constants.logNodeAdd, node.id);
 				}
 			} //foreach (AttachNode node in newpart.attachNodes)
 
@@ -976,7 +974,7 @@ namespace UbioWeldingLtd
 			}
 
 			//reads the vesseltype if that exists
-			Dbg.log(string.Format(".. VesselType - {0}", newpart.vesselType), _advancedDebug);
+			Log.dbg(".. VesselType - {0}", newpart.vesselType);
 			if (newpart.vesselType != VesselType.Debris && newpart.vesselType != VesselType.Flag && newpart.vesselType != VesselType.Unknown)
 			{
 				if (!_listedVesselTypes.Contains(newpart.vesselType.ToString()))
@@ -1021,7 +1019,7 @@ namespace UbioWeldingLtd
 				}
 			}
 
-			Dbg.log(string.Format("New Center of Mass: {0}", _com.ToString()), _advancedDebug);
+			Log.dbg("New Center of Mass: {0}", _com.ToString());
 			//Drag (Add)
 			_minimumDrag = (_minimumDrag + newpart.minimum_drag) * 0.5f;
 			_maximumDrag = (_maximumDrag + newpart.maximum_drag) * 0.5f;
@@ -1049,9 +1047,9 @@ namespace UbioWeldingLtd
 					_breakingTorque = (_partNumber == 0) ? newpart.breakingTorque : (_breakingTorque + newpart.breakingTorque) * 0.5f;
 					break;
 			}
-			Dbg.log(string.Format("Part crashTolerance: {0} - Global crashTolerance: {1} - method: {2}", newpart.crashTolerance, _crashTolerance, _StrengthCalcMethod), _advancedDebug);
-			Dbg.log(string.Format("Part crashTolerance: {0} - Global crashTolerance: {1} - method: {2}", newpart.breakingForce, _breakingForce, _StrengthCalcMethod), _advancedDebug);
-			Dbg.log(string.Format("Part breakingTorque: {0} - Global breakingTorque: {1} - method: {2}", newpart.breakingTorque, _breakingTorque, _StrengthCalcMethod), _advancedDebug);
+			Log.dbg("Part crashTolerance: {0} - Global crashTolerance: {1} - method: {2}", newpart.crashTolerance, _crashTolerance, _StrengthCalcMethod);
+			Log.dbg("Part crashTolerance: {0} - Global crashTolerance: {1} - method: {2}", newpart.breakingForce, _breakingForce, _StrengthCalcMethod);
+			Log.dbg("Part breakingTorque: {0} - Global breakingTorque: {1} - method: {2}", newpart.breakingTorque, _breakingTorque, _StrengthCalcMethod);
 
 			switch (_MaxTempCalcMethod)
 			{
@@ -1065,7 +1063,7 @@ namespace UbioWeldingLtd
 					_maxTemp = (_partNumber == 0) ? (float)newpart.maxTemp : (float)(_maxTemp * (float)olddrymass + newpart.maxTemp * newpart.mass) / ((float)olddrymass + newpart.mass);
 					break;
 			}
-			Dbg.log(string.Format("Part maxTemp: {0} - Global maxTemp: {1} - method: {2}", newpart.maxTemp, _maxTemp, _MaxTempCalcMethod), _advancedDebug);
+			Log.dbg("Part maxTemp: {0} - Global maxTemp: {1} - method: {2}", newpart.maxTemp, _maxTemp, _MaxTempCalcMethod);
 
 			//Phisics signifance
 			if (newpart.PhysicsSignificance != 0 && _physicsSignificance != -1)
@@ -1078,7 +1076,7 @@ namespace UbioWeldingLtd
 				//TODO: Find where to find it in game. Would that be pre .15 stuff? http://forum.kerbalspaceprogram.com/threads/7529-Plugin-Posting-Rules-And-Official-Documentation?p=156430&viewfull=1#post156430
 				_module = "Part";
 				//
-				Dbg.log(string.Format("weldThisPart - newpart.partInfo.category: {0}", newpart.partInfo.category.ToString()), _advancedDebug);
+				Log.dbg("weldThisPart - newpart.partInfo.category: {0}", newpart.partInfo.category.ToString());
 				_category = newpart.partInfo.category;
 				//TODO: better surface node managment
 				_srfAttachNode = newpart.srfAttachNode;
@@ -1105,30 +1103,30 @@ namespace UbioWeldingLtd
 				Quaternion relRot = _newpart.transform.rotation;
 				relRot.eulerAngles += new Vector3(0, 0, 180);
 				relRot.eulerAngles = new Vector3(relRot.eulerAngles.x, relRot.eulerAngles.z, relRot.eulerAngles.y);
-				Dbg.log("pos = " + relPos + " | rot = " + relRot, _advancedDebug);
+				Log.dbg("pos = " + relPos + " | rot = " + relRot);
 
 				if (!internalNode.config.HasNode(Constants.weldModelNode))
 				{
-					Dbg.log("- No Model in Internal found, locating modelfile", _advancedDebug);
-					Dbg.log(string.Format("- {0}{1}", Constants.logModelUrl, GetMeshurl(internalNode)), _advancedDebug);
+					Log.dbg("- No Model in Internal found, locating modelfile");
+					Log.dbg("- {0}{1}", Constants.logModelUrl, GetMeshurl(internalNode));
 					ConfigNode newNode = new ConfigNode(Constants.weldModelNode);
 					newNode.AddValue("model", GetMeshurl(internalNode));
 					if (relPos != Vector3.zero)
 					{
 						newNode.AddValue("position", new Vector3(relPos.x, relPos.z, relPos.y));
-						Dbg.log("- position = " + (relPos - _com), _advancedDebug);
+						Log.dbg("- position = {0}", (relPos - _com));
 					}
 					if (relRot.eulerAngles != Vector3.zero)
 					{
 						newNode.AddValue("rotation", relRot.eulerAngles);
-						Dbg.log("- rotation = " + relRot.eulerAngles, _advancedDebug);
+						Log.dbg("- rotation = {0}", relRot.eulerAngles);
 					}
 					_internalStorageNode.AddNode(newNode);
 				}
 				foreach (ConfigNode n in internalNode.config.GetNodes())
 				{
 					ConfigNode node = n.CreateCopy();
-					Dbg.log("- " + node.name, _advancedDebug);
+					Log.dbg("- {0}", node.name);
 
 					if (!node.name.Equals(Constants.weldModuleNode))
 					{
@@ -1154,11 +1152,11 @@ namespace UbioWeldingLtd
 				{
 					Vector3 eul = ConfigNode.ParseVector3(_node.GetValue("rotation"));
 					_node.SetValue("rotation", WeldingHelpers.limitRotationAngle(eul + _relRot.eulerAngles));
-					Dbg.log("- rotation found | euler in config " + eul + " | _relative euler " + _relRot.eulerAngles + " | result " + WeldingHelpers.limitRotationAngle(eul + _relRot.eulerAngles), _advancedDebug);
+					Log.dbg("- rotation found | euler in config {0} | _relative euler {1} | result {2}", eul, _relRot.eulerAngles, WeldingHelpers.limitRotationAngle(eul + _relRot.eulerAngles));
 				}
 				else
 				{
-					Dbg.log("- no rotation in config " + _relRot.eulerAngles, _advancedDebug);
+					Log.dbg("- no rotation in config {0}", _relRot.eulerAngles);
 					_node.AddValue("rotation", WeldingHelpers.limitRotationAngle(_relRot.eulerAngles));
 				}
 			}
@@ -1194,7 +1192,7 @@ namespace UbioWeldingLtd
 					{
 						Vector3 _pos = ConfigNode.ParseVector3(_node.GetValue("position"));
 						_node.SetValue("position", (_pos + _relPos));
-						Dbg.log("- updated internal position = " + (_pos + _relPos), _advancedDebug);
+						Log.dbg("- updated internal position = {0}", (_pos + _relPos));
 					}
 				}
 				else
@@ -1202,7 +1200,7 @@ namespace UbioWeldingLtd
 					if (_relPos != Vector3.zero)
 					{
 						_node.AddValue("position", _relPos);
-						Dbg.log("- new internal position = " + _relPos, _advancedDebug);
+						Log.dbg("- new internal position = {0}", _relPos);
 					}
 				}
 			}
@@ -1216,7 +1214,7 @@ namespace UbioWeldingLtd
 					{
 						Vector3 _pos = ConfigNode.ParseVector3(_node.GetValue("position"));
 						_node.SetValue("position", (_pos + _newPos));
-						Dbg.log("- updated internal position = " + (_pos + _newPos), _advancedDebug);
+						Log.dbg("- updated internal position = {0}", (_pos + _newPos));
 					}
 				}
 				else
@@ -1224,7 +1222,7 @@ namespace UbioWeldingLtd
 					if (_relPos != Vector3.zero)
 					{
 						_node.AddValue("position", _newPos);
-						Dbg.log("- new internal position = " + _newPos, _advancedDebug);
+						Log.dbg("- new internal position = {0}", _newPos);
 					}
 				}
 			}
@@ -1239,7 +1237,7 @@ namespace UbioWeldingLtd
 		private void mergeResources(Part newpart, List<ConfigNode> resourcesList)
 		{
 			List<PartResource> newPartResourcesList = newpart.Resources.ToList();
-			Dbg.log(string.Format("..Part {0} has {1} {2} node", newpart.partName, newPartResourcesList.Count, Constants.weldResNode), _advancedDebug);
+			Log.dbg("..Part {0} has {1} {2} node", newpart.partName, newPartResourcesList.Count, Constants.weldResNode);
 			foreach (PartResource partRes in newPartResourcesList)
 			{
 				string resourceName = partRes.resourceName;
@@ -1253,7 +1251,7 @@ namespace UbioWeldingLtd
 						rescfg.SetValue("amount", (resourceAmount + float.Parse(rescfg.GetValue("amount"))).ToString());
 						rescfg.SetValue("maxAmount", (resourceMax + float.Parse(rescfg.GetValue("maxAmount"))).ToString());
 						exist = true;
-						Dbg.log(string.Format("..{0}{1} {2}/{3}", Constants.logResMerge, resourceName, resourceAmount, resourceMax), _advancedDebug);
+						Log.dbg("..{0}{1} {2}/{3}", Constants.logResMerge, resourceName, resourceAmount, resourceMax);
 						break;
 					}
 				}
@@ -1264,7 +1262,7 @@ namespace UbioWeldingLtd
 					resourceNode.AddValue("amount", resourceAmount.ToString());
 					resourceNode.AddValue("maxAmount", resourceMax.ToString());
 					resourcesList.Add(resourceNode);
-					Dbg.log(string.Format("..{0}{1} {2}/{3}", Constants.logResAdd, resourceName, resourceAmount, resourceMax), _advancedDebug);
+					Log.dbg("..{0}{1} {2}/{3}", Constants.logResAdd, resourceName, resourceAmount, resourceMax);
 				}
 			}
 		}
@@ -1338,9 +1336,7 @@ namespace UbioWeldingLtd
 							//		break;
 							//	}
 							case Constants.modStockGear:			//Don't add (.21)
-#if (DEBUG)
-								Debug.Log(string.Format("{0}..{1}{2}", Constants.logPrefix, Constants.logModIgnore, newModuleName));
-#endif
+								Log.dbg("..{0}{1}", Constants.logModIgnore, newModuleName);
 								exist = true;
 								break;
 							case Constants.modStockReacWheel:	   //Add reaction wheel force
@@ -1352,9 +1348,7 @@ namespace UbioWeldingLtd
 								existingNewModule.SetValue("YawTorque", yaw.ToString());
 								existingNewModule.SetValue("RollTorque", roll.ToString());
 								existingNewModule.GetNode(Constants.weldResNode).SetValue("rate", wheelrate.ToString());
-#if (DEBUG)
-								Debug.Log(string.Format("{0}..{1}{2}", Constants.logPrefix, Constants.logModMerge, newModuleName));
-#endif
+								Log.dbg("..{0}{1}", Constants.logModMerge, newModuleName);
 								exist = true;
 								break;
 							case Constants.modStockCommand:		// Add Crew and Electricity ressources //TODO: Manage all used ressources
@@ -1372,9 +1366,7 @@ namespace UbioWeldingLtd
 										existingNewModule.AddNode(newModule.GetNode(Constants.weldResNode));
 									}
 								}
-#if(DEBUG)
-								Debug.Log(string.Format("{0}..{1}{2}", Constants.logPrefix, Constants.logModMerge, newModuleName));
-#endif
+								Log.dbg("..{0}{1}", Constants.logModMerge, newModuleName);
 								exist = true;
 								break;
 							case Constants.modStockGen:			// Add Generator Values //TODO: Manage output ressource name.
@@ -1382,32 +1374,24 @@ namespace UbioWeldingLtd
 								float genrate = float.Parse(newModule.GetNode(Constants.weldOutResNode).GetValue("rate")) + float.Parse(existingNewModule.GetNode(Constants.weldOutResNode).GetValue("rate"));
 								existingNewModule.SetValue("isAlwaysActive", active.ToString());
 								existingNewModule.GetNode(Constants.weldOutResNode).SetValue("rate", genrate.ToString());
-#if(DEBUG)
-								Debug.Log(string.Format("{0}..{1}{2}", Constants.logPrefix, Constants.logModMerge, newModuleName));
-#endif
+								Log.dbg("..{0}{1}", Constants.logModMerge, newModuleName);
 								exist = true;
 								break;
 							case Constants.modStockAltern:		 //add the alternator value
 								float altrate = float.Parse(newModule.GetNode(Constants.weldResNode).GetValue("rate")) + float.Parse(existingNewModule.GetNode(Constants.weldResNode).GetValue("rate"));
 								existingNewModule.GetNode(Constants.weldResNode).SetValue("rate", altrate.ToString());
-#if(DEBUG)
-								Debug.Log(string.Format("{0}..{1}{2}", Constants.logPrefix, Constants.logModMerge, newModuleName));
-#endif
+								Log.dbg("..{0}{1}", Constants.logModMerge, newModuleName);
 								exist = true;
 								break;
 							case Constants.modStockGimbal:	  //average the gimbal range TODO: test the gimbal
 								int gimbal = (int.Parse(newModule.GetValue("gimbalRange")) + int.Parse(existingNewModule.GetValue("gimbalRange"))) / 2;
 								existingNewModule.SetValue("gimbalRange", gimbal.ToString());
-#if(DEBUG)
-								Debug.Log(string.Format("{0}..{1}{2}", Constants.logPrefix, Constants.logModMerge, newModuleName));
-#endif
+								Log.dbg("..{0}{1}", Constants.logModMerge, newModuleName);
 								exist = true;
 								break;
 							case Constants.modStockSensor:	 // Allow one sensor module per different sensor
 								exist = string.Equals(newModule.GetValue("sensorType"), existingNewModule.GetValue("sensorType"));
-#if(DEBUG)
-								Debug.Log(string.Format("{0}..{1}{2}", Constants.logPrefix, (exist) ? Constants.logModIgnore : Constants.logModMerge, newModuleName));
-#endif
+								Log.dbg("..{0}{1}", (exist) ? Constants.logModIgnore : Constants.logModMerge, newModuleName);
 								break;
 							case Constants.modStockEngine:		// Average/add value and warning
 								bool exhaustDamage = bool.Parse(newModule.GetValue("exhaustDamage")) || bool.Parse(existingNewModule.GetValue("exhaustDamage"));
@@ -1488,137 +1472,99 @@ namespace UbioWeldingLtd
 										existingNewModule.AddNode(newModule.GetNode(Constants.weldEngineVelCurve));
 									}
 								}
-#if (DEBUG)
-								Debug.Log(string.Format("{0}..{1}{2} !{3}", Constants.logPrefix, Constants.logModMerge, newModuleName, Constants.msgWarnModEngine));
-#endif
+								Log.dbg("..{0}{1} !{2}", Constants.logModMerge, newModuleName, Constants.msgWarnModEngine);
 								exist = true;
 								break;
 							case Constants.modStockAnimHeat:
 								exist = string.Equals(existingNewModule.GetValue("ThermalAnim"), newModule.GetValue("ThermalAnim"));
-#if (DEBUG)
-								Debug.Log(string.Format("{0}..{1}{2}", Constants.logPrefix, (exist) ? Constants.logModIgnore : Constants.logModMerge, newModuleName));
-#endif
+								Log.dbg("..{0}{1}", (exist) ? Constants.logModIgnore : Constants.logModMerge, newModuleName);
 								break;
 							case Constants.modStockAnimGen:		// Warning for Multiple Animate Generic
 								exist = string.Equals(existingNewModule.GetValue("animationName"), newModule.GetValue("animationName"));
 								if (exist)
 								{
-#if (DEBUG)
-									Debug.LogWarning(string.Format("{0}{1}.. !{2}", Constants.logWarning, Constants.logPrefix, Constants.msgWarnModAnimGen));
-#endif
+									Log.dbgWarn(Constants.msgWarnModAnimGen);
 									ret = WeldingReturn.MultipleAnimGen;
 								}
 								break;
 							case Constants.modStockInternal:   // Warning for multiple interal and ignore
-#if (DEBUG)
-								Debug.LogWarning(string.Format("{0}{1}..{2}{3} !{4}", Constants.logWarning, Constants.logPrefix, Constants.logModIgnore, newModuleName, Constants.msgWarnModInternal));
-#endif
+								Log.dbgWarn("{0}{1} !{2}", Constants.logModIgnore, newModuleName, Constants.msgWarnModInternal);
 								ret = WeldingReturn.MultipleInternal;
 								exist = true;
 								break;
 							case Constants.modStockSeat:	   // Warning for Multiple seats //TODO: Test
-#if (DEBUG)
-								Debug.LogWarning(string.Format("{0}{1}..{2}{3} !{4}", Constants.logWarning, Constants.logPrefix, Constants.logModIgnore, newModuleName, Constants.msgWarnModSeat));
-#endif
+								Log.dbgWarn("{0}{1} !{2}", Constants.logModIgnore, newModuleName, Constants.msgWarnModSeat);
 								ret = WeldingReturn.MultipleSeats;
 								exist = true;
 								break;
 							case Constants.modStockSolarPan:	   // Warning for Multiple Deployable Solar Panel //TODO: Test
-#if (DEBUG)
-								Debug.LogWarning(string.Format("{0}{1}..{2}{3} !{4}", Constants.logWarning, Constants.logPrefix, Constants.logModIgnore, newModuleName, Constants.msgWarnModSolPan));
-#endif
+								Log.dbgWarn("{0}{1} !{2}", Constants.logModIgnore, newModuleName, Constants.msgWarnModSolPan);
 								ret = WeldingReturn.MultipleSolarPan;
 								exist = true;
 								break;
 							case Constants.modStockJettison:	   // Warning for Multiple Jetison //Only one is working fairing is working.
-#if (DEBUG)
-								Debug.LogWarning(string.Format("{0}{1}.. !{2}", Constants.logWarning, Constants.logPrefix, Constants.msgWarnModJetttison));
-#endif
+								Log.dbgWarn(Constants.msgWarnModJetttison);
 								ret = WeldingReturn.MultipleJettison;
 								exist = false;
 								break;
 							case Constants.modStockFxAnimThro:	   // Warning for Multiple FX animate. // Only the first one is working, the other are ignore
-#if (DEBUG)
-								Debug.LogWarning(string.Format("{0}{1}.. !{2}", Constants.logWarning, Constants.logPrefix, Constants.msgWarnModFxAnimTh));
-#endif
+								Log.dbgWarn(Constants.msgWarnModFxAnimTh);
 								ret = WeldingReturn.MultipleFXAnimateThrottle;
 								exist = false;
 								break;
 							case Constants.modStockIntake:		// Warning for Multiple Intake //TODO: Test
-#if (DEBUG)
-								Debug.LogWarning(string.Format("{0}{1}.. !{2}", Constants.logWarning, Constants.logPrefix, Constants.msgWarnModIntake));
-#endif
+								Log.dbgWarn(Constants.msgWarnModIntake);
 								ret = WeldingReturn.MultipleIntake;
 								exist = false;
 								break;
 							case Constants.modStockDecouple:
 							case Constants.modStockAnchdec:		//Warning for Multiple Decoupler, change the node //TODO: Test
-#if (DEBUG)
-								Debug.LogWarning(string.Format("{0}{1}.. !{2}", Constants.logWarning, Constants.logPrefix, Constants.msgWarnModDecouple));
-#endif
+								Log.dbgWarn(Constants.msgWarnModDecouple);
 								ret = WeldingReturn.MultipleDecouple;
 								exist = false;
 								break;
 							case Constants.modStockDocking:		//Warning for Multiple Dockingport
-#if (DEBUG)
-								Debug.LogWarning(string.Format("{0}{1}.. !{2}", Constants.logWarning, Constants.logPrefix, Constants.msgWarnModDocking));
-#endif
+								Log.dbgWarn(Constants.msgWarnModDocking);
 								ret = WeldingReturn.MultipleDocking;
 								exist = false;
 								break;
 							case Constants.modStockRCS:		//Warning for Multiple RCS
-#if (DEBUG)
-								Debug.LogWarning(string.Format("{0}{1}..{2}{3} !{4}", Constants.logWarning, Constants.logPrefix, Constants.logModIgnore, newModuleName, Constants.msgWarnModRcs));
-#endif
+								Log.dbgWarn("{0}{1} !{2}", Constants.logModIgnore, newModuleName, Constants.msgWarnModRcs);
 								//ret = WeldingReturn.MultipleRcs;
 								exist = true;
 								break;
 							case Constants.modStockParachutes:		//Warning for Multiple Parachutes //TODO: Test
-#if (DEBUG)
-								Debug.LogWarning(string.Format("{0}{1}.. !{2}", Constants.logWarning, Constants.logPrefix, Constants.msgWarnModParachute));
-#endif
+								Log.dbgWarn(Constants.msgWarnModParachute);
 								ret = WeldingReturn.MultipleParachutes;
 								exist = false;
 								break;
 							case Constants.modStockLight:		//Warning for Multiple Light //TODO: Test
-#if (DEBUG)
-								Debug.LogWarning(string.Format("{0}{1}.. !{2}", Constants.logWarning, Constants.logPrefix, Constants.msgWarnModLight));
-#endif
+								Log.dbgWarn(Constants.msgWarnModLight);
 								ret = WeldingReturn.MultipleLight;
 								exist = false;
 								break;
 							case Constants.modStockRetLadder:		//Warning for Multiple Retractable ladder //TODO: Test
-#if (DEBUG)
-								Debug.LogWarning(string.Format("{0}{1}.. !{2}", Constants.logWarning, Constants.logPrefix, Constants.msgWarnModRetLadder));
-#endif
+								Log.dbgWarn(Constants.msgWarnModRetLadder);
 								ret = WeldingReturn.MultipleRetLadder;
 								exist = false;
 								break;
 							case Constants.modStockWheel:		//Warning for Multiple Wheels //TODO: Test
-#if (DEBUG)
-								Debug.LogWarning(string.Format("{0}{1}.. !{2}", Constants.logWarning, Constants.logPrefix, Constants.msgWarnModWheel));
-#endif
+								Log.dbgWarn(Constants.msgWarnModWheel);
 								ret = WeldingReturn.MultipleWheel;
 								exist = false;
 								break;
 							case Constants.modStockFxLookAt:		//Warning for Multiple FxLookAt Constraint (wome with wheels) //TODO: Test
-#if (DEBUG)
-								Debug.LogWarning(string.Format("{0}{1}.. !{2}", Constants.logWarning, Constants.logPrefix, Constants.msgWarnModFxLookAt));
-#endif
+								Log.dbgWarn(Constants.msgWarnModFxLookAt);
 								ret = WeldingReturn.MultipleFxLookAt;
 								exist = false;
 								break;
 							case Constants.modStockFxPos:		//Warning for Multiple Constraint Position (wome with wheels) //TODO: Test
-#if (DEBUG)
-								Debug.LogWarning(string.Format("{0}{1}.. !{2}", Constants.logWarning, Constants.logPrefix, Constants.msgWarnModFxPos));
-#endif
+								Log.dbgWarn(Constants.msgWarnModFxPos);
 								ret = WeldingReturn.MultipleFxPos;
 								exist = false;
 								break;
 							case Constants.modStockLaunchClamp:		//Warning for Multiple Launching Clamp (I don't even why would it be needed
-#if (DEBUG)
-								Debug.LogWarning(string.Format("{0}{1}.. !{2}", Constants.logWarning, Constants.logPrefix, Constants.msgWarnModLaunClamp));
-#endif
+								Log.dbgWarn(Constants.msgWarnModLaunClamp);
 								ret = WeldingReturn.MultipleLaunchClamp;
 								exist = false;
 								break;
@@ -1626,9 +1572,7 @@ namespace UbioWeldingLtd
 								exist = string.Equals(existingNewModule.GetValue("experimentID"), newModule.GetValue("experimentID"));
 								if (exist)
 								{
-#if (DEBUG)
-									Debug.LogWarning(string.Format("{0}{1}.. !{2}", Constants.logWarning, Constants.logPrefix, Constants.msgWarnModScieExp));
-#endif
+									Log.dbgWarn(Constants.msgWarnModScieExp);
 									ret = WeldingReturn.MultipleScienceExp;
 								}
 								break;
@@ -1641,18 +1585,14 @@ namespace UbioWeldingLtd
 								existingNewModule.SetValue("packetInterval", packetInterval.ToString());
 								existingNewModule.SetValue("packetSize", packetSize.ToString());
 								existingNewModule.SetValue("packetResourceCost", packetResourceCost.ToString());
-#if (DEBUG)
-								Debug.Log(string.Format("{0}..{1}{2}", Constants.logPrefix, Constants.logModMerge, newModuleName));
-#endif
+								Log.dbg(string.Format("{0}{1}", Constants.logModMerge, newModuleName));
 								exist = true;
 								break;
 							case Constants.modStockLandingLegs:		// Waring Multiple same landing legs
 								exist = string.Equals(existingNewModule.GetValue("animationName"), newModule.GetValue("animationName"));
 								if (exist)
 								{
-#if (DEBUG)
-									Debug.LogWarning(string.Format("{0}{1}.. !{2}", Constants.logWarning, Constants.logPrefix, Constants.msgWarnModLandLegs));
-#endif
+									Log.dbgWarn(Constants.msgWarnModLandLegs);
 									ret = WeldingReturn.MultipleLandingLegs;
 								}
 								break;
@@ -1663,17 +1603,13 @@ namespace UbioWeldingLtd
 
 								existingNewModule.SetValue("evaOnlyStorage", evaOnlyStorage.ToString());
 								existingNewModule.SetValue("storageRange", storageRange.ToString());
-#if (DEBUG)
-								Debug.Log(string.Format("{0}..{1}{2}", Constants.logPrefix, Constants.logModMerge, newModuleName));
-#endif
+								Log.dbg("..{0}{1}", Constants.logModMerge, newModuleName);
 								exist = true;
 								break;
 							default:
 								{
 									// New update module or mods! not managed
-#if (DEBUG)
-									Debug.LogWarning(string.Format("{0}{1}.. !{2}", Constants.logWarning, Constants.logPrefix, Constants.msgWarnModUnknown));
-#endif
+									Log.dbgWarn(Constants.msgWarnModUnknown);
 									ret = WeldingReturn.ModuleUnknown;
 									exist = false;
 									break;
@@ -1712,9 +1648,7 @@ namespace UbioWeldingLtd
 							}
 					}
 					_moduleList.Add(newModule);
-#if (DEBUG)
-					Debug.Log(string.Format("{0}..{1}{2}", Constants.logPrefix, Constants.logModAdd, newModuleName));
-#endif
+					Log.dbg("..{0}{1}", Constants.logModAdd, newModuleName);
 				} //if (!exist)
 			} //foreach (ConfigNode mod in modules)
 			return ret;
@@ -1945,7 +1879,7 @@ namespace UbioWeldingLtd
 
 			List<ConfigNode> tempList = new List<ConfigNode>();
 			//add MODEL
-			Dbg.log("sorting Internal MODELs",_advancedDebug);
+			Log.dbg("sorting Internal MODELs");
 			if (_internalStorageNode.HasNode(Constants.weldModelNode))
 			{
 				foreach (ConfigNode c in _internalStorageNode.GetNodes(Constants.weldModelNode))
@@ -1957,11 +1891,11 @@ namespace UbioWeldingLtd
 			{
 				internalConfig.AddNode(n);
 			}
-			Dbg.log("sorting Internal MODELs complete", _advancedDebug);
+			Log.dbg("sorting Internal MODELs complete");
 			tempList.Clear();
 
 			//add MODULE
-			Dbg.log("sorting Internal MODULEs", _advancedDebug);
+			Log.dbg("sorting Internal MODULEs");
 			if (_internalStorageNode.HasNode(Constants.weldModuleNode))
 			{
 				foreach (ConfigNode c in _internalStorageNode.GetNodes(Constants.weldModuleNode))
@@ -1973,11 +1907,11 @@ namespace UbioWeldingLtd
 			{
 				internalConfig.AddNode(n);
 			}
-			Dbg.log("sorting Internal MODULEs complete", _advancedDebug);
+			Log.dbg("sorting Internal MODULEs complete");
 			tempList.Clear();
 
 			//add PROP
-			Dbg.log("sorting Internal PROPs", _advancedDebug);
+			Log.dbg("sorting Internal PROPs");
 			if (_internalStorageNode.HasNode(Constants.weldPropNode))
 			{
 				foreach (ConfigNode c in _internalStorageNode.GetNodes(Constants.weldPropNode))
@@ -1989,7 +1923,7 @@ namespace UbioWeldingLtd
 			{
 				internalConfig.AddNode(n);
 			}
-			Dbg.log("sorting Internal PROPs complete", _advancedDebug);
+			Log.dbg("sorting Internal PROPs complete");
 			tempList.Clear();
 		}
 
@@ -2015,7 +1949,7 @@ namespace UbioWeldingLtd
 
 		private void getAttachmentType(Part part)
 		{
-			Dbg.log(part.name + " Attache mode " + part.attachMode+" Attach method "+ part.attachMethod,_advancedDebug);
+			Log.dbg("{0} Attache mode {1} Attach method {2}", part.name, part.attachMode, part.attachMethod);
 		}
 
 

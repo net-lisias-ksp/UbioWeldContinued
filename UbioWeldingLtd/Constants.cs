@@ -23,11 +23,9 @@ namespace UbioWeldingLtd
 
 		//Logs/debug constants
 		public const string logVersion 		= "v" + Version.Text + " - 1.4.1 - Continuum";
-		public const string logWarning		= "WARNING ";
-		public const string logError		= "ERROR ";
-		public const string logPrefix		= "[WeldingTool] ";
+		public const string logPrefix		= "WeldingTool";
 		public const string logStartWeld	= "----- Starting Welding -----";
-		public const string logEndWeld		= " ----- End Welding -----";
+		public const string logEndWeld		= "------- End Welding --------";
 		public const string logNbPart		= " parts welded";
 		public const string logWeldingPart	= "Welding this part: ";
 		public const string logModelUrl		= "MODEL url: ";

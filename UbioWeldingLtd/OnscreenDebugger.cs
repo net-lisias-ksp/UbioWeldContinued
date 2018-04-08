@@ -40,7 +40,7 @@ namespace UbioWeldingLtd
 				message += " | Renderer = none";
 			}
 
-			Debug.Log(message);
+			Log.info(message);
 
 			foreach (Transform t in target)
 			{
@@ -52,7 +52,7 @@ namespace UbioWeldingLtd
 		private void partsListing(Transform target)
 		{
 			string message = "Part " + target.name + " active = " + target.gameObject.activeSelf + " | Childs = " + target.childCount;
-			Debug.Log(message);
+			Log.info(message);
 			foreach (Transform t in target)
 			{
 				partsListing(t);
@@ -90,7 +90,7 @@ namespace UbioWeldingLtd
 
 							foreach (Transform t in tempParent)
 							{
-								Debug.Log(t.name + " active = " + t.gameObject.activeSelf + " | Childs = " + t.childCount);
+								Log.info(t.name + " active = " + t.gameObject.activeSelf + " | Childs = " + t.childCount);
 								if (t.name.ToLower().Contains("crew"))
 								{
 									t.localScale /= 10;
@@ -121,7 +121,7 @@ namespace UbioWeldingLtd
 			foreach (Transform t in Roots)
 			{
 				string message = "Part " + t.name + " active = " + t.gameObject.activeSelf + " | Childs = " + t.childCount;
-				Debug.Log(message);
+				Log.info(message);
 			}
 		}
 

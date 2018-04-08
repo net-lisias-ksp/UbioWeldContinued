@@ -48,7 +48,7 @@ namespace UbioWeldingLtd
 				{
 					if (part.Modules.Contains(s))
 					{
-						Dbg.log("[WeldedMeshSwitch] Found a dangerous Module = " + s, advancedDebug);
+						Log.dbg("[WeldedMeshSwitch] Found a dangerous Module = " + s, advancedDebug);
 						destroyUnusedParts = false;
 						break;
 					}
@@ -63,20 +63,20 @@ namespace UbioWeldingLtd
 			int[] batchedTransformIndicies = WeldedParseTools.ParseIntegers(objectIndicies).ToArray();
 			if (batchedTransformIndicies.Length < 1)
 			{
-				Dbg.log("[WeldedMeshSwitch] Found no Transforms in the TransformIndicies list", advancedDebug);
+				Log.dbg("[WeldedMeshSwitch] Found no Transforms in the TransformIndicies list", advancedDebug);
 			}
 			else
 			{
 				string[] batchedTransformNames = objects.Split(';');
 				if (batchedTransformNames.Length < 1)
 				{
-					Dbg.log("[WeldedMeshSwitch] Found no Transforms in the TransformNames list", advancedDebug);
+					Log.dbg("[WeldedMeshSwitch] Found no Transforms in the TransformNames list", advancedDebug);
 				}
 				else
 				{
 					if (batchedTransformIndicies.Length != batchedTransformNames.Length)
 					{
-						Dbg.log("[WeldedMeshSwitch] List lengths for TransformIndicies = " + batchedTransformIndicies.Length + " and TransformNames = " + batchedTransformNames.Length + " are not equal", advancedDebug);
+						Log.dbg("[WeldedMeshSwitch] List lengths for TransformIndicies = " + batchedTransformIndicies.Length + " and TransformNames = " + batchedTransformNames.Length + " are not equal", advancedDebug);
 					}
 					else
 					{
@@ -86,12 +86,12 @@ namespace UbioWeldingLtd
 							Transform newTransform = part.FindModelTransform(Constants.weldModelNode.ToLower()).GetChild(batchedTransformIndicies[index]);
 							if (newTransform == null)
 							{
-								Dbg.log("[WeldedMeshSwitch] could not find Transform at index " + index, advancedDebug);
+								Log.dbg("[WeldedMeshSwitch] could not find Transform at index " + index, advancedDebug);
 							}
 							else
 							{
 								parentTransforms.Add(newTransform);
-								Dbg.log("[WeldedMeshSwitch] added Transform = " + newTransform.name + " from index " + index + "  to list", advancedDebug);
+								Log.dbg("[WeldedMeshSwitch] added Transform = " + newTransform.name + " from index " + index + "  to list", advancedDebug);
 
 								List<Transform> newfinalTransforms = new List<Transform>();
 								string[] finalTransformNames = batchedTransformNames[index].Split(',');
@@ -104,12 +104,12 @@ namespace UbioWeldingLtd
 									Transform newFinalTransform = newTransform.Find(finalName.Trim(' '));
 									if (newFinalTransform == null)
 									{
-										Dbg.log("[WeldedMeshSwitch] could not find Transform " + finalName, advancedDebug);
+										Log.dbg("[WeldedMeshSwitch] could not find Transform " + finalName, advancedDebug);
 									}
 									else
 									{
 										newfinalTransforms.Add(newFinalTransform);
-										Dbg.log("[WeldedMeshSwitch] added find Transform" + finalName + " to list", advancedDebug);
+										Log.dbg("[WeldedMeshSwitch] added find Transform" + finalName + " to list", advancedDebug);
 									}
 								}
 								if (newfinalTransforms.Count > 0)
@@ -164,7 +164,7 @@ namespace UbioWeldingLtd
 			}
 			else
 			{
-				Dbg.log("[WeldedMeshSwitch] can not activate Transforms init failed", advancedDebug);
+				Log.dbg("[WeldedMeshSwitch] can not activate Transforms init failed", advancedDebug);
 			}
 		}
 

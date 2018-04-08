@@ -38,7 +38,6 @@ namespace UbioWeldingLtd
 		private StrengthParamsCalcMethod _StrengthCalcMethod = StrengthParamsCalcMethod.WeightedAverage;
 		private MaxTempCalcMethod _MaxTempCalcMethod = MaxTempCalcMethod.Lowest;
 		private bool _clearEditor = true;
-		private bool _advancedDebug = false;
 		private bool _fileSimplification = false;
 		private string[] _vector2CurveModules;
 		private string[] _vector4CurveModules;
@@ -131,8 +130,8 @@ namespace UbioWeldingLtd
 
 		public bool advancedDebug
 		{
-			get { return _advancedDebug; }
-			set { _advancedDebug = value; }
+			get { return Log.debug; }
+			set { Log.debug = value; }
 		}
 
 		public bool fileSimplification

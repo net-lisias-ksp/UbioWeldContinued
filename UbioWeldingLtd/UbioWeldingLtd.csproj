@@ -33,7 +33,7 @@
   <ItemGroup>
     <Compile Include="AdvancedGUITextArea.cs" />
     <Compile Include="AdvancedGUITextField.cs" />
-    <Compile Include="Debugger.cs" />
+    <Compile Include="Log.cs" />
     <Compile Include="EditorLockManager.cs" />
     <Compile Include="ModuleMerger.cs" />
     <Compile Include="OldWeldingPluginConfig.cs" />

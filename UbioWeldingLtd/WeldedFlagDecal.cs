@@ -12,8 +12,6 @@ namespace UbioWeldingLtd
 		public string textureQuadName = string.Empty;
 		[KSPField(isPersistant = true)]
 		public bool flagDisplayed = true;
-		[KSPField]
-		public bool advancedDebug = false;
 
 
 		private List<MeshRenderer> renderers = new List<MeshRenderer>();
@@ -68,7 +66,7 @@ namespace UbioWeldingLtd
 
 		public void clearDecalModule()
 		{
-			Dbg.log("clearDecalModule start", advancedDebug);
+			Log.dbg("clearDecalModule start");
 			PartModuleList modules = part.Modules;
 			PartModule pm;
 			for(int i =0; i < part.Modules.Count; i++)
@@ -78,26 +76,26 @@ namespace UbioWeldingLtd
 				{
 					if (((FlagDecal)pm).textureQuadName == textureQuadName)
 					{
-						Dbg.log("clearDecalModule flagDecal found", advancedDebug);
+						Log.dbg("clearDecalModule flagDecal found");
 						part.Modules.Remove(pm);
 						Destroy(pm);
-						Dbg.log("clearDecalModule flagDecal marked for destroy", advancedDebug);
+						Log.dbg("clearDecalModule flagDecal marked for destroy");
 						break;
 					}
 				}
 			}
 			if(HighLogic.LoadedSceneIsEditor)
 			{
-				Dbg.log("clearDecalModule LoadedSceneIsEditor", advancedDebug);
+				Log.dbg("clearDecalModule LoadedSceneIsEditor");
 				GameEvents.onEditorPartEvent.Fire(ConstructionEventType.PartTweaked, part);
 				GameEvents.onEditorShipModified.Fire(EditorLogic.fetch.ship);
 			}
 			else if(HighLogic.LoadedSceneIsFlight)
 			{
-				Dbg.log("clearDecalModule LoadedSceneIsFlight", advancedDebug);
+				Log.dbg("clearDecalModule LoadedSceneIsFlight");
 				GameEvents.onVesselWasModified.Fire(vessel);
 			}
-			Dbg.log("clearDecalModule complete", advancedDebug);
+			Log.dbg("clearDecalModule complete");
 		}
 
 
@@ -124,10 +122,6 @@ namespace UbioWeldingLtd
 				}
 			}
 		}
-
-
 	}
-
-
 }
 

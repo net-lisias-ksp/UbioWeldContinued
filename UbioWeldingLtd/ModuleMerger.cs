@@ -14,7 +14,7 @@ namespace UbioWeldingLtd
 		/// </summary>
 		/// <param name="partname"></param>
 		/// <param name="configuration"></param>
-		public void mergeModules(string partname, UrlDir.UrlConfig configuration, List<ConfigNode> modulelist, bool advancedDebugging)
+		public void mergeModules(string partname, UrlDir.UrlConfig configuration, List<ConfigNode> modulelist)
 		{
 			ConfigNode[] originalModules = configuration.config.GetNodes(Constants.weldModuleNode);
 			string newModuleName = "";
@@ -34,7 +34,7 @@ namespace UbioWeldingLtd
 					{
 						if (!WeldingHelpers.isArrayContaining(newModuleName, UbioZurWeldingLtd.instance.config.modulesToMultiply))
 						{
-							Dbg.log(string.Format("| {0} Module already exists!!!", existingNewModule.GetValue(existingNewModule.values.DistinctNames()[0])), advancedDebugging);
+							Log.dbg("| {0} Module already exists!!!", existingNewModule.GetValue(existingNewModule.values.DistinctNames()[0]));
 							if (newModule.values.DistinctNames().Length < 2)
 							{
 								// making shure that the MODULE gets not duplicated in case it has no attributes
@@ -50,7 +50,7 @@ namespace UbioWeldingLtd
 								}
 
 								breakingAttributes = WeldingHelpers.getSharedArrayValues(breakingAttributes, UbioZurWeldingLtd.instance.config.breakingModuleAttributes);
-								Dbg.log(string.Format("| BreakingAttributes found = {0} ", breakingAttributes.Length), advancedDebugging);
+								Log.dbg("| BreakingAttributes found = {0} ", breakingAttributes.Length);
 
 								if (breakingAttributes.Length > 0)
 								{
@@ -59,7 +59,7 @@ namespace UbioWeldingLtd
 										string breakingAttribute = s.Replace(string.Concat(newModuleName, Constants.nameSeparator), "");
 										var existingValue = existingNewModule.GetValue(breakingAttribute);
 										var newValue = newModule.GetValue(breakingAttribute);
-										Dbg.log(string.Format("| BreakingAttributes found | current one is {0} | ExistingValue = {1} - NewValue = {2}", breakingAttribute, existingValue, newValue), advancedDebugging);
+										Log.dbg("| BreakingAttributes found | current one is {0} | ExistingValue = {1} - NewValue = {2}", breakingAttribute, existingValue, newValue);
 										exist = Equals(existingValue, newValue);
 										if (!exist)
 										{
@@ -68,29 +68,26 @@ namespace UbioWeldingLtd
 									}
 									if (exist)
 									{
-										mergeContents(newModuleName, newModule, existingNewModule, advancedDebugging);
+										mergeContents(newModuleName, newModule, existingNewModule);
 										exist = true;
 										break;
 									}
 								}
 								else
 								{
-									mergeContents(newModuleName, newModule, existingNewModule, advancedDebugging);
+									mergeContents(newModuleName, newModule, existingNewModule);
 									exist = true;
 									break;
 								}
 							}
 						}
 					}
-					Dbg.log(string.Format("| Module ready to add = {0}", !exist), advancedDebugging);
+					Log.dbg("| Module {1} ready to add = {0}", !exist, existingNewModule.GetValue("name"));
 				}//foreach (ConfigNode existingNewModule in _modulelist)
-				if (!exist)
+				if ( ! (exist || WeldingHelpers.isArrayContaining(newModuleName, UbioZurWeldingLtd.instance.config.modulesToIgnore)) )
 				{
-					if (!WeldingHelpers.isArrayContaining(newModuleName, UbioZurWeldingLtd.instance.config.modulesToIgnore))
-					{
-						addNewModule(partname, newModuleName, newModule, modulelist, advancedDebugging);
-					}
-				} //if (!exist)
+					addNewModule(partname, newModuleName, newModule, modulelist);
+				}
 			} //foreach (ConfigNode mod in modules)
 		}
 
@@ -102,7 +99,7 @@ namespace UbioWeldingLtd
 		/// <param name="existingNewModule"></param>
 		private void mergeVector4Modules(ConfigNode newModule, ConfigNode existingNewModule)
 		{
-			//Debug.Log(string.Format("{0}| Merging Vector4Modules Start", Constants.logPrefix));
+			Log.dbg("| Merging Vector4Modules Start");
 			foreach (string subModule in UbioZurWeldingLtd.instance.config.vector4CurveModules)
 			{
 				if (newModule.HasNode(subModule))
@@ -124,7 +121,7 @@ namespace UbioWeldingLtd
 					}
 				}
 			}
-			//Debug.LogError(string.Format("{0}| Merging Vector4Modules End", Constants.logPrefix));
+			Log.dbg("| Merging Vector4Modules End");
 		}
 
 
@@ -133,9 +130,9 @@ namespace UbioWeldingLtd
 		/// </summary>
 		/// <param name="newModule"></param>
 		/// <param name="existingNewModule"></param>
-		private void mergeVector2Modules(ConfigNode newModule, ConfigNode existingNewModule, bool advancedDebugging)
+		private void mergeVector2Modules(ConfigNode newModule, ConfigNode existingNewModule)
 		{
-			//Debug.LogError(string.Format("{0}| Merging Vector2Modules Start", Constants.logPrefix));
+			Log.dbg("| Merging Vector2Modules Start");
 			foreach (string subModule in UbioZurWeldingLtd.instance.config.vector2CurveModules)
 			{
 				if (newModule.HasNode(subModule))
@@ -157,7 +154,7 @@ namespace UbioWeldingLtd
 					}
 				}
 			}
-			//Debug.LogError(string.Format("{0}| Merging Vector2Modules End", Constants.logPrefix));
+			Log.dbg("| Merging Vector2Modules End");
 		}
 
 
@@ -167,12 +164,11 @@ namespace UbioWeldingLtd
 		/// </summary>
 		/// <param name="newModule"></param>
 		/// <param name="existingNewModule"></param>
-		/// <param name="advancedDebugging"></param>
-		private void mergeSubModules(ConfigNode newModule, ConfigNode existingNewModule, bool advancedDebugging)
+		private void mergeSubModules(ConfigNode newModule, ConfigNode existingNewModule)
 		{
 			bool exist = false;
 			string newSubModuleName = "";
-			//Debug.LogError(string.Format("{0}| Merging SubModules Start", Constants.logPrefix));
+			Log.dbg("| Merging SubModules Start");
 
 			foreach (string subModule in UbioZurWeldingLtd.instance.config.subModules)
 			{
@@ -192,7 +188,7 @@ namespace UbioWeldingLtd
 							breakingAttributes[i] = string.Concat(subModule, Constants.nameSeparator, newNode.values.DistinctNames()[i]);
 						}
 						breakingAttributes = WeldingHelpers.getSharedArrayValues(breakingAttributes, UbioZurWeldingLtd.instance.config.breakingModuleAttributes);
-						Dbg.log(string.Format("| SubModule BreakingAttributes found = {0} ", breakingAttributes.Length), advancedDebugging);
+						Log.dbg("| SubModule BreakingAttributes found = {0} ", breakingAttributes.Length);
 
 						if (breakingAttributes.Length > 0)
 						{
@@ -201,7 +197,7 @@ namespace UbioWeldingLtd
 								string breakingAttribute = s.Replace(string.Concat(subModule, Constants.nameSeparator), "");
 								var existingValue = existingNode.GetValue(breakingAttribute);
 								var newValue = newNode.GetValue(breakingAttribute);
-								Dbg.log(string.Format("| SubModule BreakingAttributes found | current one is {0} | ExistingValue = {1} - NewValue = {2}", breakingAttribute, existingValue, newValue), advancedDebugging);
+								Log.dbg("| SubModule BreakingAttributes found | current one is {0} | ExistingValue = {1} - NewValue = {2}", breakingAttribute, existingValue, newValue);
 								exist = Equals(existingValue, newValue);
 								if (!exist)
 								{
@@ -210,14 +206,14 @@ namespace UbioWeldingLtd
 							}
 							if (exist)
 							{
-								mergeContents(newSubModuleName, newNode, existingNode, advancedDebugging);
+								mergeContents(newSubModuleName, newNode, existingNode);
 								exist = true;
 								break;
 							}
 						}
 						else
 						{
-							mergeContents(newSubModuleName, newNode, existingNode, advancedDebugging);
+							mergeContents(newSubModuleName, newNode, existingNode);
 							exist = true;
 							break;
 						}
@@ -231,20 +227,21 @@ namespace UbioWeldingLtd
 					}
 				}
 			}
-			//Debug.LogError(string.Format("{0}| Merging SubModules End", Constants.logPrefix));
+			Log.dbg("| Merging SubModules End");
 		}
 
-		private void mergeContents(string newSubModuleName, ConfigNode newNode, ConfigNode existingNode, bool advancedDebugging)
+		private void mergeContents(string newSubModuleName, ConfigNode newNode, ConfigNode existingNode)
 		{
-			Dbg.log(string.Format("Pre mergeModuleAttributes"), advancedDebugging);
-			mergeModuleAttributes(newSubModuleName, newNode, existingNode, advancedDebugging);
-			Dbg.log(string.Format("Pre mergeSubModules"), advancedDebugging);
-			mergeSubModules(newNode, existingNode, advancedDebugging);
-			Dbg.log(string.Format("Pre mergeVector2Modules"), advancedDebugging);
-			mergeVector2Modules(newNode, existingNode, advancedDebugging);
-			Dbg.log(string.Format("Pre mergeVector4Modules"), advancedDebugging);
+			string dbgname = existingNode.GetValue("name");
+			Log.dbg("Pre mergeModuleAttributes({0})", dbgname);
+			mergeModuleAttributes(newSubModuleName, newNode, existingNode);
+			Log.dbg("Pre mergeSubModules({0})", existingNode);
+			mergeSubModules(newNode, existingNode);
+			Log.dbg("Pre mergeVector2Modules({0})", dbgname);
+			mergeVector2Modules(newNode, existingNode);
+			Log.dbg("Pre mergeVector4Modules({0})", dbgname);
 			mergeVector4Modules(newNode, existingNode);
-			Dbg.log(string.Format("Values done"), advancedDebugging);
+			Log.dbg("Values done");
 		}
 
 
@@ -259,7 +256,7 @@ namespace UbioWeldingLtd
 		/// <param name="floatResult"></param>
 		/// <param name="newModule"></param>
 		/// <param name="existingNewModule"></param>
-		private void mergeModuleAttributes(string newModuleName, ConfigNode newModule, ConfigNode existingNewModule, bool advancedDebugging)
+		private void mergeModuleAttributes(string newModuleName, ConfigNode newModule, ConfigNode existingNewModule)
 		{
 			bool boolResult;
 			float floatResult;
@@ -279,25 +276,23 @@ namespace UbioWeldingLtd
 				floatResult = 0f;
 				if (bool.TryParse(existingNewModule.GetValue(ModuleAttribute), out boolResult) || bool.TryParse(newModule.GetValue(ModuleAttribute), out boolResult))
 				{
-					Dbg.log(string.Format("| {0} - {1} is bool", newModuleName, ModuleAttribute), advancedDebugging);
-					mergeModuleBoolValues(newModuleName, newModule, existingNewModule, ModuleAttribute, advancedDebugging);
+					Log.dbg("| {0} - {1} is bool", newModuleName, ModuleAttribute);
+					mergeModuleBoolValues(newModuleName, newModule, existingNewModule, ModuleAttribute);
 				}
 				else
 				{
 					if (float.TryParse(existingNewModule.GetValue(ModuleAttribute), out floatResult) || float.TryParse(newModule.GetValue(ModuleAttribute), out floatResult))
 					{
-						Dbg.log(string.Format("| {0} - {1} is float", newModuleName, ModuleAttribute), advancedDebugging);
-						mergeModuleFloatValues(newModuleName, newModule, existingNewModule, ModuleAttribute, advancedDebugging);
+						Log.dbg("| {0} - {1} is float", newModuleName, ModuleAttribute);
+						mergeModuleFloatValues(newModuleName, newModule, existingNewModule, ModuleAttribute);
 					}
 					else
 					{
-						Dbg.log(string.Format("| {0} - {1} is string", newModuleName, ModuleAttribute), advancedDebugging);
-						mergeModuleStringValues(newModuleName, newModule, existingNewModule, ModuleAttribute, advancedDebugging);
+						Log.dbg("| {0} - {1} is string", newModuleName, ModuleAttribute);
+						mergeModuleStringValues(newModuleName, newModule, existingNewModule, ModuleAttribute);
 					}
 				}
-#if (DEBUG)
-				//Debug.LogError(string.Format("{0}- Alex Modulemerger - {1} | {2} = {3}", Constants.logPrefix, existingNewModule.GetValue(existingNewModule.values.DistinctNames()[0]), ModuleAttribute, existingNewModule.GetValue(ModuleAttribute)));
-#endif
+				Log.dbg("- Alex Modulemerger - {0} | {1} = {2}", existingNewModule.GetValue(existingNewModule.values.DistinctNames()[0]), ModuleAttribute, existingNewModule.GetValue(ModuleAttribute));
 			}
 		}
 
@@ -309,11 +304,9 @@ namespace UbioWeldingLtd
 		/// <param name="newModule"></param>
 		/// <param name="existingNewModule"></param>
 		/// <param name="ModuleAttribute"></param>
-		private void mergeModuleBoolValues(string newModuleName, ConfigNode newModule, ConfigNode existingNewModule, string ModuleAttribute, bool advancedDebugging)
+		private void mergeModuleBoolValues(string newModuleName, ConfigNode newModule, ConfigNode existingNewModule, string ModuleAttribute)
 		{
-#if (DEBUG)
-			//Debug.LogWarning(string.Format("{0}| {1} - {2} is bool", Constants.logPrefix, newModuleName, ModuleAttribute));
-#endif
+			Log.dbg("| {0} - {1} is bool", newModuleName, ModuleAttribute);
 			if (newModule.HasValue(ModuleAttribute))
 			{
 				if (existingNewModule.HasValue(ModuleAttribute))
@@ -325,7 +318,7 @@ namespace UbioWeldingLtd
 					existingNewModule.AddValue(ModuleAttribute, bool.Parse(newModule.GetValue(ModuleAttribute)).ToString());
 				}
 			}
-			Dbg.log(string.Format("| {0} - {1} is merged with value {2}", newModuleName, ModuleAttribute, bool.Parse(existingNewModule.GetValue(ModuleAttribute))), advancedDebugging);
+			Log.dbg("| {0} - {1} is merged with value {2}", newModuleName, ModuleAttribute, bool.Parse(existingNewModule.GetValue(ModuleAttribute)));
 		}
 
 
@@ -336,34 +329,32 @@ namespace UbioWeldingLtd
 		/// <param name="newModule"></param>
 		/// <param name="existingNewModule"></param>
 		/// <param name="ModuleAttribute"></param>
-		private void mergeModuleFloatValues(string newModuleName, ConfigNode newModule, ConfigNode existingNewModule, string ModuleAttribute, bool advancedDebugging)
+		private void mergeModuleFloatValues(string newModuleName, ConfigNode newModule, ConfigNode existingNewModule, string ModuleAttribute)
 		{
-#if (DEBUG)
-			//Debug.LogWarning(string.Format("{0}| {1} - {2} is float", Constants.logPrefix, newModuleName, ModuleAttribute));
-#endif
+			Log.dbg("| {0} - {1} is float", newModuleName, ModuleAttribute);
 			//merge float values if they are allowed
 			if (!WeldingHelpers.isArrayContaining(string.Concat(newModuleName, Constants.nameSeparator, ModuleAttribute), UbioZurWeldingLtd.instance.config.unchangedModuleAttributes))
 			{
 				if (newModule.HasValue(ModuleAttribute) || existingNewModule.HasValue(ModuleAttribute))
 				{
 					float newValue = float.TryParse(newModule.GetValue(ModuleAttribute), out newValue) == false ? float.Parse(existingNewModule.GetValue(ModuleAttribute)) : float.Parse(newModule.GetValue(ModuleAttribute));
-					Dbg.log(string.Format("| {0} - newValue - {1} = {2}", newModuleName, ModuleAttribute, newValue), advancedDebugging);
+					Log.dbg("| {0} - newValue - {1} = {2}", newModuleName, ModuleAttribute, newValue);
 
 					if (existingNewModule.HasValue(ModuleAttribute) && newModule.HasValue(ModuleAttribute))
 					{
 						float existingValue = float.Parse(existingNewModule.GetValue(ModuleAttribute));
-						Dbg.log(string.Format("| {0} - existingValue - {1} = {2}", newModuleName, ModuleAttribute, existingValue), advancedDebugging);
+						Log.dbg("| {0} - existingValue - {1} = {2}", newModuleName, ModuleAttribute, existingValue);
 
 						if (WeldingHelpers.isArrayContaining(string.Concat(newModuleName, Constants.nameSeparator, ModuleAttribute), UbioZurWeldingLtd.instance.config.maximizedModuleAttributes))
 						{
-							Dbg.log(string.Format("| {0} - {1} - maximized", newModuleName, ModuleAttribute), advancedDebugging);
+							Log.dbg("| {0} - {1} - maximized", newModuleName, ModuleAttribute);
 							existingNewModule.SetValue(ModuleAttribute, (existingValue > newValue ? existingValue : newValue).ToString());
 						}
 						else
 						{
 							if (WeldingHelpers.isArrayContaining(string.Concat(newModuleName, Constants.nameSeparator, ModuleAttribute), UbioZurWeldingLtd.instance.config.minimizedModuleAttributes))
 							{
-								Dbg.log(string.Format("| {0} - {1} - minimized", newModuleName, ModuleAttribute), advancedDebugging);
+								Log.dbg("| {0} - {1} - minimized", newModuleName, ModuleAttribute);
 								existingNewModule.SetValue(ModuleAttribute, (existingValue < newValue ? existingValue : newValue).ToString());
 							}
 							else
@@ -371,12 +362,12 @@ namespace UbioWeldingLtd
 
 								if (WeldingHelpers.isArrayContaining(string.Concat(newModuleName, Constants.nameSeparator, ModuleAttribute), UbioZurWeldingLtd.instance.config.averagedModuleAttributes) && (newValue != 0 && existingValue != 0))
 								{
-									Dbg.log(string.Format("| {0} - {1} - averaged", newModuleName, ModuleAttribute), advancedDebugging);
+									Log.dbg("| {0} - {1} - averaged", newModuleName, ModuleAttribute);
 									existingNewModule.SetValue(ModuleAttribute, ((newValue + existingValue) * 0.5f).ToString());
 								}
 								else
 								{
-									Dbg.log(string.Format("| {0} - {1} - added", newModuleName, ModuleAttribute), advancedDebugging);
+									Log.dbg("| {0} - {1} - added", newModuleName, ModuleAttribute);
 									existingNewModule.SetValue(ModuleAttribute, (newValue + existingValue).ToString());
 								}
 							}
@@ -384,12 +375,12 @@ namespace UbioWeldingLtd
 					}
 					else if (!existingNewModule.HasValue(ModuleAttribute) && newModule.HasValue(ModuleAttribute))
 					{
-						Dbg.log(string.Format("| {0} - setNewValue - {1} = {2}", newModuleName, ModuleAttribute, newValue), advancedDebugging);
+						Log.dbg("| {0} - setNewValue - {1} = {2}", newModuleName, ModuleAttribute, newValue);
 						existingNewModule.AddValue(ModuleAttribute, newValue.ToString());
 					}
 				}
 			}
-			Dbg.log(string.Format("| {0} - {1} is merged with value {2}", newModuleName, ModuleAttribute, float.Parse(existingNewModule.GetValue(ModuleAttribute))), advancedDebugging);
+			Log.dbg("| {0} - {1} is merged with value {2}", newModuleName, ModuleAttribute, float.Parse(existingNewModule.GetValue(ModuleAttribute)));
 		}
 
 
@@ -400,11 +391,9 @@ namespace UbioWeldingLtd
 		/// <param name="newModule"></param>
 		/// <param name="existingNewModule"></param>
 		/// <param name="ModuleAttribute"></param>
-		private void mergeModuleStringValues(string newModuleName, ConfigNode newModule, ConfigNode existingNewModule, string ModuleAttribute, bool advancedDebugging)
+		private void mergeModuleStringValues(string newModuleName, ConfigNode newModule, ConfigNode existingNewModule, string ModuleAttribute)
 		{
-#if (DEBUG)
-			//Debug.LogWarning(string.Format("{0}| {1} - {2} is string", Constants.logPrefix, newModuleName, ModuleAttribute));
-#endif
+			Log.dbg("| {0} - {1} is string", newModuleName, ModuleAttribute);
 			if (newModule.HasValue(ModuleAttribute))
 			{
 				if (existingNewModule.HasValue(ModuleAttribute))
@@ -416,7 +405,7 @@ namespace UbioWeldingLtd
 					existingNewModule.AddValue(ModuleAttribute, newModule.GetValue(ModuleAttribute));
 				}
 			}
-			Dbg.log(string.Format("| {0} - {1} is merged with value {2}", newModuleName, ModuleAttribute, existingNewModule.GetValue(ModuleAttribute)), advancedDebugging);
+			Log.dbg("| {0} - {1} is merged with value {2}", newModuleName, ModuleAttribute, existingNewModule.GetValue(ModuleAttribute));
 		}
 
 
@@ -502,7 +491,7 @@ namespace UbioWeldingLtd
 		/// <param name="partname"></param>
 		/// <param name="newModuleName"></param>
 		/// <param name="newModule"></param>
-		private void addNewModule(string partname, string newModuleName, ConfigNode newModule, List<ConfigNode> modulelist, bool advancedDebugging)
+		private void addNewModule(string partname, string newModuleName, ConfigNode newModule, List<ConfigNode> modulelist)
 		{
 			switch (newModule.GetValue(newModule.values.DistinctNames()[0]))
 			{
@@ -532,9 +521,7 @@ namespace UbioWeldingLtd
 					}
 			}
 			modulelist.Add(newModule);
-			Dbg.log(string.Format("{0}..{1}{2}", Constants.logPrefix, Constants.logModAdd, newModuleName), advancedDebugging);
+			Log.dbg("{0}{1}", Constants.logModAdd, newModuleName);
 		}
-
-
 	}
 }
