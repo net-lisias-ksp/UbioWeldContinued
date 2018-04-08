@@ -330,7 +330,11 @@ namespace UbioWeldingLtd
 		{
 			Log.dbg("| {0} - {1} is float", newModuleName, ModuleAttribute);
 			//merge float values if they are allowed
-			if (!WeldingHelpers.isArrayContaining(string.Concat(newModuleName, Constants.nameSeparator, ModuleAttribute), UbioZurWeldingLtd.instance.config.unchangedModuleAttributes))
+			if (WeldingHelpers.isArrayContaining(string.Concat(newModuleName, Constants.nameSeparator, ModuleAttribute), UbioZurWeldingLtd.instance.config.unchangedModuleAttributes))
+			{
+				Log.dbg("| {0} - {1} is marked as unchangeable", newModuleName, ModuleAttribute);
+			}
+			else
 			{
 				if (newModule.HasValue(ModuleAttribute) || existingNewModule.HasValue(ModuleAttribute))
 				{
@@ -376,8 +380,8 @@ namespace UbioWeldingLtd
 						existingNewModule.AddValue(ModuleAttribute, newValue.ToString());
 					}
 				}
+				Log.dbg("| {0} - {1} is merged with value {2}", newModuleName, ModuleAttribute, float.Parse(existingNewModule.GetValue(ModuleAttribute)));
 			}
-			Log.dbg("| {0} - {1} is merged with value {2}", newModuleName, ModuleAttribute, float.Parse(existingNewModule.GetValue(ModuleAttribute)));
 		}
 
 
