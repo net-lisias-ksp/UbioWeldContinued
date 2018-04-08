@@ -412,7 +412,7 @@ namespace UbioWeldingLtd
 			_scrollMod = Vector2.zero;
 			_scrollRes = Vector2.zero;
 
-			Log.dbg("{0} | {1} Parts welded", _welder.NbParts);
+			Log.dbg("| {0} Parts welded", _welder.NbParts);
 
 			if (warning)
 			{

@@ -131,7 +131,6 @@ namespace UbioWeldingLtd
 		/// <returns></returns>
 		public static bool isArrayContaining(string attributeToCheck, string[] arrayToCompare)
 		{
-
 			foreach (string attributeEntry in arrayToCompare)
 			{
 				if (string.Equals(attributeEntry.Trim(), attributeToCheck.Trim()))

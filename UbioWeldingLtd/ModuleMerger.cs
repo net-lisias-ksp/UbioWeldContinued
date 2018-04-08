@@ -235,7 +235,7 @@ namespace UbioWeldingLtd
 			string dbgname = existingNode.GetValue("name");
 			Log.dbg("Pre mergeModuleAttributes({0})", dbgname);
 			mergeModuleAttributes(newSubModuleName, newNode, existingNode);
-			Log.dbg("Pre mergeSubModules({0})", existingNode);
+			Log.dbg("Pre mergeSubModules({0})", dbgname);
 			mergeSubModules(newNode, existingNode);
 			Log.dbg("Pre mergeVector2Modules({0})", dbgname);
 			mergeVector2Modules(newNode, existingNode);
@@ -243,9 +243,6 @@ namespace UbioWeldingLtd
 			mergeVector4Modules(newNode, existingNode);
 			Log.dbg("Values done");
 		}
-
-
-
 
 		/// <summary>
 		/// managed the merging of the attributes of a module

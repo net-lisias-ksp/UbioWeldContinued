@@ -1103,7 +1103,7 @@ namespace UbioWeldingLtd
 				Quaternion relRot = _newpart.transform.rotation;
 				relRot.eulerAngles += new Vector3(0, 0, 180);
 				relRot.eulerAngles = new Vector3(relRot.eulerAngles.x, relRot.eulerAngles.z, relRot.eulerAngles.y);
-				Log.dbg("pos = " + relPos + " | rot = " + relRot);
+				Log.dbg("pos = {0} | rot = {1}", relPos, relRot);
 
 				if (!internalNode.config.HasNode(Constants.weldModelNode))
 				{
