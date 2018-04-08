@@ -136,7 +136,7 @@ namespace UbioWeldingLtd
 		public const string msgWarnModLandLegs	= "Multiple ModuleLandingLeg with the same animName is not supported by the game";
 
 		//Weld
-		public const string weldPartPath			= USERDATA + "Parts/";
+		public const string weldPartPath			= USERDATA + "WeldedParts/";
 		public const string weldPartDefaultFile		= "part.cfg";
 		public const string weldPartInternalDefaultFile
 													= "internal.cfg";
