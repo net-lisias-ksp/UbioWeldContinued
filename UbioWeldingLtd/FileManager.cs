@@ -11,8 +11,8 @@ namespace UbioWeldingLtd
 	public static class FileManager
 	{
 
-		private static string _configFile = FileManager.FULLPATHNAME(Constants.settingXmlFilePath, Constants.settingXmlConfigFileName);
-		private static string _moduleListFile = FileManager.FULLPATHNAME(Constants.settingXmlFilePath, Constants.settingXmlListFileName);
+		public static readonly string CONFIG_FULLPATHNAME = FileManager.FULLPATHNAME(Constants.settingXmlFilePath, Constants.settingXmlConfigFileName);
+		public static readonly string MODULELIST_FULLPATHNAME = FileManager.FULLPATHNAME(Constants.settingXmlFilePath, Constants.settingXmlListFileName);
 
 		private static string[] comments =
 			{
@@ -69,12 +69,12 @@ namespace UbioWeldingLtd
 			ModuleLists moduleList = new ModuleLists();
 			FileStream FileStream;
 
-			if (System.IO.File.Exists(_configFile))
+			if (System.IO.File.Exists(CONFIG_FULLPATHNAME))
 			{
 				XmlSerializer configSerializer = new XmlSerializer(typeof(WeldingConfiguration));
 				configSerializer.UnknownNode += new XmlNodeEventHandler(serializer_UnknownNode);
 				configSerializer.UnknownAttribute += new XmlAttributeEventHandler(serializer_UnknownAttribute);
-				FileStream = new FileStream(_configFile, FileMode.Open);
+				FileStream = new FileStream(CONFIG_FULLPATHNAME, FileMode.Open);
 				configuration = (WeldingConfiguration)configSerializer.Deserialize(FileStream);
 				FileStream.Close();
 
@@ -89,12 +89,12 @@ namespace UbioWeldingLtd
 				FileStream.Close();
 			}
 
-			if (System.IO.File.Exists(_moduleListFile))
+			if (System.IO.File.Exists(MODULELIST_FULLPATHNAME))
 			{
 				XmlSerializer moduleListSerializer = new XmlSerializer(typeof(ModuleLists));
 				moduleListSerializer.UnknownNode += new XmlNodeEventHandler(serializer_UnknownNode);
 				moduleListSerializer.UnknownAttribute += new XmlAttributeEventHandler(serializer_UnknownAttribute);
-				FileStream = new FileStream(_moduleListFile, FileMode.Open);
+				FileStream = new FileStream(MODULELIST_FULLPATHNAME, FileMode.Open);
 				moduleList = (ModuleLists)moduleListSerializer.Deserialize(FileStream);
 				FileStream.Close();
 
@@ -152,7 +152,7 @@ namespace UbioWeldingLtd
 			configuration.breakingModuleAttributes = null;
 
 			XmlSerializer configSerializer = new XmlSerializer(typeof(WeldingConfiguration));
-			fileStreamWriter = new StreamWriter(_configFile);
+			fileStreamWriter = new StreamWriter(CONFIG_FULLPATHNAME);
 			configSerializer.Serialize(fileStreamWriter, configuration);
 			fileStreamWriter.Close();
 
@@ -169,7 +169,7 @@ namespace UbioWeldingLtd
 			moduleList.breakingModuleAttributes = WeldingHelpers.convertStringFromToArray(configToSave.breakingModuleAttributes != null && (configToSave.breakingModuleAttributes.Length > Constants.basicBreakingModuleAttributes.Length) ? configToSave.breakingModuleAttributes : Constants.basicBreakingModuleAttributes);
 
 			XmlSerializer moduleListSerializer = new XmlSerializer(typeof(ModuleLists));
-			fileStreamWriter = new StreamWriter(_moduleListFile);
+			fileStreamWriter = new StreamWriter(MODULELIST_FULLPATHNAME);
 			moduleListSerializer.Serialize(fileStreamWriter, moduleList);
 
 			fileStreamWriter.WriteLine("");
