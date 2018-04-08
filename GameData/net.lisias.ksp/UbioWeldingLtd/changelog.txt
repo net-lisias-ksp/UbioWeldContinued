@@ -1,3 +1,9 @@
+2018-04-08 - Version 2.6.0.2 - Continuum
+	Some more logging to make debugging easier
+	And yet some more logging
+	Better logging support
+	A very stupid mistake corrected on the settings file location.
+	Better welded dir naming.
 2018-04-05 - Version 2.6.0.1 - Continuum
 	Rebuilding under Windows' DLLs
 	Typo on .version file fixed
@@ -30,7 +36,7 @@
 	fixed scaling
 2016-10-16 - Version 2.3.4.0 - Continued
 	Adapted for KSP 1.2.0
-2016-09-18 - Version 2.3.3.1 - Continued - Pre 
+2016-09-18 - Version 2.3.3.1 - Continued - Pre
 	Adapted for KSP 1.2.0
 2016-06-13 - Version 2.3.3 - Continued
 	Merging of multiple Internals added
