@@ -3,3 +3,4 @@ TODO List
 * GUI overhaul:
     * Spliting the GUI code into different "windows", to make easier the maintainance.
     * Getting rid of the OnGUI deprecated way of doing things.
+* Check if it's not the case of using [Click Through Blocker](https://forum.kerbalspaceprogram.com/index.php?/topic/170747-141-click-through-blocker/)
