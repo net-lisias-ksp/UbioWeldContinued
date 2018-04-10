@@ -23,6 +23,15 @@ namespace UbioWeldingLtd
 			partSelection
 		}
 
+		private DisplayState __state;
+		private DisplayState state {
+			set {
+				Log.dbgGui(this, "New Main Window State: {0}", __state.ToString());
+				__state = value;
+			}
+			get { return __state; }
+		}
+
 		public static UbioZurWeldingLtd instance { get; private set; }
 		private Rect[] _guiInfoWindowColoumns = new Rect[4];
 		private Rect _editorErrorDial;
@@ -32,7 +41,6 @@ namespace UbioWeldingLtd
 		private Rect _editorSavedDial;
 		private Rect _editorMainWindow;
 		private Welder _welder;
-		private DisplayState _state;
 		private List<GUIContent> _catNames = new List<GUIContent>();
 		private GUIDropdown _catDropdown;
 		private GUIDropdown _techDropdown;
@@ -48,6 +56,7 @@ namespace UbioWeldingLtd
 		private RaycastHit _hit;
 		private Ray _ray;
 		private EditorFacility _editorFacility;
+		private EditorToolbar _editorToolbar;
 
 		private AdvancedGUITextArea _textAreaDescription = new AdvancedGUITextArea();
 		private AdvancedGUITextField _textFieldTitle = new AdvancedGUITextField();
@@ -96,6 +105,7 @@ namespace UbioWeldingLtd
 		{
 			try {
 				this.HandleAwake();
+				this._editorToolbar = new EditorToolbar(this);
 			} catch (Exception e) {
 				Log.ex(this, e);
 			} finally {
@@ -109,7 +119,7 @@ namespace UbioWeldingLtd
 			Log.dbg("Platform is {0}", Application.platform);
 
 			initConfig();
-			_state = DisplayState.none;
+			this.state = DisplayState.none;
 			_editorErrorDial = new Rect(Screen.width / 2 - Constants.guiDialogX, Screen.height / 2 - Constants.guiDialogY, Constants.guiDialogW, Constants.guiDialogH);
 			_editorWarningDial = new Rect(Screen.width / 2 - Constants.guiDialogX, Screen.height / 2 - Constants.guiDialogY, Constants.guiDialogW, Constants.guiDialogH);
 			_editorInfoWindow = new Rect(Screen.width / 2 - Constants.guiInfoWindowX, Screen.height / 2 - Constants.guiInfoWindowY, Constants.guiInfoWindowW, Constants.guiInfoWindowH);
@@ -123,26 +133,60 @@ namespace UbioWeldingLtd
 			DatabaseHandler.initMMAssembly();
 		}
 
+
+		/*
+		 * Called when plug in is unloaded
+		 */
+		public void OnDisable()
+		{
+			try {
+				this.HandleDisable();
+				this._editorToolbar.OnDisable(); this._editorToolbar = null;
+			} catch (Exception e) {
+				Log.ex(this, e);
+			} finally {
+				Log.dbgGui(this, "OnDisable handled.");
+			}
+		}
+
+		private void HandleDisable()
+		{
+		}
+
 		/// <summary>
 		/// Welds the whole active craft in the scene in case the stocktoolbar is used
 		/// </summary>
-		public void stockToolbarButtonUsed()
+		public void HandleToolbarButtonUsed()
 		{
-			if (!EditorLockManager.isEditorLocked())
+			try
 			{
-				if (EditorLogic.RootPart != null)
+				if (!EditorLockManager.isEditorLocked())
 				{
-					if (_state != DisplayState.mainWindow)
+					if (EditorLogic.RootPart != null)
 					{
-						_state = DisplayState.mainWindow;
+						if (this.state != DisplayState.mainWindow)
+						{
+							this.state = DisplayState.mainWindow;
+						}
+						else
+						{
+							closeMainwindow();
+						}
+					} else {
+						Log.dbgGui(this, "EditorLogic.RootPart == null!");
 					}
-					else
-					{
-						closeMainwindow();
-					}
+				} else {
+					Log.dbgGui(this, "EditorLockManager.isEditorLocked()!");
 				}
 			}
-			//_stockToolbarButton.SetFalse();
+			catch (Exception e)
+			{
+				Log.ex(this, e);
+			}
+			finally
+			{
+				Log.dbgGui(this, "HandleToolbarButtonUsed handled.");
+			}
 		}
 
 		/// <summary>
@@ -150,7 +194,7 @@ namespace UbioWeldingLtd
 		/// </summary>
 		private void closeMainwindow()
 		{
-			_state = DisplayState.none;
+			this.state = DisplayState.none;
 			disablePartHighlight(_selectedPartbranch);
 			_selectedPartbranch = null;
 		}
@@ -201,36 +245,16 @@ namespace UbioWeldingLtd
 			Welder.fileSimplification = oldConfigFound ? false : _config.fileSimplification;
 		}
 
-		/// <summary>
-		/// Prepares the Stocktoolbar with the Icon or enables the old style button
-		/// </summary>
-		private void initGUI()
-		{
-			if (null == EditorLogic.fetch || (!_config.allowCareerMode && HighLogic.fetch.currentGame.Mode == Game.Modes.CAREER))
-			{
-				_guiVisible = false;
-			}
-			else
-			{
-				if (_config.useStockToolbar)
-				{
-					if (EditorToolbar.instance != null)
-					{
-						EditorToolbar.instance.initToolbar();
-					}
-				}
-				_guiVisible = true;
-			}
-		}
-
-
 		/*
 		 * Called once everything in scene is loaded
 		 */
 		public void Start()
 		{
 			try {
-				initGUI();
+				this._guiVisible = (
+					null != EditorLogic.fetch 
+					&& (_config.allowCareerMode || !_config.allowCareerMode && HighLogic.fetch.currentGame.Mode != Game.Modes.CAREER)
+				);
 				EditorLockManager.resetEditorLocks();
 				_editorFacility = EditorDriver.editorFacility;
 			} catch (Exception e) {
@@ -246,6 +270,7 @@ namespace UbioWeldingLtd
 		public void Update() {
 			try {
 				this.HandleUpdate();
+				this._editorToolbar.Update();
 			} catch (Exception e) {
 				Log.ex(this, e);
 			} finally {
@@ -255,7 +280,7 @@ namespace UbioWeldingLtd
 
 		private void HandleUpdate()
 		{
-			if (_state == DisplayState.partSelection)
+			if (this.state == DisplayState.partSelection)
 			{
 				_ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 				if (Physics.Raycast(_ray, out _hit))
@@ -273,11 +298,11 @@ namespace UbioWeldingLtd
 						_selectedPartbranch.SetHighlightType(Part.HighlightType.AlwaysOn);
 						_currentSelectedPartbranch = null;
 						_previousSelectedPartbranch = null;
-						_state = DisplayState.mainWindow;
+						this.state = DisplayState.mainWindow;
 					}
 				}
 			}
-			else if (_state != DisplayState.none)
+			else if (this.state != DisplayState.none)
 			{
 				if (_selectedPartbranch != null)
 				{
@@ -334,43 +359,44 @@ namespace UbioWeldingLtd
 		/// </summary>
 		private void HandleGUI()
 		{
-			if (_guiVisible)
+			if (!_guiVisible) {
+				//TODO: Play a "uh-uh" (nops) sound.
+				Log.dbgGui(this, "GUI is set to invisible!");
+				return;
+			}
+
+			GUI.skin = _guiskin;
+			switch (this.state)
 			{
-				GUI.skin = _guiskin;
-
-				switch (_state)
-				{
-					case DisplayState.none :
-						EditorLockManager.unlockEditor(Constants.settingPreventClickThroughLock);
-						EditorLockManager.unlockEditor(Constants.settingWeldingLock);
-						break;
-					case DisplayState.weldError :
-						_editorErrorDial = GUILayout.Window((int)_state, _editorErrorDial, OnErrorDisplay, Constants.weldManufacturer);
-						break;
-					case DisplayState.weldWarning :
-						_editorWarningDial = GUILayout.Window((int)_state, _editorWarningDial, OnWarningDisplay, Constants.weldManufacturer);
-						break;
-					case DisplayState.infoWindow :
-						_editorInfoWindow = GUI.Window((int)_state, _editorInfoWindow, OnInfoWindow, Constants.weldManufacturer);
-						PreventClickThrough(_editorInfoWindow);
-						break;
-					case DisplayState.savedWindow :
-						_editorSavedDial = GUILayout.Window((int)_state, _editorSavedDial, OnSavedDisplay, Constants.weldManufacturer);
-						break;
-					case DisplayState.overwriteDial :
-						_editorOverwriteDial = GUILayout.Window((int)_state, _editorOverwriteDial, OnOverwriteDisplay, Constants.weldManufacturer);
-						break;
-					case DisplayState.mainWindow :
-						_editorMainWindow = GUI.Window((int)_state, _editorMainWindow, OnMainWindow, Constants.weldManufacturer);
-						PreventClickThrough(_editorMainWindow);
-						break;
-					case DisplayState.partSelection:
-						ScreenMessages.PostScreenMessage(Constants.guiScreenMessagePartSelection, Time.deltaTime, ScreenMessageStyle.UPPER_CENTER);
-						break;
-				}
-			} //if (_guiVisible)
+				case DisplayState.none:
+					EditorLockManager.unlockEditor(Constants.settingPreventClickThroughLock);
+					EditorLockManager.unlockEditor(Constants.settingWeldingLock);
+					break;
+				case DisplayState.weldError:
+					_editorErrorDial = GUILayout.Window((int)this.state, _editorErrorDial, OnErrorDisplay, Constants.weldManufacturer);
+					break;
+				case DisplayState.weldWarning:
+					_editorWarningDial = GUILayout.Window((int)this.state, _editorWarningDial, OnWarningDisplay, Constants.weldManufacturer);
+					break;
+				case DisplayState.infoWindow:
+					_editorInfoWindow = GUI.Window((int)this.state, _editorInfoWindow, OnInfoWindow, Constants.weldManufacturer);
+					PreventClickThrough(_editorInfoWindow);
+					break;
+				case DisplayState.savedWindow:
+					_editorSavedDial = GUILayout.Window((int)this.state, _editorSavedDial, OnSavedDisplay, Constants.weldManufacturer);
+					break;
+				case DisplayState.overwriteDial:
+					_editorOverwriteDial = GUILayout.Window((int)this.state, _editorOverwriteDial, OnOverwriteDisplay, Constants.weldManufacturer);
+					break;
+				case DisplayState.mainWindow:
+					_editorMainWindow = GUI.Window((int)this.state, _editorMainWindow, OnMainWindow, Constants.weldManufacturer);
+					PreventClickThrough(_editorMainWindow);
+					break;
+				case DisplayState.partSelection:
+					ScreenMessages.PostScreenMessage(Constants.guiScreenMessagePartSelection, Time.deltaTime, ScreenMessageStyle.UPPER_CENTER);
+					break;
+			}
 		} //private void OnDraw()
-
 
 		private void weldPart(Part partToWeld)
 		{
@@ -399,7 +425,7 @@ namespace UbioWeldingLtd
 			if (ret < 0)
 			{
 				Log.dbg("{0}", Constants.logEndWeld);
-				_state = DisplayState.weldError;
+				this.state = DisplayState.weldError;
 				return;
 			}
 			else
@@ -421,7 +447,7 @@ namespace UbioWeldingLtd
 					if (ret< 0)
 					{
 						Log.dbg("{0}", Constants.logEndWeld);
-						_state = DisplayState.weldError;
+						this.state = DisplayState.weldError;
 						return;
 					}
 					else
@@ -453,13 +479,13 @@ namespace UbioWeldingLtd
 			if (warning)
 			{
 				Log.dbg(Constants.logEndWeld);
-				_state = DisplayState.weldWarning;
+				this.state = DisplayState.weldWarning;
 			}
 			else
 			{
 				Log.dbg("welder.Category: {0}", (int)_welder.Category);
 				_catDropdown.SelectedItemIndex = (int)_welder.Category;
-				_state = DisplayState.infoWindow;
+				this.state = DisplayState.infoWindow;
 			}
 		}
 
@@ -553,7 +579,7 @@ namespace UbioWeldingLtd
 			//SelectPArtbranch button
 			if (GUILayout.RepeatButton(Constants.guiSelectPartGUIContent, GUILayout.MaxWidth(160)))
 			{
-				_state = DisplayState.partSelection;
+				this.state = DisplayState.partSelection;
 			}
 
 			//Weld button
@@ -623,7 +649,7 @@ namespace UbioWeldingLtd
 			if (GUILayout.Button(Constants.guiOK))
 			{
 				EditorLockManager.unlockEditor(Constants.settingWeldingLock);
-				_state = DisplayState.none;
+				this.state = DisplayState.none;
 			}
 			GUILayout.EndVertical();
 
@@ -654,7 +680,7 @@ namespace UbioWeldingLtd
 			GUILayout.FlexibleSpace();
 			if (GUILayout.Button(Constants.guiOK))
 			{
-				_state = DisplayState.infoWindow;
+				this.state = DisplayState.infoWindow;
 			}
 			GUILayout.EndVertical();
 
@@ -692,11 +718,11 @@ namespace UbioWeldingLtd
 			if (GUILayout.Button(Constants.guiOK))
 			{
 				WriteCfg(filepath);
-				_state = DisplayState.savedWindow;
+				this.state = DisplayState.savedWindow;
 			}
 			if (GUILayout.Button(Constants.guiCancel))
 			{
-				_state = DisplayState.infoWindow;
+				this.state = DisplayState.infoWindow;
 			}
 			GUILayout.EndVertical();
 
@@ -737,7 +763,7 @@ namespace UbioWeldingLtd
 				GUILayout.FlexibleSpace();
 				if (GUILayout.Button(Constants.guiOK))
 				{
-					_state = DisplayState.none;
+					this.state = DisplayState.none;
 					ClearEditor();
 				}
 			}
@@ -780,17 +806,17 @@ namespace UbioWeldingLtd
 						{
 							GUI.Label(new Rect(_guiInfoWindowColoumns[i].x, posH, columnWidth, height), "Name:");
 							posH += height + margin;
-							//_welder.Name = _textFieldTitle.DrawAdvancedGUITextField(new Rect(_guiInfoWindowColoumns[i].x, posH, columnWidth, height), _welder.Name, 100, (int)_state);
+							//_welder.Name = _textFieldTitle.DrawAdvancedGUITextField(new Rect(_guiInfoWindowColoumns[i].x, posH, columnWidth, height), _welder.Name, 100, (int)this.state);
 							_welder.Name = GUI.TextField(new Rect(_guiInfoWindowColoumns[i].x, posH, columnWidth, height), _welder.Name, 100);
 							posH += height + margin;
 							GUI.Label(new Rect(_guiInfoWindowColoumns[i].x, posH, columnWidth, height), "Title:");
 							posH += height + margin;
-							//_welder.Title = _textFieldTitle.DrawAdvancedGUITextField(new Rect(_guiInfoWindowColoumns[i].x, posH, columnWidth, height), _welder.Title, 100, (int)_state);
+							//_welder.Title = _textFieldTitle.DrawAdvancedGUITextField(new Rect(_guiInfoWindowColoumns[i].x, posH, columnWidth, height), _welder.Title, 100, (int)this.state);
 							_welder.Title = GUI.TextField(new Rect(_guiInfoWindowColoumns[i].x, posH, columnWidth, height), _welder.Title, 100);
 							posH += height + margin;
 							GUI.Label(new Rect(_guiInfoWindowColoumns[i].x, posH, columnWidth, height), "Description:");
 							posH += height + margin;
-							//_welder.Description = _textAreaDescription.DrawAdvancedGUITextArea(new Rect(_guiInfoWindowColoumns[i].x, posH, columnWidth, 7 * height + 6 * margin), _welder.Description, 600, (int)_state);
+							//_welder.Description = _textAreaDescription.DrawAdvancedGUITextArea(new Rect(_guiInfoWindowColoumns[i].x, posH, columnWidth, 7 * height + 6 * margin), _welder.Description, 600, (int)this.state);
 							_welder.Description = GUI.TextArea(new Rect(_guiInfoWindowColoumns[i].x, posH, columnWidth, 8 * height + 7 * margin), _welder.Description, 600);
 							posH += 8 * height + 8 * margin;
 							GUI.Label(new Rect(_guiInfoWindowColoumns[i].x, posH, columnWidth, height), "Symmetry:");
@@ -931,11 +957,11 @@ namespace UbioWeldingLtd
 																	 );
 						partfile.Close();
 						WriteCfg(filepath);
-						_state = DisplayState.savedWindow;
+						this.state = DisplayState.savedWindow;
 					}
 					else
 					{
-						_state = DisplayState.overwriteDial;
+						this.state = DisplayState.overwriteDial;
 					}
 				}
 			}
@@ -945,7 +971,7 @@ namespace UbioWeldingLtd
 			}
 			if (GUI.Button(new Rect(_guiInfoWindowColoumns[2].x, height + columnHeight + margin, columnWidth * 0.5f, height), Constants.guiCancel))
 			{
-				_state = DisplayState.none;
+				this.state = DisplayState.none;
 				ClearEditor();
 			}
 			GUI.DragWindow();
