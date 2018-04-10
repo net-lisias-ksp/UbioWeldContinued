@@ -7,6 +7,7 @@ Further reading:
 
 * Manual (Work in Progress)
 * [ChangeLog](https://raw.githubusercontent.com/net-lisias-ksp/UbioWeldContinuum/master/GameData/net.lisias.ksp/UbioWeldingLtd/license.txt)
+* [TODO](https://raw.githubusercontent.com/net-lisias-ksp/UbioWeldContinuum/master/GameData/net.lisias.ksp/UbioWeldingLtd/todo.txt) list
 * Licensing Terms
 	+ [SKL 1.0](https://ksp.lisias.net/SKL-1_0.txt)
 	+ [CC BY-NC-SA 3.0](https://raw.githubusercontent.com/net-lisias-ksp/UbioWeldContinuum/master/GameData/net.lisias.ksp/UbioWeldingLtd/CC_BY-NC-SA-3_0.txt)

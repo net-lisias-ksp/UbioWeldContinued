@@ -1,0 +1,5 @@
+TODO List
+
+* GUI overhaul:
+    * Spliting the GUI code into different "windows", to make easier the maintainance.
+    * Getting rid of the OnGUI deprecated way of doing things.
