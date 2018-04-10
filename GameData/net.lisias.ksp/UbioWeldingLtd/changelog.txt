@@ -1,3 +1,7 @@
+2018-04-09 - Version 2.6.0.3 - Continuum
+	Solving a problem on the Toolbar, that was raising an exception internally on the game and preventing all the toolbar buttons (not just mine) to show when coming back to the Editor once a ship is launched.
+	Getting rid of unused config options.
+	Refactoring the Plug-In's life cycle code to better cope with nowadays KSP versions.
 2018-04-08 - Version 2.6.0.2 - Continuum
 	Some more logging to make debugging easier
 	And yet some more logging
