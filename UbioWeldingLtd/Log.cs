@@ -57,7 +57,7 @@ namespace UbioWeldingLtd
 			if (debug > 1) Debug.Log(string.Format("[{0}] DEBUG WARNING {1}", Constants.logPrefix, text));
 		}
 
-		public static void dbgGui(MonoBehaviour logger, string format, object[] parms)
+		public static void dbgGui(MonoBehaviour logger, string format, params object[] parms)
 		{
 			if (debug > 2) Debug.Log(string.Format("[{0}] DEBUG GUI {1} - {2}", Constants.logPrefix, logger.name, string.Format(format, parms)));
 		}
