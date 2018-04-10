@@ -130,8 +130,15 @@ namespace UbioWeldingLtd
 
 		public bool advancedDebug
 		{
-			get { return Log.debug; }
-			set { Log.debug = value; }
+			get { return 0 != Log.debug; }
+			set
+			{
+#if (DEBUG)
+				Log.debug = value ? 3 : 0;
+#else
+				Log.debug = value ? 2 : 0;
+#endif
+			}
 		}
 
 		public bool fileSimplification

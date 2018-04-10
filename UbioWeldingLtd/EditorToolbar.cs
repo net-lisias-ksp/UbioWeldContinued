@@ -61,7 +61,7 @@ namespace UbioWeldingLtd
 			catch (Exception exception)
 			{
 				Log.err("{0} => Awake", instance.GetType());
-				Log.ex(exception, this);
+				Log.ex(this, exception);
 			}
 		}
 
@@ -84,12 +84,14 @@ namespace UbioWeldingLtd
 					Constants.weldManufacturer
 					);
 				this._isEnabled = true;
-				Log.dbg("-> OnGuiAppLauncherReady done");
 			}
 			catch (Exception exception)
 			{
-				Log.err("{0} => OnGuiAppLauncherReady", instance.GetType());
-				Log.ex(exception, this);
+				Log.ex(this, exception);
+			}
+			finally
+			{
+				Log.dbg("OnGuiAppLauncherReady handled");
 			}
 		}
 
@@ -107,8 +109,11 @@ namespace UbioWeldingLtd
 			}
 			catch (Exception exception)
 			{
-				Log.err("{0} => useToolbarButton", instance.GetType());
-				Log.ex(exception, this);
+				Log.ex(this, exception);
+			}
+			finally
+			{
+				Log.dbg("useToolbarButton handled.");
 			}
 		}
 
@@ -128,12 +133,14 @@ namespace UbioWeldingLtd
 					Destroy(this._toolbar);
 					this._toolbarControl = null;
 				}
-				Log.dbg("BuildToolbar->OnDestroy");
 			}
 			catch (Exception exception)
 			{
-				Log.err("{0} => OnDestroy", instance.GetType());
-				Log.ex(exception, this);
+				Log.ex(this, exception);
+			}
+			finally
+			{
+				Log.dbg("OnDestroy handled.");
 			}
 		}
 
@@ -154,8 +161,11 @@ namespace UbioWeldingLtd
 			}
 			catch (Exception exception)
 			{
-				Log.err("{0} => Update", instance.GetType());
-				Log.ex(exception, this);
+				Log.ex(this, exception);
+			}
+			finally
+			{
+				Log.dbg("Update handled");
 			}
 		}
 	}

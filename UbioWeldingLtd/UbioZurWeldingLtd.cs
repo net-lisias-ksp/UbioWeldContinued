@@ -69,7 +69,7 @@ namespace UbioWeldingLtd
 		public GUISkin guiskin
 		{
 			get { return _guiskin; }
-			}
+		}
 
 		public GUIStyle guistyle
 		{
@@ -94,8 +94,18 @@ namespace UbioWeldingLtd
 		 */
 		public void Awake()
 		{
+			try {
+				this.HandleAwake();
+			} catch (Exception e) {
+				Log.ex(this, e);
+			} finally {
+				Log.dbgGui(this, "Awake handled.");
+			}
+		}
+
+		private void HandleAwake()
+		{
 			instance = this;
-			Log.dbg("{0} => Awake", instance.GetType());
 			Log.dbg("Platform is {0}", Application.platform);
 
 			initConfig();
@@ -219,16 +229,31 @@ namespace UbioWeldingLtd
 		 */
 		public void Start()
 		{
-			initGUI();
-			EditorLockManager.resetEditorLocks();
-			_editorFacility = EditorDriver.editorFacility;
+			try {
+				initGUI();
+				EditorLockManager.resetEditorLocks();
+				_editorFacility = EditorDriver.editorFacility;
+			} catch (Exception e) {
+				Log.ex(this, e);
+			} finally {
+				Log.dbgGui(this, "Start handled");
+			}
 		}
-
 
 		/// <summary>
 		/// Unity default function for stuff that happens every frame
 		/// </summary>
-		public void Update()
+		public void Update() {
+			try {
+				this.HandleUpdate();
+			} catch (Exception e) {
+				Log.ex(this, e);
+			} finally {
+				Log.dbgGui(this, "Update handled.");
+			}
+		}
+
+		private void HandleUpdate()
 		{
 			if (_state == DisplayState.partSelection)
 			{
@@ -267,7 +292,18 @@ namespace UbioWeldingLtd
 		/// </summary>
 		public void OnGUI()
 		{
-			OnDraw();
+			try
+			{
+				this.HandleGUI();
+			}
+			catch (Exception e)
+			{
+				Log.ex(this, e);
+			}
+			finally
+			{
+				Log.dbgGui(this, "OnGUI handled.");
+			}
 		}
 
 		/// <summary>
@@ -296,7 +332,7 @@ namespace UbioWeldingLtd
 		/// <summary>
 		/// Public Eventcall at the GuiDraw
 		/// </summary>
-		private void OnDraw()
+		private void HandleGUI()
 		{
 			if (_guiVisible)
 			{
@@ -345,8 +381,8 @@ namespace UbioWeldingLtd
 #if (DEBUG)
 			Debug.ClearDeveloperConsole();
 
-			Log.dbg("{0}", Constants.logVersion);
-			Log.dbg("{0}", Constants.logStartWeld);
+			Log.info("{0}", Constants.logVersion);
+			Log.info("{0}", Constants.logStartWeld);
 #endif
 			bool warning = false;
 			_welder = new Welder();
@@ -428,10 +464,20 @@ namespace UbioWeldingLtd
 		}
 
 
+		private void OnMainWindow(int windowID) {
+			try {
+				this.HandleMainWindow(windowID);
+			} catch (Exception e) {
+				Log.ex(this, e);
+			} finally {
+				Log.dbgGui(this, "OnMainWindow handled.");
+			}
+		}
+
 		/*
 		 * Main window
 		 */
-		private void OnMainWindow(int windowID)
+		private void HandleMainWindow(int windowID)
 		{
 			GUIStyle _settingsToggleGroupStyle = new GUIStyle(GUI.skin.toggle);
 			_settingsToggleGroupStyle.margin.left += 40;
@@ -552,10 +598,20 @@ namespace UbioWeldingLtd
 		}
 
 
+		private void OnErrorDisplay(int windowID) {
+			try {
+				this.HandleErrorDisplay(windowID);
+			} catch (Exception e) {
+				Log.ex(this, e);
+			} finally {
+				Log.dbgGui(this, "OnErrorDisplay handled.");
+			}
+		}
+
 		/*
 		 * Error Message
 		 */
-		private void OnErrorDisplay(int windowID)
+		private void HandleErrorDisplay(int windowID)
 		{
 			GUILayout.BeginVertical();
 			GUILayout.BeginHorizontal();
@@ -574,10 +630,20 @@ namespace UbioWeldingLtd
 			GUI.DragWindow();
 		} //private void OnErrorDisplay()
 
+		private void OnWarningDisplay(int windowID) {
+			try {
+				this.HandleWarningDisplay(windowID);
+			} catch (Exception e) {
+				Log.ex(this, e);
+			} finally {
+				Log.dbgGui(this, "OnWarningDislay handled.");
+			}
+		}
+
 		/*
 		 * Warning Message
 		 */
-		private void OnWarningDisplay(int windowID)
+		private void HandleWarningDisplay(int windowID)
 		{
 			GUILayout.BeginVertical();
 			GUILayout.BeginHorizontal();
@@ -595,10 +661,20 @@ namespace UbioWeldingLtd
 			GUI.DragWindow();
 		} //private void OnErrorDisplay()
 
+		private void OnOverwriteDisplay(int windowID) {
+			try {
+				this.OnOverwriteDisplay(windowID);
+			} catch (Exception e) {
+				Log.ex(this, e);
+			} finally {
+				Log.dbgGui(this, "OnOverwriteDisplay handled.");
+			}
+		}
+
 		/*
 		 * Overwrite Message
 		 */
-		private void OnOverwriteDisplay(int windowID)
+		private void HandleOverwriteDisplay(int windowID)
 		{
 			GUILayout.BeginVertical();
 			GUILayout.BeginHorizontal();
@@ -627,10 +703,20 @@ namespace UbioWeldingLtd
 			GUI.DragWindow();
 		} //private void OnErrorDisplay()
 
+		private void OnSavedDisplay(int windowID) {
+			try {
+				this.HandleSavedDisplay(windowID);
+			} catch (Exception e) {
+				Log.ex(this, e);
+			} finally {
+				Log.dbgGui(this, "OnSavedDisplay handled.");
+			}
+		}
+
 		/*
 		 * Saved Message
 		 */
-		private void OnSavedDisplay(int windowID)
+		private void HandleSavedDisplay(int windowID)
 		{
 			bool MMPathLoaderIsReady = DatabaseHandler.isModuleManagerInstalled ? (bool)DatabaseHandler.DynaInvokeMMPatchLoaderMethod("IsReady") : false;
 			GUILayout.BeginVertical();
@@ -660,12 +746,21 @@ namespace UbioWeldingLtd
 			GUI.DragWindow();
 		} //private void OnErrorDisplay()
 
+		private void OnInfoWindow(int windowID) {
+			try {
+				this.HandleInfoWindow(windowID);
+			} catch (Exception e) {
+				Log.ex(this, e);
+			} finally {
+				Log.dbgGui(this, "OnHandleInfoWindow handled.");
+			}
+		}
 
 		/// <summary>
 		/// Darws the Info window where the new saved partfile can be configured
 		/// </summary>
 		/// <param name="windowID"></param>
-		void OnInfoWindow(int windowID)
+		private void HandleInfoWindow(int windowID)
 		{
 			float margin = 5f;
 			float height = 20;
