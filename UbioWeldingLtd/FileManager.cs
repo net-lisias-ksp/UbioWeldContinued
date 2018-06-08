@@ -67,16 +67,14 @@ namespace UbioWeldingLtd
 
 			WeldingConfiguration configuration = new WeldingConfiguration();
 			ModuleLists moduleList = new ModuleLists();
-			FileStream FileStream;
+			FileStream FileStream = null;
 
-			if (System.IO.File.Exists(CONFIG_FULLPATHNAME))
-			{
+			try {
 				XmlSerializer configSerializer = new XmlSerializer(typeof(WeldingConfiguration));
 				configSerializer.UnknownNode += new XmlNodeEventHandler(serializer_UnknownNode);
 				configSerializer.UnknownAttribute += new XmlAttributeEventHandler(serializer_UnknownAttribute);
 				FileStream = new FileStream(CONFIG_FULLPATHNAME, FileMode.Open);
 				configuration = (WeldingConfiguration)configSerializer.Deserialize(FileStream);
-				FileStream.Close();
 
 				if (configuration.MainWindowXPosition > (Screen.width - Constants.guiScreenEdgeClearance))
 				{
@@ -86,17 +84,20 @@ namespace UbioWeldingLtd
 				{
 					configuration.MainWindowYPosition = Screen.height - Constants.guiScreenEdgeClearance;
 				}
-				FileStream.Close();
+			} catch (Exception e) {
+				configuration = new WeldingConfiguration();
+				Log.warn(String.Format("{0} : {1}", CONFIG_FULLPATHNAME, e.Message));
+			} finally {
+				if (null != FileStream) FileStream.Close();
+				FileStream = null;
 			}
 
-			if (System.IO.File.Exists(MODULELIST_FULLPATHNAME))
-			{
+			try {
 				XmlSerializer moduleListSerializer = new XmlSerializer(typeof(ModuleLists));
 				moduleListSerializer.UnknownNode += new XmlNodeEventHandler(serializer_UnknownNode);
 				moduleListSerializer.UnknownAttribute += new XmlAttributeEventHandler(serializer_UnknownAttribute);
 				FileStream = new FileStream(MODULELIST_FULLPATHNAME, FileMode.Open);
 				moduleList = (ModuleLists)moduleListSerializer.Deserialize(FileStream);
-				FileStream.Close();
 
 				configuration.vector2CurveModules = moduleList.vector2CurveModules != null ? WeldingHelpers.convertFromToStringArray(moduleList.vector2CurveModules) : new string[0];
 				configuration.vector4CurveModules = moduleList.vector4CurveModules != null ? WeldingHelpers.convertFromToStringArray(moduleList.vector4CurveModules) : new string[0];
@@ -108,10 +109,7 @@ namespace UbioWeldingLtd
 				configuration.averagedModuleAttributes = moduleList.averagedModuleAttributes != null ? WeldingHelpers.convertFromToStringArray(moduleList.averagedModuleAttributes) : new string[0];
 				configuration.unchangedModuleAttributes = moduleList.unchangedModuleAttributes != null ? WeldingHelpers.convertFromToStringArray(moduleList.unchangedModuleAttributes) : new string[0];
 				configuration.breakingModuleAttributes = moduleList.breakingModuleAttributes != null ? WeldingHelpers.convertFromToStringArray(moduleList.breakingModuleAttributes) : new string[0];
-				FileStream.Close();
-			}
-			else
-			{
+			} catch (Exception e) {
 				configuration.vector2CurveModules = Constants.basicVector2CurveModules;
 				configuration.vector4CurveModules = Constants.basicVector4CurveModules;
 				configuration.subModules = Constants.basicSubModules;
@@ -122,7 +120,12 @@ namespace UbioWeldingLtd
 				configuration.averagedModuleAttributes = Constants.basicAveragedModuleAttributes;
 				configuration.unchangedModuleAttributes = Constants.basicUnchangedModuleAttributes;
 				configuration.breakingModuleAttributes = Constants.basicBreakingModuleAttributes;
+				Log.warn(String.Format("{0} : {1}", CONFIG_FULLPATHNAME, e.Message));
+			} finally {
+				if (null != FileStream) FileStream.Close();
+				FileStream = null;
 			}
+
 			Log.dbg("Config was loaded");
 			return configuration;
 		}
@@ -132,6 +135,18 @@ namespace UbioWeldingLtd
 		/// </summary>
 		/// <param name="configToSave"></param>
 		public static void saveConfig(WeldingConfiguration configToSave)
+		{
+			try {
+				saveConfig(configToSave, CONFIG_FULLPATHNAME, MODULELIST_FULLPATHNAME);
+			} catch (Exception e) {
+				Log.warn(e.Message);
+				checkPathnameAvailability(CONFIG_FULLPATHNAME);
+				checkPathnameAvailability(MODULELIST_FULLPATHNAME);
+				saveConfig(configToSave, CONFIG_FULLPATHNAME, MODULELIST_FULLPATHNAME);
+			}
+		}
+
+		private static void saveConfig(WeldingConfiguration configToSave, String configFullPathName, String moduleFullPathName)
 		{
 			WeldingConfiguration configuration = (WeldingConfiguration)configToSave.clone();
 			ModuleLists moduleList = new ModuleLists();
@@ -152,7 +167,7 @@ namespace UbioWeldingLtd
 			configuration.breakingModuleAttributes = null;
 
 			XmlSerializer configSerializer = new XmlSerializer(typeof(WeldingConfiguration));
-			fileStreamWriter = new StreamWriter(CONFIG_FULLPATHNAME);
+			fileStreamWriter = new StreamWriter(configFullPathName);
 			configSerializer.Serialize(fileStreamWriter, configuration);
 			fileStreamWriter.Close();
 
@@ -169,7 +184,7 @@ namespace UbioWeldingLtd
 			moduleList.breakingModuleAttributes = WeldingHelpers.convertStringFromToArray(configToSave.breakingModuleAttributes != null && (configToSave.breakingModuleAttributes.Length > Constants.basicBreakingModuleAttributes.Length) ? configToSave.breakingModuleAttributes : Constants.basicBreakingModuleAttributes);
 
 			XmlSerializer moduleListSerializer = new XmlSerializer(typeof(ModuleLists));
-			fileStreamWriter = new StreamWriter(MODULELIST_FULLPATHNAME);
+			fileStreamWriter = new StreamWriter(moduleFullPathName);
 			moduleListSerializer.Serialize(fileStreamWriter, moduleList);
 
 			fileStreamWriter.WriteLine("");
@@ -181,20 +196,9 @@ namespace UbioWeldingLtd
 			Log.dbg("Config was saved");
 		}
 
-		private static string root_dir = null;
 		public static string FULLPATHNAME(string pathname)
 		{
-			if (null == root_dir) {
-				root_dir = Assembly.GetExecutingAssembly().Location
-								   .Replace(new FileInfo(Assembly.GetExecutingAssembly().Location).Name, "")
-								   .Replace(Constants.GAMEDATA, "")
-								   .Replace(Constants.ROOT, "")
-								   .Replace(Constants.BASE, "")
-								   ;
-				// change this to KSPUtil.ApplicationRootPath - better!
-				// NOTE: But this will prevent the plugin from finding his way if someone move it out of the net.lisias.ksp rootdir...
-			}
-			return Path.Combine(root_dir, pathname);
+			return Path.Combine(KSPUtil.ApplicationRootPath, pathname);
 		}
 
 		public static string FULLPATHNAME(string basedir, string pathname)
@@ -205,6 +209,16 @@ namespace UbioWeldingLtd
 		public static string PATHNAME(string basedir, string dir, string filename)
 		{
 			return Path.Combine(Path.Combine(basedir, dir), filename);
+		}
+
+		// Checks the full pathname (filename included), checks if the parent dirs are available, creating it when not.
+		// Raises exception if some directory on the hiarachy cannot be created.
+		// Returns if the file exists.
+		private static bool checkPathnameAvailability(string pathname)
+		{
+			string dirnames = Path.GetDirectoryName(pathname);
+			Directory.CreateDirectory(dirnames);
+			return File.Exists(pathname);
 		}
 	}
 }
