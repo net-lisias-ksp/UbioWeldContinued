@@ -14,7 +14,7 @@ namespace UbioWeldingLtd
 		public static readonly string CONFIG_FULLPATHNAME = FileManager.FULLPATHNAME(Constants.settingXmlFilePath, Constants.settingXmlConfigFileName);
 		public static readonly string MODULELIST_FULLPATHNAME = FileManager.FULLPATHNAME(Constants.settingXmlFilePath, Constants.settingXmlListFileName);
 
-		private static string[] comments =
+		private static readonly string[] comments =
 			{
 				Constants.CommentOutText(Constants.setupGeneralLine1),
 				Constants.CommentOutText(Constants.setupGeneralLine2),
