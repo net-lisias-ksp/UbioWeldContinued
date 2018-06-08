@@ -5,3 +5,4 @@ echo $VERSION
 FILE=UbioWeldContinuum-$VERSION.zip
 rm $FILE
 zip -r $FILE ./GameData/* -x .DS_Store
+mv $FILE ./Archive
