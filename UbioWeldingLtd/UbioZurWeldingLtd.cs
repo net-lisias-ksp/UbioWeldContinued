@@ -280,34 +280,39 @@ namespace UbioWeldingLtd
 
 		private void HandleUpdate()
 		{
-			if (this.state == DisplayState.partSelection)
+			switch (this.state)
 			{
-				_ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-				if (Physics.Raycast(_ray, out _hit))
-				{
-					_currentSelectedPartbranch = _hit.transform.gameObject.GetComponent<Part>() as Part;
-					if (_previousSelectedPartbranch != null && _previousSelectedPartbranch != _currentSelectedPartbranch)
+				case DisplayState.none:
+					break;
+
+				case DisplayState.partSelection:
+					_ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+					if (Physics.Raycast(_ray, out _hit))
 					{
-						disablePartHighlight(_previousSelectedPartbranch);
+						_currentSelectedPartbranch = _hit.transform.gameObject.GetComponent<Part>() as Part;
+						if (_previousSelectedPartbranch != null && _previousSelectedPartbranch != _currentSelectedPartbranch)
+						{
+							disablePartHighlight(_previousSelectedPartbranch);
+						}
+						enablePartHighlight(_currentSelectedPartbranch);
+						_previousSelectedPartbranch = _currentSelectedPartbranch;
+						if (Input.GetKeyUp(KeyCode.Mouse0) && (Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)))
+						{
+							_selectedPartbranch = _currentSelectedPartbranch;
+							_selectedPartbranch.SetHighlightType(Part.HighlightType.AlwaysOn);
+							_currentSelectedPartbranch = null;
+							_previousSelectedPartbranch = null;
+							this.state = DisplayState.mainWindow;
+						}
 					}
-					enablePartHighlight(_currentSelectedPartbranch);
-					_previousSelectedPartbranch = _currentSelectedPartbranch;
-					if (Input.GetKeyUp(KeyCode.Mouse0) && (Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)))
+				    break;
+				
+				default:
+					if (_selectedPartbranch != null)
 					{
-						_selectedPartbranch = _currentSelectedPartbranch;
-						_selectedPartbranch.SetHighlightType(Part.HighlightType.AlwaysOn);
-						_currentSelectedPartbranch = null;
-						_previousSelectedPartbranch = null;
-						this.state = DisplayState.mainWindow;
+						enablePartHighlight(_selectedPartbranch);
 					}
-				}
-			}
-			else if (this.state != DisplayState.none)
-			{
-				if (_selectedPartbranch != null)
-				{
-					enablePartHighlight(_selectedPartbranch);
-				}
+					break;
 			}
 		}
 
