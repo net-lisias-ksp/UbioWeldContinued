@@ -1,66 +1,72 @@
-2018-04-09 - Version 2.6.0.3 - Continuum
+2018-0607 - Version 2.6.0.4 - Continuum
+	Added Hard Dependency: ClickThroughBlocker
+	Better Exception handling while loading configurations
+		They are created automatically now
+	Some code maintainabiity improvments
+	Reworking MiniAVC support.
+2018-0409 - Version 2.6.0.3 - Continuum
 	Solving a problem on the Toolbar, that was raising an exception internally on the game and preventing all the toolbar buttons (not just mine) to show when coming back to the Editor once a ship is launched.
 	Getting rid of unused config options.
 	Refactoring the Plug-In's life cycle code to better cope with nowadays KSP versions.
-2018-04-08 - Version 2.6.0.2 - Continuum
+2018-0408 - Version 2.6.0.2 - Continuum
 	Some more logging to make debugging easier
 	And yet some more logging
 	Better logging support
 	A very stupid mistake corrected on the settings file location.
 	Better welded dir naming.
-2018-04-05 - Version 2.6.0.1 - Continuum
+2018-0405 - Version 2.6.0.1 - Continuum
 	Rebuilding under Windows' DLLs
 	Typo on .version file fixed
 	minor and unimportant internal enhancements
-2018-04-04 - Version 2.6.0.0 - Continuum
+2018-0404 - Version 2.6.0.0 - Continuum
 	Adapted for KSP 1.4.1
 	Changing user files location to a more sensible place.
-	Using ToolbarControl from now on
-2017-07-09 - Version 2.5.1.0 - Continued
+	Added Hard Dependency: ToolbarControl
+2017-0709 - Version 2.5.1.0 - Continued
 	Adapted for KSP 1.3.0
 	Fixed empty slots in weldedmeshswitch
-2016-12-28 - Version 2.5.0.0 - Continued
+2016-1228 - Version 2.5.0.0 - Continued
 	Adapted for KSP 1.2.1
 	new feature internal merging, creates new internals
 	improved mass calculation precision
-2016-11-15 - Version 2.4.4.0 - Continued
+2016-1115 - Version 2.4.4.0 - Continued
 	fixed NPE with certain parts
-2016-11-10 - Version 2.4.3.0 - Continued
+2016-1110 - Version 2.4.3.0 - Continued
 	fixed scaling with parts that only contain a mesh
-2016-11-08 - Version 2.4.2.0 - Continued
+2016-1108 - Version 2.4.2.0 - Continued
 	fixed scaling
 	CoM Offset for Models fixed
-2016-11-08 - Version 2.4.1.0 - Continued
+2016-1108 - Version 2.4.1.0 - Continued
 	fixed scaling
-2016-11-06 - Version 2.4.0.0 - Continued
+2016-1106 - Version 2.4.0.0 - Continued
 	Adapted for KSP 1.2.1
 	Fixed welding of weldments
 	fixed rotation
 	fixed positioning
 	fixed scaling
-2016-10-16 - Version 2.3.4.0 - Continued
+2016-1016 - Version 2.3.4.0 - Continued
 	Adapted for KSP 1.2.0
-2016-09-18 - Version 2.3.3.1 - Continued - Pre
+2016-0918 - Version 2.3.3.1 - Continued - Pre
 	Adapted for KSP 1.2.0
-2016-06-13 - Version 2.3.3 - Continued
+2016-0613 - Version 2.3.3 - Continued
 	Merging of multiple Internals added
 	Added minimized values
 	Mini AVC integrated
-2016-05-08 - Version 2.3.2 - Continued
+2016-0508 - Version 2.3.2 - Continued
 	Fix for massless parts causing NAN values and parts
 	Improved Submodule merging, endless possible
-2016-05-06 - Version 2.3.1 - Continued
+2016-0506 - Version 2.3.1 - Continued
 	Adapted for KSP 1.1.2
 	new weldedFlagDecal Module
 	partbranch is centered at preweldment
-2016-04-03 - Version 2.3.0 - Continued
+2016-0403 - Version 2.3.0 - Continued
 	Adapted for KSP 1.1.0
-2015-11-11 - Version 2.2.1 - Continued
+2015-1111 - Version 2.2.1 - Continued
 	Recompiled for KSP 1.0.5
-2015-10-11 - Version 2.2.1 - Continued
+2015-1011 - Version 2.2.1 - Continued
 	added file simplification for experienced users as config field in the settings.
 	improved config changes during play
-2015-08-27 - Version 2.2.0 - Continued
+2015-0827 - Version 2.2.0 - Continued
 	Compatibility with KSP 1.0.4
 	New WeldedMeshSwitch that is able to select the correct meshes for welded parts that contained the InterstellarMeshSwitch
 	Fixed a major bug that caused the Welding and UI to freeze
@@ -75,32 +81,32 @@
 	settings contains a precisionDigits value that will round the values of the new part to this amount of digits after the dot
 	saving the settings out of the game now makes them also the actual ones used
 	safety check in the weldedMeshSwitch to prevent nullpointer exeption at Heatshields
-2015-05-27 - Version 2.1.3 - Continued
+2015-0527 - Version 2.1.3 - Continued
 	Fixed a UI bug that prevented the saving of the weldment
-2015-05-27 - Version 2.1.2 - Continued
+2015-0527 - Version 2.1.2 - Continued
 	Compatibility with KSP 1.0.x
-2015-01-14 - Version 2.1.1 - Continued
+2015-0114 - Version 2.1.1 - Continued
 	Compatibility with Linux and MacOS
 	AVC version check integration
 	Fixed problem with with the welding of parts without category
-2014-12-31 - Version 2.1-Unofficial
+2014-1231 - Version 2.1-Unofficial
 	Compatibility with KSP 0.90
 	Added partselection, selecting no part will use the whole craft
 	Fixed problems with config laoding
 	Added <MaximizedModuleAttributes> for values where only the highest is wanted like the new SAS Level
 	Added <ModulesToMultiply> for Modules that shall be added mutliple times
 	Fixed problems with Modulemerging where sometimes modules would not be added correctly
-2014-12-03
+2014-1203
 	Fixed wrong rescaling of some models in KSP 0.25
 	Improved database reloading with ModuleManager installed
 	Updated <ModulesToIgnore> list
 	Dropped compatibility with KSP 0.24.2
-2014-11-01
+2014-1101
 	Fixed wrong rotation of models in some cases (especially in SHP)
 	Now topmost and lowest nodes are placed to the end of list for fix impossibility to attach welded part to other in VAB/SHP. (It is assumed that the topmost and lowest nodes, most likely, are stack nodes)
 	Most floating-point values (excluding amount of resources) of welded part are rounded to 5 fractional digits
 	Some other minor fixes
-2014-10-21
+2014-1021
 	Stock Toolbar integration.
 	Added the GUI to change most settings.
 	Added ability for change requiredTech from GUI.
@@ -126,10 +132,10 @@
 			lowest between values of parts  (now it's default)
 	Changed config file format (and name).
 	Fixed miscalculation in case of resources which have not equal amount and maxAmount values.
-2014-09-02
+2014-0902
 	Fixes incorrect rescaling of parts, containing "scale" in MODEL description.
-2014-09-01
+2014-0901
 	Fixed incorrect calculation of COM offset.
-2014-08-12
+2014-0812
 	KSP 0.24 compatibility.
 	Changed massless parts processing behavior.
