@@ -1,9 +1,19 @@
 #!/usr/bin/env bash
 
-VERSION=$(cat ./Source/Version.cs | grep -Po 'public const string Number = "(.+)";' | sed 's/public const string Number = "//' | sed 's/";//')
-echo $VERSION
-FILE=UbiWeldContinuum-$VERSION.zip
-rm $FILE
+source ./CONFIG.inc
+
+clean() {
+	rm $FILE
+	if [ ! -d Archive ] ; then
+		rm -f Archive
+		mkdir Archive
+	fi
+}
+
+FILE=$PACKAGE-$VERSION.zip
+echo $FILE
+clean
 zip -r $FILE ./GameData/* -x ".*"
-zip -d $FILE __MACOSX .DS_Store
+zip -r $FILE ./PluginData/* -x ".*"
+zip -d $FILE __MACOSX "**/.DS_Store"
 mv $FILE ./Archive
