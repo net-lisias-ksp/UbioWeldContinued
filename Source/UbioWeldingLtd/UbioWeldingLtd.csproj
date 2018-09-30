@@ -55,7 +55,9 @@
     <Compile Include="WeldingConfiguration.cs" />
     <Compile Include="WeldingHelpers.cs" />
     <Compile Include="Dependencies.cs" />
-    <Compile Include="Version.cs" />
+    <Compile Include="Properties\Version.cs">
+      <DependentUpon>Version.tt</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="mscorlib">
@@ -87,6 +89,12 @@
     </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <None Include="Properties\Version.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Version.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
   <PropertyGroup>
     <PostBuildEvent></PostBuildEvent>
   </PropertyGroup>

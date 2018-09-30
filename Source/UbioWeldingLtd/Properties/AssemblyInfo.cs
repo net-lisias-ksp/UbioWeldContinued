@@ -10,8 +10,8 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("L Aerospace KSP Division")]
 [assembly: AssemblyProduct("UbioWeldingLtd")]
-[assembly: AssemblyCopyright("Copyright © 2018")]
-[assembly: AssemblyTrademark("")]
+[assembly: AssemblyCopyright("©2018 LisiasT")]
+[assembly: AssemblyTrademark("Ubiozur, Makthur, Alexw, LisiasT")]
 [assembly: AssemblyCulture("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
@@ -34,6 +34,7 @@ using System.Runtime.InteropServices;
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion(UbioWeldingLtd.Version.Number)]
 [assembly: AssemblyFileVersion(UbioWeldingLtd.Version.Number)]
+[assembly: KSPAssembly("UbioWeldingLtd", UbioWeldingLtd.Version.major, UbioWeldingLtd.Version.minor)]
 
 [assembly: KSPAssemblyDependency("ClickThroughBlocker", 1, 0)]
 [assembly: KSPAssemblyDependency("ToolbarController", 1, 0)]
