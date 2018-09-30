@@ -6,6 +6,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{15934CED-4E31-491D-9E06-8511433E4CF3}</ProjectGuid>
     <OutputType>Library</OutputType>
+    <BaseIntermediateOutputPath>..\..\obj</BaseIntermediateOutputPath>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>UbioWeldingLtd</RootNamespace>
     <AssemblyName>UbioWeldingLtd</AssemblyName>
@@ -17,7 +18,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\..\bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -25,7 +26,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>..\..\bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -70,99 +71,24 @@
       <HintPath>..\..\..\LIB\managed\1.4.1\System.Xml.dll</HintPath>
     </Reference>
     <Reference Include="Assembly-CSharp">
-      <HintPath>..\..\..\..\LIB\managed\1.4.1\Assembly-CSharp.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.UI">
-      <HintPath>..\..\..\..\LIB\managed\1.4.1\UnityEngine.UI.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine">
-      <HintPath>..\..\..\..\LIB\managed\1.4.1\UnityEngine.dll</HintPath>
-    </Reference>
-    <Reference Include="ToolbarControl">
-      <HintPath>..\..\..\..\LIB\plugins\ToolbarControl.dll</HintPath>
-    </Reference>
-    <Reference Include="Assembly-CSharp">
-      <HintPath>bin\Debug\Assembly-CSharp.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine">
-      <HintPath>bin\Debug\UnityEngine.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.UI">
-      <HintPath>bin\Debug\UnityEngine.UI.dll</HintPath>
-    </Reference>
-    <Reference Include="Assembly-CSharp">
-      <HintPath>bin\Debug\Assembly-CSharp.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine">
-      <HintPath>bin\Debug\UnityEngine.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.UI">
-      <HintPath>bin\Debug\UnityEngine.UI.dll</HintPath>
-    </Reference>
-    <Reference Include="Assembly-CSharp">
-      <HintPath>bin\Debug\Assembly-CSharp.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine">
-      <HintPath>bin\Debug\UnityEngine.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.UI">
-      <HintPath>bin\Debug\UnityEngine.UI.dll</HintPath>
+      <HintPath>..\..\..\..\..\LIB\managed\1.4.1\Assembly-CSharp.dll</HintPath>
     </Reference>
     <Reference Include="ClickThroughBlocker">
-      <HintPath>..\..\..\..\LIB\plugins\ClickThroughBlocker.dll</HintPath>
+      <HintPath>..\..\..\..\..\LIB\plugins\ClickThroughBlocker.dll</HintPath>
     </Reference>
-    <Reference Include="Assembly-CSharp">
-      <HintPath>bin\Debug\Assembly-CSharp.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine">
-      <HintPath>bin\Debug\UnityEngine.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.UI">
-      <HintPath>bin\Debug\UnityEngine.UI.dll</HintPath>
-    </Reference>
-    <Reference Include="Assembly-CSharp">
-      <HintPath>bin\Debug\Assembly-CSharp.dll</HintPath>
+    <Reference Include="ToolbarControl">
+      <HintPath>..\..\..\..\..\LIB\plugins\ToolbarControl.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine">
-      <HintPath>bin\Debug\UnityEngine.dll</HintPath>
+      <HintPath>..\..\..\..\..\LIB\managed\1.4.1\UnityEngine.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UI">
-      <HintPath>bin\Debug\UnityEngine.UI.dll</HintPath>
-    </Reference>
-    <Reference Include="Assembly-CSharp">
-      <HintPath>bin\Debug\Assembly-CSharp.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine">
-      <HintPath>bin\Debug\UnityEngine.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.UI">
-      <HintPath>bin\Debug\UnityEngine.UI.dll</HintPath>
-    </Reference>
-    <Reference Include="Assembly-CSharp">
-      <HintPath>bin\Debug\Assembly-CSharp.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine">
-      <HintPath>bin\Debug\UnityEngine.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.UI">
-      <HintPath>bin\Debug\UnityEngine.UI.dll</HintPath>
-    </Reference>
-    <Reference Include="Assembly-CSharp">
-      <HintPath>bin\Debug\Assembly-CSharp.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine">
-      <HintPath>bin\Debug\UnityEngine.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.UI">
-      <HintPath>bin\Debug\UnityEngine.UI.dll</HintPath>
+      <HintPath>..\..\..\..\..\LIB\managed\1.4.1\UnityEngine.UI.dll</HintPath>
     </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>
-	cp "$(TargetPath)" "$(SolutionDir)..\..\..\runtime\1.4.1\GameData\net.lisias.ksp\$(SolutionName)\" ;
-	cp "$(TargetPath)" "$(SolutionDir)..\GameData\net.lisias.ksp\$(SolutionName)\"
-    </PostBuildEvent>
+    <PostBuildEvent></PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.

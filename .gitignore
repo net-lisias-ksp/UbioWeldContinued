@@ -1,11 +1,11 @@
-# Build Folders (you can keep bin if you'd like, to store dlls and pdbs)
-[Bb]in/
-[Oo]bj/
-
-# files that should be ignores as they cause problems with different versions of IDE
-*.sln
-*.suo
-*.user
-UbioWeldingLtd/.vs
-UbioWeldingLtd.dll
-distro
+.vs
+bin
+obj
+GameData/*/*/*.dll
+GameData/*/*.LICENSE
+GameData/*/README.md
+GameData/*/CHANGE_LOG.md
+GameData/*/CHANGES.md
+GameData/*/*.version
+Source/*/Properties/Version.cs
+Source/*/*.user

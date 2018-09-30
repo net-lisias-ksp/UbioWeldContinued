@@ -8,4 +8,7 @@
 	+ https://forum.kerbalspaceprogram.com/index.php?/topic/96670-14-253-2018-04-06-ubiozur-welding-ltd-continued/&do=findComment&comment=3397826
 * Check upstream issues
 	+ https://github.com/UbioWeldingLtd/UbioWeldContinued/issues
+* GUI overhaul:
+	* Spliting the GUI code into different "windows", to make easier the maintainance.
+	* Getting rid of the OnGUI deprecated way of doing things.
 
