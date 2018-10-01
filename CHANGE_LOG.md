@@ -1,5 +1,8 @@
 # Welding Ltd. Continuum (Archive)
 
+* 2016-0403: 2.3.0_Beta (Alewx) for KSP 1.1.0 PRE-RELEASE
+	+ UbioweldingLtd 2.3.0
+		- Adapted for KSP 1.1.0 Beta
 * 2015-1111: 2.2.2 (Alewx) for KSP 1.0.5
 	+ Recompiled for KSP 1.0.5
 * 2015-1011: 2.2.1 (Alewx) for KSP 1.0.4
