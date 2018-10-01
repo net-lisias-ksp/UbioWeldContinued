@@ -1,5 +1,28 @@
 # Welding Ltd. Continuum (Archive)
 
+* 2015-0827: 2.2.0_release (Alewx) for KSP 1.0.4
+	+ New weldedMeshSwitch works like an interstellarMeshSwitch is currently limited to InterstellarMeshSwitch FSMeshSwitch is ignored
+	+ Added some modules and attributes for the moduleAttributeList config
+	+ Fixed a major bug that could cause freeze of UI and welding
+	+ added experimental nodes in the weldment file for:
+		- stackSymmetry
+		- CoLOffset
+		- CoPOffset
+		- explosionPotential
+		- thermalMassModifier
+		- heatConductivity
+		- emissiveConstant
+		- radiatorHeadroom
+		- bulkheadProfiles
+	+ Textfield for stackSymmetry in the info window
+	+ improved scaleing readout
+	+ removed needless vectors from the written file
+	+ WeldedMeshSwitch contains an option to destroy unused objects to save tiny performance
+	+ imropved the rotation or models to be not set to 360 degrees
+	+ settings contains a precisionDigits value that will round the values of the new part to this amount of digits after the dot
+	+ saving the settings out of the game now makes them also the actual ones used
+	+ added safety check into the destruction of unused objects at the WeldedMeshSwitch
+	+ final Version of scaling for models implemented to work now with every damn configuration that is possible out there
 * 2015-0701: 2.2.0 (Alewx) for KSP 1.0.4 PRE-RELEASE
 	+ New weldedMeshSwitch works like an interstellarMeshSwitch is currently limited to InterstellarMeshSwitch FSMeshSwitch is ignored
 	+ Added some modules and attributes for the moduleAttributeList config
