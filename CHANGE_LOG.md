@@ -1,5 +1,8 @@
 # Welding Ltd. Continuum (Archive)
 
+* 2015-1011: 2.2.1 (Alewx) for KSP 1.0.4
+	+ added new config field for file simplification that caused trouble for some Players
+	+ slight improvements for the Setting changes at runtime.
 * 2015-0827: 2.2.0_release (Alewx) for KSP 1.0.4
 	+ New weldedMeshSwitch works like an interstellarMeshSwitch is currently limited to InterstellarMeshSwitch FSMeshSwitch is ignored
 	+ Added some modules and attributes for the moduleAttributeList config
