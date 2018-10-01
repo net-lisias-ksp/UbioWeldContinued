@@ -7,6 +7,7 @@ using UnityEngine;
 
 using KSPe.IO;
 using KSPe.IO.Data;     // KSP/PluginData/net.lisias.ksp/UbioWeldingLtd/*
+using System.Text;
 
 namespace UbioWeldingLtd
 {
@@ -182,13 +183,17 @@ namespace UbioWeldingLtd
 
 			XmlSerializer moduleListSerializer = new XmlSerializer(typeof(ModuleLists));
 			fileStreamWriter = StreamWriter.CreateForType<UbioZurWeldingLtd>(moduleFilename);
-			moduleListSerializer.Serialize(fileStreamWriter, moduleList);
 
-			fileStreamWriter.WriteLine("");
+			StringBuilder sb = new StringBuilder();
 			foreach (string s in comments)
 			{
-				fileStreamWriter.WriteLine(s);
+				sb.AppendLine(s);
 			}
+			fileStreamWriter.WriteLine(sb);
+			fileStreamWriter.WriteLine("");
+	
+			moduleListSerializer.Serialize(fileStreamWriter, moduleList);
+
 			fileStreamWriter.Close();
 			Log.dbg("Config was saved");
 		}
