@@ -1,5 +1,7 @@
 # Welding Ltd. Continuum (Archive)
 
+* 2016-0918: 2.3.3.1 (Alewx) for KSP 1.1.0 PRE-RELEASE
+	+ Experimental for 1.2
 * 2016-0613: 2.3.3 (Alewx) for KSP 1.1.0
 	+ Mini AVC integrated
 	+ Internals Merging integrated
