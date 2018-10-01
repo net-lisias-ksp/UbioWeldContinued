@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using KSP;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
@@ -36,5 +37,6 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyFileVersion(UbioWeldingLtd.Version.Number)]
 [assembly: KSPAssembly("UbioWeldingLtd", UbioWeldingLtd.Version.major, UbioWeldingLtd.Version.minor)]
 
+[assembly: KSPAssemblyDependency("KSPe", 2, 0)]
 [assembly: KSPAssemblyDependency("ClickThroughBlocker", 1, 0)]
 [assembly: KSPAssemblyDependency("ToolbarController", 1, 0)]
