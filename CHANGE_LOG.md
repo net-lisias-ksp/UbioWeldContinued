@@ -1,5 +1,8 @@
 # Welding Ltd. Continuum (Archive)
 
+* 2016-1108: 2.4.1 (Alewx) for KSP 1.2.1
+	+ finally working and correct scaling of all parts
+	+ fixed a bug with configuration for file simplification
 * 2016-1106: 2.4.0 (Alewx) for KSP 1.2.1
 	+ recompiled against KSP 1.2.1
 	+ fixed welding of weldments
