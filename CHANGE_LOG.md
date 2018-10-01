@@ -1,5 +1,9 @@
 # Welding Ltd. Continuum (Archive)
 
+* 2016-0613: 2.3.3 (Alewx) for KSP 1.1.0
+	+ Mini AVC integrated
+	+ Internals Merging integrated
+	+ Minized Values merging integrated
 * 2016-0508: 2.3.2 (Alewx) for KSP 1.1.0
 	+ imporved submodule merging
 	+ fixed NAN parts caused by massless parts.
