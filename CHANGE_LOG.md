@@ -1,5 +1,11 @@
 # Welding Ltd. Continuum (Archive)
 
+* 2014-1203: 05 (girka2k) for KSP 0.25 PRE-RELEASE
+	+ Unofficial-v.05 changes
+		- Fixed wrong rescaling of some models in KSP 0.25
+		- Improved database reloading with ModuleManager installed
+		- Updated <ModulesToIgnore> list
+		- Dropped compatibility with KSP 0.24.2
 * 2014-1101: 04 (girka2k) for KSP 0.24 PRE-RELEASE
 	+ Unofficial-v.04 changes:
 		- Fixed wrong rotation of models in some cases (especially in SHP)
