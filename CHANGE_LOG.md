@@ -1,5 +1,7 @@
 # Welding Ltd. Continuum (Archive)
 
+* 2017-1028: 2.5.2 (Alewx) for KSP 1.3.1
+	+ Recompiled against KSP 1.3.1
 * 2017-0709: 2.5.1 (Alewx) for KSP 1.3
 	+ recompiled for KSP 1.3
 	+ fixed empty weldedmeshswitch slots
