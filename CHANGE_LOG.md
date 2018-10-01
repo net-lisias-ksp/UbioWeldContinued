@@ -1,5 +1,7 @@
 # Welding Ltd. Continuum (Archive)
 
+* 2015-1111: 2.2.2 (Alewx) for KSP 1.0.5
+	+ Recompiled for KSP 1.0.5
 * 2015-1011: 2.2.1 (Alewx) for KSP 1.0.4
 	+ added new config field for file simplification that caused trouble for some Players
 	+ slight improvements for the Setting changes at runtime.
