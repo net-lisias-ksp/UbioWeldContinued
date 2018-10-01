@@ -1,5 +1,7 @@
 # Welding Ltd. Continuum (Archive)
 
+* 2015-0527: 2.1.2 (Alewx) for KSP 1.0
+	+ changed the compatibility for KSP 1.0
 * 2015-0114: 2.1.1 (girka2k) for KSP 0.90
 	+ Compatibility with Linux and MacOS
 	+ AVC version check integration
