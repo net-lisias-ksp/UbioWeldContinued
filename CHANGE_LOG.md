@@ -1,5 +1,8 @@
 # Welding Ltd. Continuum (Archive)
 
+* 2017-0709: 2.5.1 (Alewx) for KSP 1.3
+	+ recompiled for KSP 1.3
+	+ fixed empty weldedmeshswitch slots
 * 2016-1228: 2.5.0 (Alewx) for KSP 1.2.2
 	+ Adapted for KSP 1.2.2
 	+ new Feature: Internal merging (internals will get saved in a seperate file in the same directory as the part)
