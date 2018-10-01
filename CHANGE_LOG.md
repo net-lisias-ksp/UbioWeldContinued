@@ -1,5 +1,12 @@
 # Welding Ltd. Continuum (Archive)
 
+* 2018-0408: 2.6.0.2 (Lisias) for KSP 1.4.1 PRE-RELEASE
+	+ Support for
+		- MacOS (100%)
+		- Linux and Windows (hopefully working right this time).
+	+ Settings are saved on <KSP_ROOT>/PluginData/UbioWeldingLtd
+	+ User weldings are saved by default on <KSP_ROOT>/GameData/_LOCAL/WeldedParts
+	+ (removed the binary)
 * 2018-0406: 2.6.0.1 (Lisias) for KSP 1.4.1 PRE-RELEASE
 	+ Support for KSP 1.4.1 that works on Windows and Linux
 	+ User files moved to a more sensible location.
