@@ -1,5 +1,11 @@
 # Welding Ltd. Continuum (Archive)
 
+* 2016-1106: 2.4.0 (Alewx) for KSP 1.2.1
+	+ recompiled against KSP 1.2.1
+	+ fixed welding of weldments
+	+ fixed position
+	+ fixed rotation
+	+ fixed scaling
 * 2016-1016: 2.3.4 (Alewx) for KSP 1.2
 	+ recompiled for KSP 1.2
 	+ added new ModuleAttributes
