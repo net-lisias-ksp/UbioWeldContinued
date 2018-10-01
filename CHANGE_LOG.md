@@ -1,5 +1,9 @@
 # Welding Ltd. Continuum (Archive)
 
+* 2015-0114: 2.1.1 (girka2k) for KSP 0.90
+	+ Compatibility with Linux and MacOS
+	+ AVC version check integration
+	+ Fixed problem with with the welding of parts without category
 * 2014-1203: 05 (girka2k) for KSP 0.25 PRE-RELEASE
 	+ Unofficial-v.05 changes
 		- Fixed wrong rescaling of some models in KSP 0.25
