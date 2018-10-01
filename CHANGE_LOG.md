@@ -1,5 +1,8 @@
 # Welding Ltd. Continuum (Archive)
 
+* 2016-1108: 2.4.2 (Alewx) for KSP 1.2.1
+	+ fixed scaling
+	+ fixed CoM Offset with Multiple Models
 * 2016-1108: 2.4.1 (Alewx) for KSP 1.2.1
 	+ finally working and correct scaling of all parts
 	+ fixed a bug with configuration for file simplification
