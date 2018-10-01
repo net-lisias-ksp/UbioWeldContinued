@@ -1,11 +1,11 @@
 .vs
 bin
 obj
-GameData/*/*/*.dll
-GameData/*/*.LICENSE
-GameData/*/README.md
-GameData/*/CHANGE_LOG.md
-GameData/*/CHANGES.md
-GameData/*/*.version
+GameData/**/*.dll
+GameData/**/*.LICENSE
+GameData/**/README.md
+GameData/**/CHANGE_LOG.md
+GameData/**/CHANGES.md
+GameData/**/*.version
 Source/*/Properties/Version.cs
 Source/*/*.user
