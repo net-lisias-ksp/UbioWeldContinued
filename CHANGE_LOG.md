@@ -1,4 +1,4 @@
-# Welding Ltd. Continuum (Archive)
+# Welding Ltd. Continuum :: Change Log
 
 * 2018-0608: 2.6.0.4 (Lisias) for KSP 1.4.1 PRE-RELEASE
 	+ KSP 1.4.1 Part IV
