@@ -1,5 +1,8 @@
 # Welding Ltd. Continuum (Archive)
 
+* 2018-0406: 2.5.3 (Alewx) for KSP 1.4.2
+	+ updated compatibility for 1.4.2
+	+ recompiled against 1.4.2
 * 2017-1028: 2.5.2 (Alewx) for KSP 1.3.1
 	+ Recompiled against KSP 1.3.1
 * 2017-0709: 2.5.1 (Alewx) for KSP 1.3
