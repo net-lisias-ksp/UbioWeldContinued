@@ -723,7 +723,7 @@ namespace UbioWeldingLtd
 			GUILayout.FlexibleSpace();
 			if (GUILayout.Button(Constants.guiOK))
 			{
-				WriteCfg(filepath);
+				WriteCfg();
 				this.state = DisplayState.savedWindow;
 			}
 			if (GUILayout.Button(Constants.guiCancel))
@@ -962,7 +962,7 @@ namespace UbioWeldingLtd
 																		: FileManager.PATHNAME(filepath, _welder.Name, Constants.weldPartDefaultFile)
 																	 );
 						partfile.Close();
-						WriteCfg(filepath);
+						WriteCfg();
 						this.state = DisplayState.savedWindow;
 					}
 					else
@@ -1018,7 +1018,7 @@ namespace UbioWeldingLtd
 		/*
 		 * Writing the cfg File
 		 */
-		private void WriteCfg( string filepath)
+		private void WriteCfg()
 		{
 			string filename = _config.useNamedCfgFile
 										? FileManager.PATHNAME(filepath, _welder.Name, string.Format("{0}.cfg", _welder.Name))
