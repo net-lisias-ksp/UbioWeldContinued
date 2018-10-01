@@ -1,5 +1,9 @@
 # Welding Ltd. Continuum (Archive)
 
+* 2016-1228: 2.5.0 (Alewx) for KSP 1.2.2
+	+ Adapted for KSP 1.2.2
+	+ new Feature: Internal merging (internals will get saved in a seperate file in the same directory as the part)
+	+ improved mass calculation precision
 * 2016-1115: 2.4.4 (Alewx) for KSP 1.2.1
 	+ fixed NPE with certain parts
 * 2016-1110: 2.4.3 (Alewx) for KSP 1.2.1
