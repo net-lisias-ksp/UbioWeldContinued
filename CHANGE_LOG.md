@@ -1,5 +1,7 @@
 # Welding Ltd. Continuum (Archive)
 
+* 2016-1115: 2.4.4 (Alewx) for KSP 1.2.1
+	+ fixed NPE with certain parts
 * 2016-1110: 2.4.3 (Alewx) for KSP 1.2.1
 	+ fixed scale issue with parts that only contain a single mesh
 * 2016-1108: 2.4.2 (Alewx) for KSP 1.2.1
