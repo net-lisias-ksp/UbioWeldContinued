@@ -87,6 +87,9 @@
     <Reference Include="UnityEngine.UI">
       <HintPath>..\..\..\..\..\LIB\managed\1.4.1\UnityEngine.UI.dll</HintPath>
     </Reference>
+    <Reference Include="KSPe">
+      <HintPath>..\..\..\..\..\LIB\plugins\KSPe.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -94,9 +97,6 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Version.cs</LastGenOutput>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="KSPe\" />
   </ItemGroup>
   <PropertyGroup>
     <PostBuildEvent></PostBuildEvent>

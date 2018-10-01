@@ -1,10 +1,13 @@
 ﻿using UnityEngine;
 using System;
-using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Collections;
 using System.Collections.Generic;
+
+using SIO = System.IO;
+using KSPe.IO;
+
 
 namespace UbioWeldingLtd
 {
@@ -424,11 +427,12 @@ namespace UbioWeldingLtd
             string filename = string.Format("{0}" + _filePathDelimiter + "{1}.mu", cfgdir.parent.parent.path, mesh);
 			string url = string.Format("{0}/{1}", cfgdir.parent.parent.url, mesh);
 
+			// TODO: Should I move this logic into KSPe.IO.Asset?
 			//in case the mesh name does not exist (.22 bug)
-			if (!File.Exists(filename))
+			if (!SIO.File.Exists(filename))
 			{
 				Log.warn("!{0} {1}", Constants.logWarnNoMesh, filename);
-				string[] files = Directory.GetFiles(cfgdir.parent.parent.path, "*.mu");
+				string[] files = SIO.Directory.GetFiles(cfgdir.parent.parent.path, "*.mu");
 				if (files.Length != 0)
 				{
 					Log.dbg("..cfgdir.parent.parent.path {0}", cfgdir.parent.parent.path);

@@ -1,9 +1,12 @@
 ﻿using System;
-using System.IO;
 using System.Collections.Generic;
 using UnityEngine;
 using KSP.UI.Screens;
 using ClickThroughFix;
+
+using KSPe.IO;
+using D = KSPe.IO.Data;     // KSP/PluginData/net.lisias.ksp/UbioWeldingLtd/*
+using L = KSPe.IO.Local;    // KSP/GameData/__LOCAL/net.lisias.ksp/UbioWeldingLtd/*
 
 namespace UbioWeldingLtd
 {
@@ -66,10 +69,10 @@ namespace UbioWeldingLtd
 		private bool _guiVisible = false;
 		private bool _mainWindowsSettingsMode = false;
 		static public bool isReloading = false;
-		private string filepath
-		{
-			get { return string.Format("{0}{1}", Constants.weldPartPath, _welder.Category.ToString()); }
-		}
+		private string welding_pathname => _config.useNamedCfgFile
+						  ? string.Format("{0}/{1}/{1}.cfg", _welder.Category.ToString(), _welder.Name)
+						  : string.Format("{0}/{1}/{2}.cfg", _welder.Category.ToString(), _welder.Name, Constants.weldPartDefaultFile)
+			  ;
 
 		public Rect editorInfoWindow
 		{
@@ -205,19 +208,18 @@ namespace UbioWeldingLtd
 		/// </summary>
 		private void initConfig()
 		{
-			string xmlOldConfigFile = FileManager.FULLPATHNAME(Constants.settingXmlFilePath, Constants.settingXmlOldConfigFileName);
-
-			KSP.IO.PluginConfiguration oldConfig = KSP.IO.PluginConfiguration.CreateForType<OldWeldingPluginConfig>();
-			bool oldConfigFound = File.Exists(xmlOldConfigFile);
+			D.PluginConfiguration oldConfig = D.PluginConfiguration.CreateForType<OldWeldingPluginConfig>(Constants.settingXmlOldConfigFileName);
+			bool oldConfigFound = oldConfig.exists();
 			if (oldConfigFound)
 			{
-				oldConfig = KSP.IO.PluginConfiguration.CreateForType<OldWeldingPluginConfig>();
+				oldConfig = D.PluginConfiguration.CreateForType<OldWeldingPluginConfig>();
 				oldConfig.load();
-				File.Delete(xmlOldConfigFile);
+				oldConfig.delete();
 				Log.dbg("old configfile found and deleted");
 			}
 
-			if (!File.Exists(FileManager.CONFIG_FULLPATHNAME))
+			D.PluginConfiguration config = D.PluginConfiguration.CreateForType<OldWeldingPluginConfig>(Constants.settingXmlConfigFileName);
+			if (!config.exists())
 			{
 				_config = new WeldingConfiguration();
 				FileManager.saveConfig(_config);
@@ -713,10 +715,7 @@ namespace UbioWeldingLtd
 			GUILayout.Label(Constants.guiDialOverwrite);
 			GUILayout.EndHorizontal();
 			GUILayout.BeginHorizontal();
-			GUILayout.Label(_config.useNamedCfgFile
-							? FileManager.PATHNAME(filepath, _welder.Name, string.Format("{0}.cfg", _welder.Name))
-							: FileManager.PATHNAME(filepath, _welder.Name, Constants.weldPartDefaultFile)
-						   );
+			GUILayout.Label(this.welding_pathname);
 			GUILayout.EndHorizontal();
 			GUILayout.BeginHorizontal();
 			GUILayout.EndHorizontal();
@@ -945,22 +944,11 @@ namespace UbioWeldingLtd
 				if (GUI.Button(new Rect(_guiInfoWindowColoumns[1].x + columnWidth * 0.5f, height + columnHeight + margin, columnWidth * 0.5f, height), Constants.guiSave))
 				{
 					//check if the file exist
-					string dirpath = FileManager.PATHNAME(Constants.weldPartPath, _welder.Category.ToString(), _welder.Name);
-					if (!System.IO.File.Exists(
-						_config.useNamedCfgFile
-							? FileManager.PATHNAME(filepath, _welder.Name, string.Format("{0}.cfg", _welder.Name))
-							: FileManager.PATHNAME(filepath, _welder.Name, Constants.weldPartDefaultFile)
-						))
+					string welding_pathname = this.welding_pathname; // Cache the built pathname
+					if (!File<UbioZurWeldingLtd>.Local.Exists(welding_pathname))
 					{
-						if (!Directory.Exists(dirpath))
-						{
-							Directory.CreateDirectory(dirpath);
-						}
 						//create the file
-						StreamWriter partfile = System.IO.File.CreateText(_config.useNamedCfgFile
-																		? FileManager.PATHNAME(filepath, _welder.Name, string.Format("{0}.cfg", _welder.Name))
-																		: FileManager.PATHNAME(filepath, _welder.Name, Constants.weldPartDefaultFile)
-																	 );
+						L.StreamWriter partfile = File<UbioZurWeldingLtd>.Local.CreateText(welding_pathname);
 						partfile.Close();
 						WriteCfg();
 						this.state = DisplayState.savedWindow;
@@ -1020,20 +1008,17 @@ namespace UbioWeldingLtd
 		 */
 		private void WriteCfg()
 		{
-			string filename = _config.useNamedCfgFile
-										? FileManager.PATHNAME(filepath, _welder.Name, string.Format("{0}.cfg", _welder.Name))
-										: FileManager.PATHNAME(filepath, _welder.Name, Constants.weldPartDefaultFile)
-									;
+			string filename = this.welding_pathname;
 			Log.dbg("{0}{1}", Constants.logWritingFile, filename);
+			
 			_welder.CreateFullConfigNode();
 			_welder.FullConfigNode.Save(filename);
 			Log.dbg("{0}{1} successful", Constants.logWritingFile, filename);
-			filename = _config.useNamedCfgFile
-										? FileManager.PATHNAME(filepath, _welder.Name, _welder.Name + "Internal" + ".cfg")
-										: FileManager.PATHNAME(filepath, _welder.Name, Constants.weldPartInternalDefaultFile)
-									;
+			
+			filename = filename.Replace(".cfg", "-Internal.cfg");
 			_welder.FullInternalNode.Save(filename);
 			Log.dbg("{0}{1} successful", Constants.logWritingFile, filename);
+			
 			if (_config.dataBaseAutoReload)
 			{
 				StartCoroutine(DatabaseHandler.DatabaseReloadWithMM());

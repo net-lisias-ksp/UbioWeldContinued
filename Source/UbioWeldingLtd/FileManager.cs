@@ -1,18 +1,17 @@
 ﻿using System;
-using System.IO;
 using System.Reflection;
 using System.Xml;
 using System.Xml.Serialization;
 using System.Collections.Generic;
 using UnityEngine;
 
+using KSPe.IO;
+using KSPe.IO.Data;     // KSP/PluginData/net.lisias.ksp/UbioWeldingLtd/*
+
 namespace UbioWeldingLtd
 {
 	public static class FileManager
 	{
-
-		public static readonly string CONFIG_FULLPATHNAME = FileManager.FULLPATHNAME(Constants.settingXmlFilePath, Constants.settingXmlConfigFileName);
-		public static readonly string MODULELIST_FULLPATHNAME = FileManager.FULLPATHNAME(Constants.settingXmlFilePath, Constants.settingXmlListFileName);
 
 		private static readonly string[] comments =
 			{
@@ -73,7 +72,7 @@ namespace UbioWeldingLtd
 				XmlSerializer configSerializer = new XmlSerializer(typeof(WeldingConfiguration));
 				configSerializer.UnknownNode += new XmlNodeEventHandler(serializer_UnknownNode);
 				configSerializer.UnknownAttribute += new XmlAttributeEventHandler(serializer_UnknownAttribute);
-				FileStream = new FileStream(CONFIG_FULLPATHNAME, FileMode.Open);
+				FileStream = FileStream.CreateForType<UbioZurWeldingLtd>(Constants.settingXmlConfigFileName, FileMode.Open);
 				configuration = (WeldingConfiguration)configSerializer.Deserialize(FileStream);
 
 				if (configuration.MainWindowXPosition > (Screen.width - Constants.guiScreenEdgeClearance))
@@ -86,7 +85,7 @@ namespace UbioWeldingLtd
 				}
 			} catch (Exception e) {
 				configuration = new WeldingConfiguration();
-				Log.warn(String.Format("{0} : {1}", CONFIG_FULLPATHNAME, e.Message));
+				Log.warn(String.Format("{0} : {1}", Constants.settingXmlConfigFileName, e.Message));
 			} finally {
 				if (null != FileStream) FileStream.Close();
 				FileStream = null;
@@ -96,7 +95,7 @@ namespace UbioWeldingLtd
 				XmlSerializer moduleListSerializer = new XmlSerializer(typeof(ModuleLists));
 				moduleListSerializer.UnknownNode += new XmlNodeEventHandler(serializer_UnknownNode);
 				moduleListSerializer.UnknownAttribute += new XmlAttributeEventHandler(serializer_UnknownAttribute);
-				FileStream = new FileStream(MODULELIST_FULLPATHNAME, FileMode.Open);
+				FileStream = FileStream.CreateForType<UbioZurWeldingLtd>(Constants.settingXmlListFileName, FileMode.Open);
 				moduleList = (ModuleLists)moduleListSerializer.Deserialize(FileStream);
 
 				configuration.vector2CurveModules = moduleList.vector2CurveModules != null ? WeldingHelpers.convertFromToStringArray(moduleList.vector2CurveModules) : new string[0];
@@ -120,7 +119,7 @@ namespace UbioWeldingLtd
 				configuration.averagedModuleAttributes = Constants.basicAveragedModuleAttributes;
 				configuration.unchangedModuleAttributes = Constants.basicUnchangedModuleAttributes;
 				configuration.breakingModuleAttributes = Constants.basicBreakingModuleAttributes;
-				Log.warn(String.Format("{0} : {1}", CONFIG_FULLPATHNAME, e.Message));
+				Log.warn(String.Format("{0} : {1}", Constants.settingXmlConfigFileName, e.Message));
 			} finally {
 				if (null != FileStream) FileStream.Close();
 				FileStream = null;
@@ -137,20 +136,18 @@ namespace UbioWeldingLtd
 		public static void saveConfig(WeldingConfiguration configToSave)
 		{
 			try {
-				saveConfig(configToSave, CONFIG_FULLPATHNAME, MODULELIST_FULLPATHNAME);
+				saveConfig(configToSave, Constants.settingXmlConfigFileName, Constants.settingXmlListFileName);
 			} catch (Exception e) {
 				Log.warn(e.Message);
-				checkPathnameAvailability(CONFIG_FULLPATHNAME);
-				checkPathnameAvailability(MODULELIST_FULLPATHNAME);
-				saveConfig(configToSave, CONFIG_FULLPATHNAME, MODULELIST_FULLPATHNAME);
+				saveConfig(configToSave, Constants.settingXmlConfigFileName, Constants.settingXmlListFileName);
 			}
 		}
 
-		private static void saveConfig(WeldingConfiguration configToSave, String configFullPathName, String moduleFullPathName)
+		private static void saveConfig(WeldingConfiguration configToSave, String configFilename, String moduleFilename)
 		{
 			WeldingConfiguration configuration = (WeldingConfiguration)configToSave.clone();
 			ModuleLists moduleList = new ModuleLists();
-			TextWriter fileStreamWriter;
+			StreamWriter fileStreamWriter;
 			if (configuration == null)
 			{
 				configuration = new WeldingConfiguration();
@@ -167,7 +164,7 @@ namespace UbioWeldingLtd
 			configuration.breakingModuleAttributes = null;
 
 			XmlSerializer configSerializer = new XmlSerializer(typeof(WeldingConfiguration));
-			fileStreamWriter = new StreamWriter(configFullPathName);
+			fileStreamWriter = StreamWriter.CreateForType<UbioZurWeldingLtd>(configFilename);
 			configSerializer.Serialize(fileStreamWriter, configuration);
 			fileStreamWriter.Close();
 
@@ -184,7 +181,7 @@ namespace UbioWeldingLtd
 			moduleList.breakingModuleAttributes = WeldingHelpers.convertStringFromToArray(configToSave.breakingModuleAttributes != null && (configToSave.breakingModuleAttributes.Length > Constants.basicBreakingModuleAttributes.Length) ? configToSave.breakingModuleAttributes : Constants.basicBreakingModuleAttributes);
 
 			XmlSerializer moduleListSerializer = new XmlSerializer(typeof(ModuleLists));
-			fileStreamWriter = new StreamWriter(moduleFullPathName);
+			fileStreamWriter = StreamWriter.CreateForType<UbioZurWeldingLtd>(moduleFilename);
 			moduleListSerializer.Serialize(fileStreamWriter, moduleList);
 
 			fileStreamWriter.WriteLine("");
@@ -194,31 +191,6 @@ namespace UbioWeldingLtd
 			}
 			fileStreamWriter.Close();
 			Log.dbg("Config was saved");
-		}
-
-		public static string FULLPATHNAME(string pathname)
-		{
-			return Path.Combine(KSPUtil.ApplicationRootPath, pathname);
-		}
-
-		public static string FULLPATHNAME(string basedir, string pathname)
-		{
-			return FULLPATHNAME(Path.Combine(basedir, pathname));
-		}
-
-		public static string PATHNAME(string basedir, string dir, string filename)
-		{
-			return Path.Combine(Path.Combine(basedir, dir), filename);
-		}
-
-		// Checks the full pathname (filename included), checks if the parent dirs are available, creating it when not.
-		// Raises exception if some directory on the hiarachy cannot be created.
-		// Returns if the file exists.
-		private static bool checkPathnameAvailability(string pathname)
-		{
-			string dirnames = Path.GetDirectoryName(pathname);
-			Directory.CreateDirectory(dirnames);
-			return File.Exists(pathname);
 		}
 	}
 }
