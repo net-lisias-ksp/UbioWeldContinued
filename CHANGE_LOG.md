@@ -1,5 +1,8 @@
 # Welding Ltd. Continuum (Archive)
 
+* 2016-0508: 2.3.2 (Alewx) for KSP 1.1.0
+	+ imporved submodule merging
+	+ fixed NAN parts caused by massless parts.
 * 2016-0506: 2.3.1 (Alewx) for KSP 1.1.0
 	+ new weldedFlagDecal to provide a properly working flag decal on welded parts
 	+ part branch will be centered at Z and X before the weldment is made
