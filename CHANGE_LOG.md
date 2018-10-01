@@ -1,5 +1,10 @@
 # Welding Ltd. Continuum (Archive)
 
+* 2018-0410: 2.6.0.3 (Lisias) for KSP 1.4.1 PRE-RELEASE
+	+ Trying again to Support KSP 1.4.1 - part III
+	+ Solving a problem on the Toolbar, that was raising an exception internally on the game and preventing all the toolbar buttons (not just mine) to show when coming back to the Editor once a ship is launched.
+	+ Getting rid of unused config options.
+	+ Refactoring the Plug-In's life cycle code to better cope with nowadays KSP versions.
 * 2018-0408: 2.6.0.2 (Lisias) for KSP 1.4.1 PRE-RELEASE
 	+ Support for
 		- MacOS (100%)
