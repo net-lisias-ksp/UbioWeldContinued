@@ -1,5 +1,13 @@
 # Welding Ltd. Continuum (Archive)
 
+* 2018-0608: 2.6.0.4 (Lisias) for KSP 1.4.1 PRE-RELEASE
+	+ KSP 1.4.1 Part IV
+	+ Added Hard Dependency: ClickThroughBlocker
+	+ Better Exception handling while loading configurations
+		- They are created automatically now
+	+ Some code maintainabiity improvements
+	+ Reworking MiniAVC support.
+	+ PRE RELEASE: Not properly tested.
 * 2018-0410: 2.6.0.3 (Lisias) for KSP 1.4.1 PRE-RELEASE
 	+ Trying again to Support KSP 1.4.1 - part III
 	+ Solving a problem on the Toolbar, that was raising an exception internally on the game and preventing all the toolbar buttons (not just mine) to show when coming back to the Editor once a ship is launched.
