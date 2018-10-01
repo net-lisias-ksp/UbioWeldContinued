@@ -1,5 +1,9 @@
 # Welding Ltd. Continuum (Archive)
 
+* 2016-1016: 2.3.4 (Alewx) for KSP 1.2
+	+ recompiled for KSP 1.2
+	+ added new ModuleAttributes
+	+ slightly improved module merging
 * 2016-0918: 2.3.3.1 (Alewx) for KSP 1.1.0 PRE-RELEASE
 	+ Experimental for 1.2
 * 2016-0613: 2.3.3 (Alewx) for KSP 1.1.0
