@@ -15,11 +15,8 @@ namespace UbioWeldingLtd
 		 * + Use Path.Combine where's possible.
 		 */
 		public const string GAMEDATA	= "GameData/";
-		public const string PLUGINDATA 	= "PluginData/";
-		public const string LOCAL 		= "_LOCAL/";
 		public const string ROOT 		= "net.lisias.ksp/";
 		public const string BASE 		= "UbioWeldingLtd/";
-		public const string USERDATA 	= GAMEDATA + LOCAL;
 
 		//Logs/debug constants
 		public const string logVersion 		= "v" + Version.Text + " - 1.4.1 - Continuum";
@@ -81,7 +78,6 @@ namespace UbioWeldingLtd
 		public const string settingDontProcessMasslessParts	= "dontProcessMasslessParts";
 		public const string settingLargeIconGetPath			= ROOT + BASE + "Textures/ToolbarLargeIcon.png"; // Toobar already adds GameData/ for us!
 		public const string settingSmallIconGetPath 		= ROOT + BASE + "Textures/ToolbarSmallIcon.png";
-		public const string settingXmlFilePath				= PLUGINDATA + BASE;
 		public const string settingXmlConfigFileName		= "new-config.xml";
 		public const string settingXmlOldConfigFileName		= "config.xml";
 		public const string settingXmlListFileName			= "moduleAttributeList.xml";
@@ -136,7 +132,6 @@ namespace UbioWeldingLtd
 		public const string msgWarnModLandLegs	= "Multiple ModuleLandingLeg with the same animName is not supported by the game";
 
 		//Weld
-		public const string weldPartPath			= USERDATA + "WeldedParts/";
 		public const string weldPartDefaultFile		= "part.cfg";
 		public const string weldPartInternalDefaultFile
 													= "internal.cfg";
