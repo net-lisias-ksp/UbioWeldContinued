@@ -1,5 +1,11 @@
 # Welding Ltd. Continuum (Archive)
 
+* 2016-0506: 2.3.1 (Alewx) for KSP 1.1.0
+	+ new weldedFlagDecal to provide a properly working flag decal on welded parts
+	+ part branch will be centered at Z and X before the weldment is made
+	+ recompiled with 1.1.2
+	+ adapted for B9PartSwitch
+	+ Removal of some hardcoded values
 * 2016-0403: 2.3.0_Beta (Alewx) for KSP 1.1.0 PRE-RELEASE
 	+ UbioweldingLtd 2.3.0
 		- Adapted for KSP 1.1.0 Beta
