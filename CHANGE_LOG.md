@@ -1,5 +1,11 @@
 # Welding Ltd. Continuum (Archive)
 
+* 2018-0406: 2.6.0.1 (Lisias) for KSP 1.4.1 PRE-RELEASE
+	+ Support for KSP 1.4.1 that works on Windows and Linux
+	+ User files moved to a more sensible location.
+	+ PRE-RELEASE - User at your own risk! :-)
+	+ This build should work fine on Windows and Linux (and not just on MacOS)
+	+ (removing binary due yet more filesystems mistakes)
 * 2018-0404: 2.6.0.0 (Lisias) for KSP 1.4.1 PRE-RELEASE
 	+ Support for KSP 1.4.1
 	+ User files moved to a more sensible location.
