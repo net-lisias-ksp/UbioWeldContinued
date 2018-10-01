@@ -1,5 +1,10 @@
 # Welding Ltd. Continuum (Archive)
 
+* 2018-0404: 2.6.0.0 (Lisias) for KSP 1.4.1 PRE-RELEASE
+	+ Support for KSP 1.4.1
+	+ User files moved to a more sensible location.
+	+ PRE-RELEASE - User at your own risk! :-)
+	+ (binary withdrawn as it doesn't properly works on Windows or Linux)
 * 2018-0406: 2.5.3 (Alewx) for KSP 1.4.2
 	+ updated compatibility for 1.4.2
 	+ recompiled against 1.4.2
