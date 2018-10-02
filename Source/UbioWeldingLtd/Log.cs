@@ -1,69 +1,59 @@
-﻿using UnityEngine;
+﻿using System.Diagnostics;
+using UnityEngine;
+
+using KSPe.Util.Log;
+using Logger = KSPe.Util.Log.Logger;
 
 namespace UbioWeldingLtd
 {
 	public static class Log
 	{
-		public static int debug = 0;
+		private static readonly Logger LOG = Logger.CreateForType<UbioZurWeldingLtd>(Constants.logPrefix);
 
-		public static void info(string format, params object[] parms)
-		{
-			Debug.Log(string.Format("[{0}] {1}", Constants.logPrefix, string.Format(format, parms)));
-		}
-		public static void info(string text)
-		{
-			Debug.Log(string.Format("[{0}] {1}", Constants.logPrefix, text));
+		public static int debuglevel {
+			get => (int)LOG.level;
+			set => LOG.level = (KSPe.Util.Log.Level)(debuglevel % 6);
 		}
 
-		public static void warn(string format, params object[] parms)
+		public static void log(string format, params object[] @parms)
 		{
-			Debug.LogWarning(string.Format("[{0}] WARNING {1}", Constants.logPrefix, string.Format(format, parms)));
+			LOG.force(format, parms);
 		}
-		public static void warn(string text)
+
+		public static void info(string format, params object[] @parms)
 		{
-			Debug.LogWarning(string.Format("[{0}] WARNING {1}", Constants.logPrefix, text));
+			LOG.info(format, parms);
+		}
+
+		public static void warn(string format, params object[] @parms)
+		{
+			LOG.warn(format, parms);
 		}
 
 		public static void err(string format, params object[] parms)
 		{
-			Debug.LogError(string.Format("[{0}] ERROR {1}", Constants.logPrefix, string.Format(format, parms)));
-		}
-		public static void err(string text)
-		{
-			Debug.LogError(string.Format("[{0}] ERROR {1}", Constants.logPrefix, text));
+			LOG.error(format, parms);
 		}
 
 		public static void ex(MonoBehaviour offended, System.Exception e)
 		{
-			Debug.LogError(string.Format("[{0}] ERROR {1}", Constants.logPrefix, string.Format("{0} raised Exception {1}", offended.name, e.ToString())));
-			Debug.LogException(e, offended);
+			LOG.error(offended, e);
 		}
 
-		public static void dbg(string format, params object[] parms)
+		public static void dbg(string format, params object[] @parms)
 		{
-			if (debug > 0) Debug.Log(string.Format("[{0}] DEBUG {1}", Constants.logPrefix, string.Format(format, parms)));
-		}
-		public static void dbg(string text)
-		{
-			if (debug > 0) Debug.Log(string.Format("[{0}] DEBUG {1}", Constants.logPrefix, text));
+			LOG.dbg(format, parms);
 		}
 
-		public static void dbgWarn(string format, params object[] parms)
+		public static void dbgWarn(string format, params object[] @parms)
 		{
-			if (debug > 1) Debug.Log(string.Format("[{0}] DEBUG WARNING {1}", Constants.logPrefix, string.Format(format, parms)));
-		}
-		public static void dbgWarn(string text)
-		{
-			if (debug > 1) Debug.Log(string.Format("[{0}] DEBUG WARNING {1}", Constants.logPrefix, text));
+			LOG.warn(format, parms);
 		}
 
-		public static void dbgGui(MonoBehaviour logger, string format, params object[] parms)
+		[ConditionalAttribute("DEBUG")]
+		public static void dbgGui(MonoBehaviour logger, string format, params object[] @parms)
 		{
-			if (debug > 2) Debug.Log(string.Format("[{0}] DEBUG GUI {1} - {2}", Constants.logPrefix, logger.name, string.Format(format, parms)));
-		}
-		public static void dbgGui(MonoBehaviour logger, string text)
-		{
-			if (debug > 2) Debug.Log(string.Format("[{0}] DEBUG GUI {1} - {2}", Constants.logPrefix, logger.name, text));
+			LOG.trace(format, parms);
 		}
 	}
 }

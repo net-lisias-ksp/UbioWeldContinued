@@ -123,14 +123,15 @@ namespace UbioWeldingLtd
 
 		public bool advancedDebug
 		{
-			get { return 0 != Log.debug; }
+			get => 0 != Log.debuglevel;
 			set
 			{
 #if (DEBUG)
-				Log.debug = value ? 3 : 0;
+				Log.debuglevel = value ? 5 : 0;
 #else
-				Log.debug = value ? 2 : 0;
+				Log.debuglevel = value ? 3 : 0;
 #endif
+				Log.log("Debug Level set to {0}.", Log.debuglevel);
 			}
 		}
 

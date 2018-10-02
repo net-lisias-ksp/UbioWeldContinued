@@ -477,7 +477,7 @@ namespace UbioWeldingLtd
 			newWeldedMeshSwitch.AddValue(Constants.weldModuleNodeName, Constants.weldedmeshSwitchModule);
 			newWeldedMeshSwitch.AddValue("objectIndicies", indexString);
 			newWeldedMeshSwitch.AddValue("objects", transformNamesString);
-			newWeldedMeshSwitch.AddValue("advancedDebug", Log.debug); //TODO; This is really necessary? Why add this to the module?
+			newWeldedMeshSwitch.AddValue("advancedDebug", Log.debuglevel); //TODO; This is really necessary? Why add this to the module?
 			newWeldedMeshSwitch.AddValue("destroyUnusedParts", true);
 
 			moduleList.Add(newWeldedMeshSwitch);
