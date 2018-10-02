@@ -17,8 +17,8 @@ namespace UbioWeldingLtd
 			this._toolbarControl.AddToAllToolbars(
 				OnClickToolbarButton, null,
 				ApplicationLauncher.AppScenes.VAB | ApplicationLauncher.AppScenes.SPH,
-				"UbioWeldingLtd",
-				"UbioWeldingLtdButton",
+				this.GetType().Namespace,
+				this.GetType().Namespace+"Button",
 				Constants.settingLargeIconGetPath,
 				Constants.settingSmallIconGetPath,
 				Constants.weldManufacturer
@@ -37,6 +37,7 @@ namespace UbioWeldingLtd
 
 		public void Start()
 		{
+			ToolbarControl.RegisterMod(this.GetType().Namespace, Constants.weldManufacturer);
 		}
 
 		public void Update()
