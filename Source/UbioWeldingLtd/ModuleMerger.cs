@@ -461,14 +461,16 @@ namespace UbioWeldingLtd
 			{
 				curvevect[i] = ConfigNode.ParseVector2(set2[i]);
 			}
+			Log.dbg("MergeAtmCurve: curvevect");
+			
 			for (int i = 0; i < set1.Length; ++i)
 			{
 				Vector2 vect = ConfigNode.ParseVector2(set1[i]);
-				int j = 0;
-				while (vect.x != curvevect[j].x && j < curvevect.Length && j < set2.Length)
-				{
-					++j;
-				}
+				
+				int j;
+				for (j = 0; vect.x != curvevect[j].x && j < curvevect.Length && j < set2.Length; ++j) ;
+				Log.dbg("MergeAtmCurve: set1");
+
 				if (j >= curvevect.Length)
 				{
 					//didn't find it, should add more
@@ -482,6 +484,7 @@ namespace UbioWeldingLtd
 					curvevect[j].y = (curvevect[j].y + vect.y) * 0.5f;
 				}
 			}
+
 			return curvevect;
 		}
 
