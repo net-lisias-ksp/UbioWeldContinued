@@ -260,6 +260,7 @@ namespace UbioWeldingLtd
 				);
 				EditorLockManager.resetEditorLocks();
 				_editorFacility = EditorDriver.editorFacility;
+				this._editorToolbar.Start();
 			} catch (Exception e) {
 				Log.ex(this, e);
 			} finally {

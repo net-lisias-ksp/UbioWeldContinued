@@ -7,22 +7,17 @@ namespace UbioWeldingLtd
 {
 	public class EditorToolbar
 	{
+		private static readonly string MODID = typeof(EditorToolbar).Namespace;
+		private static readonly string MODNAME = MODID + "Button";
+
 		private ToolbarControl _toolbarControl;
 		private readonly MonoBehaviour owner;
 
 		public EditorToolbar(MonoBehaviour owner) {
-			this.owner = owner;	
+			this.owner = owner;
 
+			ToolbarControl.RegisterMod(MODID, MODNAME);
 			this._toolbarControl = this.owner.gameObject.AddComponent<ToolbarControl>();
-			this._toolbarControl.AddToAllToolbars(
-				OnClickToolbarButton, null,
-				ApplicationLauncher.AppScenes.VAB | ApplicationLauncher.AppScenes.SPH,
-				this.GetType().Namespace,
-				this.GetType().Namespace+"Button",
-				Constants.settingLargeIconGetPath,
-				Constants.settingSmallIconGetPath,
-				Constants.weldManufacturer
-				);
 		}
 
 		/// <summary>
@@ -37,7 +32,14 @@ namespace UbioWeldingLtd
 
 		public void Start()
 		{
-			ToolbarControl.RegisterMod(this.GetType().Namespace, Constants.weldManufacturer);
+			this._toolbarControl.AddToAllToolbars(
+				OnClickToolbarButton, null,
+				ApplicationLauncher.AppScenes.VAB | ApplicationLauncher.AppScenes.SPH,
+				MODID, MODNAME,
+				Constants.settingLargeIconGetPath,
+				Constants.settingSmallIconGetPath,
+				Constants.weldManufacturer
+				);
 		}
 
 		public void Update()
