@@ -5,7 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using KSPe.IO;
-
+using System.Text;
 
 namespace UbioWeldingLtd
 {
@@ -48,6 +48,36 @@ namespace UbioWeldingLtd
 	[XmlRootAttribute("ModuleAttributeLists", Namespace = "KSP-Forum", IsNullable = false)]
 	public class ModuleLists
 	{
+		private static readonly string[] comments =
+		{
+			Constants.CommentOutText(Constants.setupGeneralLine1+"\n"),
+			Constants.CommentOutText(Constants.setupGeneralLine2+"\n"),
+			Constants.CommentOutText(Constants.setupGeneralLine3+"\n"),
+			
+			Constants.CommentOutText(Constants.setupVector2Line1+"\n"),
+			Constants.CommentOutText(Constants.setupVector4Line1+"\n"),
+			Constants.CommentOutText(Constants.setupSubmoduleLine1+"\n"),
+			Constants.CommentOutText(Constants.setupModulesToIgnoreLine1+"\n"),
+			Constants.CommentOutText(Constants.setupModulesToMultiplyLine1+"\n"),
+			Constants.CommentOutText(Constants.setupMaximizedAttribtesLine1+"\n"),
+			Constants.CommentOutText(Constants.setupAveragedAttribtesLine1+"\n"),
+			Constants.CommentOutText(Constants.setupUnchangedAttribtesLine1+"\n"),
+			Constants.CommentOutText(Constants.setupBreakingAttribtesLine1+"\n"),
+			Constants.CommentOutText(Constants.setupAddingAttributeEntryLine1+"\n"),
+		};
+	
+
+		[XmlAnyElement("Comment")]
+		private XmlComment Comment
+		{
+			get
+			{
+				StringBuilder sb = new StringBuilder();
+				foreach (string s in comments) sb.AppendLine(s);
+				return new XmlDocument().CreateComment(sb.ToString());
+			}
+			set { }
+		}
 
 		private ModuleAttribute[] _vector2CurveModules;
 		private ModuleAttribute[] _vector4CurveModules;

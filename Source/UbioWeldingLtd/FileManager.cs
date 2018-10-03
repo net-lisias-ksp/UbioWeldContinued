@@ -1,37 +1,14 @@
 ﻿using System;
-using System.Reflection;
-using System.Xml;
 using System.Xml.Serialization;
-using System.Collections.Generic;
 using UnityEngine;
 
 using KSPe.IO;
 using KSPe.IO.Data;     // KSP/PluginData/net.lisias.ksp/UbioWeldingLtd/*
-using System.Text;
 
 namespace UbioWeldingLtd
 {
 	public static class FileManager
 	{
-
-		private static readonly string[] comments =
-			{
-				Constants.CommentOutText(Constants.setupGeneralLine1),
-				Constants.CommentOutText(Constants.setupGeneralLine2),
-				Constants.CommentOutText(Constants.setupGeneralLine3),
-				
-				Constants.CommentOutText(Constants.setupVector2Line1),
-				Constants.CommentOutText(Constants.setupVector4Line1),
-				Constants.CommentOutText(Constants.setupSubmoduleLine1),
-				Constants.CommentOutText(Constants.setupModulesToIgnoreLine1),
-				Constants.CommentOutText(Constants.setupModulesToMultiplyLine1),
-				Constants.CommentOutText(Constants.setupMaximizedAttribtesLine1),
-				Constants.CommentOutText(Constants.setupAveragedAttribtesLine1),
-				Constants.CommentOutText(Constants.setupUnchangedAttribtesLine1),
-				Constants.CommentOutText(Constants.setupBreakingAttribtesLine1),
-				Constants.CommentOutText(Constants.setupAddingAttributeEntryLine1),
-			};
-
 
 		/// <summary>
 		/// catches unknown nodes
@@ -184,14 +161,6 @@ namespace UbioWeldingLtd
 			XmlSerializer moduleListSerializer = new XmlSerializer(typeof(ModuleLists));
 			fileStreamWriter = StreamWriter.CreateForType<UbioZurWeldingLtd>(moduleFilename);
 
-			StringBuilder sb = new StringBuilder();
-			foreach (string s in comments)
-			{
-				sb.AppendLine(s);
-			}
-			fileStreamWriter.WriteLine(sb);
-			fileStreamWriter.WriteLine("");
-	
 			moduleListSerializer.Serialize(fileStreamWriter, moduleList);
 
 			fileStreamWriter.Close();
