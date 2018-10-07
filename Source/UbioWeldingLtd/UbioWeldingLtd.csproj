@@ -75,9 +75,6 @@
     <Reference Include="Assembly-CSharp">
       <HintPath>..\..\..\..\..\LIB\managed\1.4.1\Assembly-CSharp.dll</HintPath>
     </Reference>
-    <Reference Include="ClickThroughBlocker">
-      <HintPath>..\..\..\..\..\LIB\plugins\ClickThroughBlocker.dll</HintPath>
-    </Reference>
     <Reference Include="ToolbarControl">
       <HintPath>..\..\..\..\..\LIB\plugins\ToolbarControl.dll</HintPath>
     </Reference>

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using KSP.UI.Screens;
-using ClickThroughFix;
 
 using KSPe.IO;
 using D = KSPe.IO.Data;     // KSP/PluginData/net.lisias.ksp/UbioWeldingLtd/*
@@ -382,23 +381,23 @@ namespace UbioWeldingLtd
 					EditorLockManager.unlockEditor(Constants.settingWeldingLock);
 					break;
 				case DisplayState.weldError:
-					_editorErrorDial = ClickThruBlocker.GUILayoutWindow((int)this.state, _editorErrorDial, OnErrorDisplay, Constants.weldManufacturer);
+					_editorErrorDial = GUILayout.Window((int)this.state, _editorErrorDial, OnErrorDisplay, Constants.weldManufacturer);
 					break;
 				case DisplayState.weldWarning:
-					_editorWarningDial = ClickThruBlocker.GUILayoutWindow((int)this.state, _editorWarningDial, OnWarningDisplay, Constants.weldManufacturer);
+					_editorWarningDial = GUILayout.Window((int)this.state, _editorWarningDial, OnWarningDisplay, Constants.weldManufacturer);
 					break;
 				case DisplayState.infoWindow:
-					_editorInfoWindow =  ClickThruBlocker.GUIWindow((int)this.state, _editorInfoWindow, OnInfoWindow, Constants.weldManufacturer);
+					_editorInfoWindow =  GUI.Window((int)this.state, _editorInfoWindow, OnInfoWindow, Constants.weldManufacturer);
 					PreventClickThrough(_editorInfoWindow);
 					break;
 				case DisplayState.savedWindow:
-					_editorSavedDial = ClickThruBlocker.GUILayoutWindow((int)this.state, _editorSavedDial, OnSavedDisplay, Constants.weldManufacturer);
+					_editorSavedDial = GUILayout.Window((int)this.state, _editorSavedDial, OnSavedDisplay, Constants.weldManufacturer);
 					break;
 				case DisplayState.overwriteDial:
-					_editorOverwriteDial = ClickThruBlocker.GUILayoutWindow((int)this.state, _editorOverwriteDial, OnOverwriteDisplay, Constants.weldManufacturer);
+					_editorOverwriteDial = GUILayout.Window((int)this.state, _editorOverwriteDial, OnOverwriteDisplay, Constants.weldManufacturer);
 					break;
 				case DisplayState.mainWindow:
-					_editorMainWindow =  ClickThruBlocker.GUIWindow((int)this.state, _editorMainWindow, OnMainWindow, Constants.weldManufacturer);
+					_editorMainWindow =  GUI.Window((int)this.state, _editorMainWindow, OnMainWindow, Constants.weldManufacturer);
 					PreventClickThrough(_editorMainWindow);
 					break;
 				case DisplayState.partSelection:
