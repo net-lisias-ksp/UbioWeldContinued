@@ -6,8 +6,9 @@ This is a welding tool to allow you to merge KSP parts together in order to redu
 ## In a Hurry
 
 * [Latest Release](https://github.com/net-lisias-ksp/UbioWeldingLtd/releases)
+	+ [Binaries](https://github.com/net-lisias-ksp/UbioWeldingLtd/tree/Archive)
 * [Source](https://github.com/net-lisias-ksp/UbioWeldingLtd)
-* [Binaries](https://github.com/net-lisias-ksp/UbioWeldingLtd/tree/Archive)
+* [Issue Tracker](https://github.com/net-lisias-ksp/UbioWeldingLtd/issues)
 * Documentation	
 	+ [Homepage](http://ksp.lisias.net/add-ons/UbioWeldContinuum) on L Aerospace KSP Division
 	+ [Project's README](https://github.com/net-lisias-ksp/UbioWeldingLtd/blob/master/README.md)
