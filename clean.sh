@@ -19,7 +19,7 @@ VERSIONFILE=$PACKAGE.version
 rm -f "./GameData/$TARGETDIR/$VERSIONFILE"
 rm -f "./GameData/$TARGETDIR/CHANGE_LOG.md"
 rm -f "./GameData/$TARGETDIR/README.md"
-rm -f "./GameData/$TARGETDIR/*.LICENSE"
+rm -f "./GameData/$TARGETDIR/LICENSE*"
 for dll in $PACKAGE ; do
     clean $dll
 done

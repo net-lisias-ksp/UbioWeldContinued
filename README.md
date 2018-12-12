@@ -47,7 +47,7 @@ This add-on depends from the following ones (that should be installed, and **are
 ### Licensing
 
 * This Work is protected under the following terms:
-	+ [CC BY-NC-SA 3.0](https://creativecommons.org/licenses/'by-nc-sa/3.0/). See [here](./CC_BY-NC-SA-3_0.LICENSE)
+	+ [CC BY-NC-SA 3.0](https://creativecommons.org/licenses/'by-nc-sa/3.0/). See [here](./LICENSE.CC_BY-NC-SA-3_0)
 		+ You are free to:
 			- Share : copy and redistribute the material in any medium or format
 			- Adapt : remix, transform, and build upon the material for any purpose, even commercially. 
@@ -55,7 +55,7 @@ This add-on depends from the following ones (that should be installed, and **are
 			- Attribution : You must give appropriate credit, provide a link to the license, and indicate if changes were made. You may do so in any reasonable manner, but not in any way that suggests the licensor endorses you or your use.
 			- NonCommercial : You may not use the material for commercial purposes.
 			- ShareAlike : If you remix, transform, or build upon the material, you must distribute your contributions under the same license as the original.
-	+ Parts are also covered (DUAL LICENSED) by [SKL 1.0](https://ksp.lisias.net/SKL-1_0.txt). See [here](./SKL-1_0.LICENSE)
+	+ Parts are also covered (DUAL LICENSED) by [SKL 1.0](https://ksp.lisias.net/SKL-1_0.txt). See [here](./LICENSE.SKL-1_0)
 		+ You are free to:
 			- Use : unpack and use the material in any computer or device
 			- Redistribute: redistribute the original package in any medium
