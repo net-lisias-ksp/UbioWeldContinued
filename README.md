@@ -12,6 +12,7 @@ This is a welding tool to allow you to merge KSP parts together in order to redu
 * Documentation	
 	+ [Homepage](http://ksp.lisias.net/add-ons/UbioWeldContinuum) on L Aerospace KSP Division
 	+ [Project's README](https://github.com/net-lisias-ksp/UbioWeldingLtd/blob/master/README.md)
+	+ [Install Instructions](https://github.com/net-lisias-ksp/UbioWeldingLtd/blob/master/INSTALL.md)
 	+ [Change Log](./CHANGE_LOG.md)
 	+ [TODO](./TODO.md) list
 * Official Distribution Sites:
@@ -28,21 +29,9 @@ This is a welding tool to allow you to merge KSP parts together in order to redu
 The mass, price, resource quantity are kept as if you had all the part separated.
 
 
-## Install
+## Installation
 
-1. Delete all previous content from `GameData/net.lisias.ksp/UbioWeldingLtd`
-2. Make a backup copy from `PluginData/UbioWeldingLtd` (just in case)
-3. Make a backup copu from `GameData/__LOCAL/UbioWeldingLtd` (just in case)
-4. Unzip the distribution zipfile on the KSP's root dir.
-    * Do not overwrite `PluginData/UbioWeldingLtd` contents if you want to preserve your current settings
-
-### Dependencies
-
-This add-on depends from the following ones (that should be installed, and **are not** embedded):
-
-* [KSP API Extensions/L](https://github.com/net-lisias-ksp/KSPAPIExtensions) 2.0 or newer
-* [Module Manager](https://github.com/net-lisias-kspu/ModuleManager) 3.0.4 or newer
-* [Toolbar Control](https://github.com/net-lisias-kspu/ToolbarControl) 0.1.6.15 or newer
+Detailed installation instructions are now on its own file (see the [In a Hurry](#in-a-hurry) section) and on the distribution file.
 
 ### Licensing
 
