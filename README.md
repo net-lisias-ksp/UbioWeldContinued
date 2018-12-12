@@ -66,12 +66,6 @@ This add-on depends from the following ones (that should be installed, and **are
 			- You must explicitly state the author's Copyright, as well an Official Site for downloading the original and new versions (see "Official Distribution Sites" above) 
 	+ [Further Copyright notices](./LICENSE)
 
-### Disclaimer
-
-This mod includes version checking using [MiniAVC](http://ksp-avc.cybutek.net). If you don't opt-out, it will use the internet to check whether there is a new version available. Data is only read from the internet and no personal information is sent. You can opt-out by deleting every instance of  `MiniAVC.dll` from your KSP's installment (after installing this mod).
-
-For a more comprehensive version checking experience, please download the [KSP-AVC](https://forum.kerbalspaceprogram.com/index.php?/topic/72169-13-12-ksp-avc-add-on-version-checker-plugin-1162-miniavc-ksp-avc-online-2016-10-13/) (1.4.1 and beyond see [here](https://forum.kerbalspaceprogram.com/index.php?/topic/173126-141-ksp-avc-add-on-version-checker-plugin-120-miniavc/)).
-
 
 ## UPSTREAM
 
