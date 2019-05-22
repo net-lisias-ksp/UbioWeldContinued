@@ -5,9 +5,12 @@ using ToolbarControl_NS;
 
 namespace UbioWeldingLtd
 {
+	
 	public class EditorToolbar
 	{
-		private ToolbarControl _toolbarControl;
+        internal static string MODID = "UbioWeldingLtd";
+
+        private ToolbarControl _toolbarControl;
 		private readonly MonoBehaviour owner;
 
 		public EditorToolbar(MonoBehaviour owner) {
@@ -17,7 +20,7 @@ namespace UbioWeldingLtd
 			this._toolbarControl.AddToAllToolbars(
 				OnClickToolbarButton, null,
 				ApplicationLauncher.AppScenes.VAB | ApplicationLauncher.AppScenes.SPH,
-				"UbioWeldingLtd",
+				MODID,
 				"UbioWeldingLtdButton",
 				Constants.settingLargeIconGetPath,
 				Constants.settingSmallIconGetPath,
