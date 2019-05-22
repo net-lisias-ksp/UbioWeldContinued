@@ -69,24 +69,22 @@
     <Reference Include="System">
       <HintPath>..\..\..\LIB\managed\1.4.1\System.dll</HintPath>
     </Reference>
-    <Reference Include="System.Xml">
-      <HintPath>..\..\..\LIB\managed\1.4.1\System.Xml.dll</HintPath>
-    </Reference>
-    <Reference Include="Assembly-CSharp">
-      <HintPath>..\..\..\..\..\LIB\managed\1.4.1\Assembly-CSharp.dll</HintPath>
+    <Reference Include="KSPe">
+      <HintPath>..\..\..\..\..\..\LIB\plugins\KSPe.dll</HintPath>
     </Reference>
     <Reference Include="ToolbarControl">
-      <HintPath>..\..\..\..\..\LIB\plugins\ToolbarControl.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\LIB\plugins\ToolbarControl.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine">
-      <HintPath>..\..\..\..\..\LIB\managed\1.4.1\UnityEngine.dll</HintPath>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>..\..\..\..\..\..\LIB\managed\1.4.1\Assembly-CSharp.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UI">
-      <HintPath>..\..\..\..\..\LIB\managed\1.4.1\UnityEngine.UI.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\LIB\managed\1.4.1\UnityEngine.UI.dll</HintPath>
     </Reference>
-    <Reference Include="KSPe">
-      <HintPath>..\..\..\..\..\LIB\plugins\KSPe.dll</HintPath>
+    <Reference Include="UnityEngine">
+      <HintPath>..\..\..\..\..\..\LIB\managed\1.4.1\UnityEngine.dll</HintPath>
     </Reference>
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
