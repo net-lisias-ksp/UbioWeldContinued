@@ -3,6 +3,7 @@ bin
 obj
 GameData/**/*.dll
 GameData/**/LICENSE*
+GameData/**/KNOWN_ISSUES.md
 GameData/**/README.md
 GameData/**/CHANGE_LOG.md
 GameData/**/CHANGES.md
