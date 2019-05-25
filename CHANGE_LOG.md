@@ -154,3 +154,6 @@
 		- Some other minor fixes
 	+ This is a joint release of girka2k and Alewx
 	+ previous changes: https://github.com/girka2k/unofficailUbioWeld/blob/dev/changelog.txt
+* 2013-1012: 1.1 (UbioZur) for KSP 0.22
+	+ Oldest known UbioZur's code.
+	+ [Post](https://forum.kerbalspaceprogram.com/index.php?/topic/35533-022-ubiozur-welding-ltd-20-dev-stopped/&page=8&tab=comments#comment-684377)
