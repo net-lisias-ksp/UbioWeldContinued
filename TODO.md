@@ -1,5 +1,7 @@
-# TODO List
+# Welding Ltd. Continuum :: TODO List
 
+* Implement proper `ModulePartVariant` support
+	+ KSP >= 1.5 !!
 * Implement IFS Support
 	+ https://forum.kerbalspaceprogram.com/index.php?/topic/96670-14-253-2018-04-06-ubiozur-welding-ltd-continued/&do=findComment&comment=3390902
 * Implement BD Armory Support

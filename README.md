@@ -63,12 +63,20 @@ Detailed installation instructions are now on its own file (see the [In a Hurry]
 ## UPSTREAM
 
 * [Alewx](https://forum.kerbalspaceprogram.com/index.php?/profile/102791-alewx/): UPSTREAM / Current Maintainer
-	+ [Forum](https://forum.kerbalspaceprogram.com/index.php?/topic/96670-14-253-2018-04-06-ubiozur-welding-ltd-continued/&)
+	+ [Forum](https://forum.kerbalspaceprogram.com/index.php?/topic/96670-*)
 	+ [GitHub](https://github.com/UbioWeldingLtd/UbioWeldContinued)
 * [girka2k](https://github.com/girka2k): PARALLEL
 	+ [GitHub](https://github.com/girka2k/UbioWeldContinued)
-* [malkuth](https://forum.kerbalspaceprogram.com/index.php?/profile/57414-malkuth/): PARALLEL
+* [malkuth](https://forum.kerbalspaceprogram.com/index.php?/profile/57414-malkuth/): 'Forked' from the sources from UbioZur
 	+ [GitHub](https://github.com/malkuth1974/unofficailUbioWeld)
 * [UbioZur](https://forum.kerbalspaceprogram.com/index.php?/profile/72946-ubiozur/): ROOT
-	+ [Forum](https://forum.kerbalspaceprogram.com/index.php?/topic/35533-022-ubiozur-welding-ltd-20-dev-stopped/&)
-	+ No Source available
+	+ [Forum](https://forum.kerbalspaceprogram.com/index.php?/topic/35533-*)
+	+ 2 in dev:
+		- [Google Drive](https://drive.google.com/file/d/0Bwou6bewBq0uM2J3VnFqMFRKRWs/view?usp=sharing)
+		- last known source, [posted here](https://forum.kerbalspaceprogram.com/index.php?/topic/35533-022-ubiozur-welding-ltd-20-dev-stopped/&do=findComment&comment=1541687)
+	+ Unversioned Test Version:
+		- [Google Drive](https://drive.google.com/file/d/0Bwou6bewBq0uWVFiRHpucFlrZEk/edit?usp=sharing)
+		- [posted here](https://forum.kerbalspaceprogram.com/index.php?/topic/35533-022-ubiozur-welding-ltd-20-dev-stopped/&do=findComment&comment=815188)
+	+ 1.1 :
+		- [Google Drive](https://docs.google.com/file/d/0Bwou6bewBq0ucS1FckJ3SEpHZDg/edit)
+		- [posted here](https://forum.kerbalspaceprogram.com/index.php?/topic/35533-022-ubiozur-welding-ltd-20-dev-stopped/&do=findComment&comment=684377)
