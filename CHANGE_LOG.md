@@ -154,6 +154,9 @@
 		- Some other minor fixes
 	+ This is a joint release of girka2k and Alewx
 	+ previous changes: https://github.com/girka2k/unofficailUbioWeld/blob/dev/changelog.txt
+* 2014-1122: 2.0 (UbioZur) for KSP 0.25 InDev
+	+ Last known source code from UbioZur
+	+ [Post](https://forum.kerbalspaceprogram.com/index.php?/topic/35533-022-ubiozur-welding-ltd-20-dev-stopped/&do=findComment&comment=1541687)
 * 2013-1206: 1.? (UbioZur) for KSP 0.23
 	+ Test DLL compiled for Linux.
 	+ [Post](https://forum.kerbalspaceprogram.com/index.php?/topic/35533-022-ubiozur-welding-ltd-20-dev-stopped/&page=18&tab=comments#comment-815188)
