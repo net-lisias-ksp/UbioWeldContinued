@@ -1,7 +1,7 @@
 
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UbioWeldingLtd", "Source/UbioWeldingLtd/UbioWeldingLtd.csproj", "{15934CED-4E31-491D-9E06-8511433E4CF3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UbioWeldingLtd", "Source\UbioWeldingLtd\UbioWeldingLtd.csproj", "{15934CED-4E31-491D-9E06-8511433E4CF3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -20,6 +20,14 @@ Global
 		$1.DirectoryNamespaceAssociation = PrefixedHierarchical
 		$0.StandardHeader = $2
 		$0.VersionControlPolicy = $3
+		$0.TextStylePolicy = $4
+		$4.FileWidth = 132
+		$4.NoTabsAfterNonTabs = True
+		$4.EolMarker = Unix
+		$4.scope = text/plain
+		$0.TextStylePolicy = $5
+		$5.inheritsSet = null
+		$5.scope = application/t4-template
 		version = 2.6.0.0
 	EndGlobalSection
 EndGlobal
