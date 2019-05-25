@@ -53,8 +53,11 @@ Detailed installation instructions are now on its own file (see the [In a Hurry]
 			- You agree to use the material only on (or to) KSP
 			- You don't alter the package in any form or way (but you can embedded it)
 			- You don't change the material in any way, and retain any copyright notices
-			- You must explicitly state the author's Copyright, as well an Official Site for downloading the original and new versions (see "Official Distribution Sites" above) 
+			- You must explicitly state the author's Copyright, as well an Official Site for downloading the original and new versions (see "Official Distribution Sites" above)
+	+ Original Code is now "Open to everyone who want to follow it, create you own mod based on mine, continue this one."
+		- Code by Malkuth under [license from UbioZur](https://forum.kerbalspaceprogram.com/index.php?/topic/35533-022-ubiozur-welding-ltd-20-dev-stopped/&do=findComment&comment=988710).   
 	+ [Further Copyright notices](./LICENSE)
+	+ Please note the copyrights and trademarks in [NOTICE](./NOTICE).
 
 
 ## UPSTREAM
