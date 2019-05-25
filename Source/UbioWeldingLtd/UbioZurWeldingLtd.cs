@@ -6,6 +6,8 @@ using KSP.UI.Screens;
 using KSPe.IO;
 using D = KSPe.IO.Data;     // KSP/PluginData/net.lisias.ksp/UbioWeldingLtd/*
 using L = KSPe.IO.Local;    // KSP/GameData/__LOCAL/net.lisias.ksp/UbioWeldingLtd/*
+using GUILayout = KSPe.UI.GUILayout;
+using GUI = KSPe.UI.GUI;
 
 namespace UbioWeldingLtd
 {
