@@ -1011,16 +1011,32 @@ namespace UbioWeldingLtd
 		 */
 		private void WriteCfg(string pathname)
 		{
+			// Gambiarra WARNING!
+			// Since I'm not fully using the KSPe.IO ConfigNode services, the KSPe path solving facitilies
+			// are giving us the wrong pathname here. A real solution is to use that thing properly, but]
+			// currently I'm rushing this to Release. Sometime in the near future this need to be FIXME.
+			// DANGER, WILL ROBINSON, DANGER!
+			// Failing on this code leads to KSP bluntly shutting down wihout warning or a log entry on KSP.log and Player.log/out_put.log!
+			pathname = System.IO.Path.Combine("GameData", pathname);
+			
 			Log.dbg("{0}{1}", Constants.logWritingFile, pathname);
 			
 			_welder.CreateFullConfigNode();
 			_welder.FullConfigNode.Save(pathname);
 			Log.dbg("{0}{1} successful", Constants.logWritingFile, pathname);
 			
-			_welder.FullInternalNode.Save(pathname);
-			Log.dbg("{0}{1} successful", Constants.logWritingFile, pathname);
-			
-			if (_config.dataBaseAutoReload)
+			if (null != _welder.FullInternalNode.GetNode(Constants.weldInternalNode))
+            {
+	            pathname = pathname.Replace(".cfg", "-Internal.cfg");
+				_welder.FullInternalNode.Save(pathname);
+				Log.dbg("{0}{1} successful", Constants.logWritingFile, pathname);
+            }
+            else
+            {
+				Log.dbg("{0}{1} has no internal info. Skipping.", Constants.logWritingFile, pathname);
+            }
+
+            if (_config.dataBaseAutoReload)
 			{
 				StartCoroutine(DatabaseHandler.DatabaseReloadWithMM());
 			}
