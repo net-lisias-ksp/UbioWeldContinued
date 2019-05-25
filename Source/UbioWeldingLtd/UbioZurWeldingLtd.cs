@@ -712,19 +712,20 @@ namespace UbioWeldingLtd
 		 */
 		private void HandleOverwriteDisplay(int windowID)
 		{
+            string welding_pathname = this.welding_pathname; // Caching the pathname
 			GUILayout.BeginVertical();
 			GUILayout.BeginHorizontal();
 			GUILayout.Label(Constants.guiDialOverwrite);
 			GUILayout.EndHorizontal();
 			GUILayout.BeginHorizontal();
-			GUILayout.Label(this.welding_pathname);
+			GUILayout.Label(welding_pathname);
 			GUILayout.EndHorizontal();
 			GUILayout.BeginHorizontal();
 			GUILayout.EndHorizontal();
 			GUILayout.FlexibleSpace();
 			if (GUILayout.Button(Constants.guiOK))
 			{
-				WriteCfg();
+				WriteCfg(welding_pathname);
 				this.state = DisplayState.savedWindow;
 			}
 			if (GUILayout.Button(Constants.guiCancel))
@@ -949,10 +950,10 @@ namespace UbioWeldingLtd
 					string welding_pathname = this.welding_pathname; // Cache the built pathname
 					if (!File<UbioZurWeldingLtd>.Local.Exists(welding_pathname))
 					{
-						//create the file
+						//create the file (why? ListasT)
 						L.StreamWriter partfile = File<UbioZurWeldingLtd>.Local.CreateText(welding_pathname);
 						partfile.Close();
-						WriteCfg();
+						WriteCfg(File<UbioZurWeldingLtd>.Local.Solve(welding_pathname));
 						this.state = DisplayState.savedWindow;
 					}
 					else
@@ -1008,18 +1009,16 @@ namespace UbioWeldingLtd
 		/*
 		 * Writing the cfg File
 		 */
-		private void WriteCfg()
+		private void WriteCfg(string pathname)
 		{
-			string filename = this.welding_pathname;
-			Log.dbg("{0}{1}", Constants.logWritingFile, filename);
+			Log.dbg("{0}{1}", Constants.logWritingFile, pathname);
 			
 			_welder.CreateFullConfigNode();
-			_welder.FullConfigNode.Save(filename);
-			Log.dbg("{0}{1} successful", Constants.logWritingFile, filename);
+			_welder.FullConfigNode.Save(pathname);
+			Log.dbg("{0}{1} successful", Constants.logWritingFile, pathname);
 			
-			filename = filename.Replace(".cfg", "-Internal.cfg");
-			_welder.FullInternalNode.Save(filename);
-			Log.dbg("{0}{1} successful", Constants.logWritingFile, filename);
+			_welder.FullInternalNode.Save(pathname);
+			Log.dbg("{0}{1} successful", Constants.logWritingFile, pathname);
 			
 			if (_config.dataBaseAutoReload)
 			{
