@@ -699,7 +699,7 @@ namespace UbioWeldingLtd
 
 		private void OnOverwriteDisplay(int windowID) {
 			try {
-				this.OnOverwriteDisplay(windowID);
+				this.HandleOverwriteDisplay(windowID);
 			} catch (Exception e) {
 				Log.ex(this, e);
 			} finally {
