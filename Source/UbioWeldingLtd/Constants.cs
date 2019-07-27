@@ -75,8 +75,8 @@ namespace UbioWeldingLtd
 		public const string settingAllNodes					= "includeAllNodes";
 		public const string settingAllowCareer				= "allowCareerMode";
 		public const string settingDontProcessMasslessParts	= "dontProcessMasslessParts";
-		public const string settingLargeIconGetPath			= ROOT + BASE + "Textures/ToolbarLargeIcon.png"; // Toobar already adds GameData/ for us!
-		public const string settingSmallIconGetPath 		= ROOT + BASE + "Textures/ToolbarSmallIcon.png";
+		public const string settingLargeIconGetPath			= ROOT + BASE + "PluginData/Textures/ToolbarLargeIcon.png"; // Toobar already adds GameData/ for us!
+		public const string settingSmallIconGetPath 		= ROOT + BASE + "PluginData/Textures/ToolbarSmallIcon.png";
 		public const string settingXmlConfigFileName		= "new-config.xml";
 		public const string settingXmlOldConfigFileName		= "config.xml";
 		public const string settingXmlListFileName			= "moduleAttributeList.xml";
