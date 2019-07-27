@@ -1,5 +1,8 @@
 # Welding Ltd. Continuum :: Change Log
 
+* 2019-0727: 2.6.0.6 (Lisias) for 1.4.1 <= KSP <= 1.4.5
+	+ An incredibly idiotic mistake was detected and fixed.
+		- Thanks for the heads up, [w00tguy](https://forum.kerbalspaceprogram.com/index.php?/topic/96670-14-253-2018-04-06-ubiozur-welding-ltd-continued/&do=findComment&comment=3641610) 
 * 2019-0525: 2.6.0.5 (Lisias) for 1.4.1 <= KSP <= 1.4.5
 	+ After almost a Year, Continuum goes gold! :-)
 		- Finally fully supporting KSP 1.4.5... =P
@@ -166,12 +169,3 @@
 		- Some other minor fixes
 	+ This is a joint release of girka2k and Alewx
 	+ previous changes: https://github.com/girka2k/unofficailUbioWeld/blob/dev/changelog.txt
-* 2014-1122: 2.0 (UbioZur) for KSP 0.25 InDev
-	+ Last known source code from UbioZur
-	+ [Post](https://forum.kerbalspaceprogram.com/index.php?/topic/35533-022-ubiozur-welding-ltd-20-dev-stopped/&do=findComment&comment=1541687)
-* 2013-1206: 1.? (UbioZur) for KSP 0.23
-	+ Test DLL compiled for Linux.
-	+ [Post](https://forum.kerbalspaceprogram.com/index.php?/topic/35533-022-ubiozur-welding-ltd-20-dev-stopped/&page=18&tab=comments#comment-815188)
-* 2013-1012: 1.1 (UbioZur) for KSP 0.22
-	+ Oldest known UbioZur's code.
-	+ [Post](https://forum.kerbalspaceprogram.com/index.php?/topic/35533-022-ubiozur-welding-ltd-20-dev-stopped/&page=8&tab=comments#comment-684377)
