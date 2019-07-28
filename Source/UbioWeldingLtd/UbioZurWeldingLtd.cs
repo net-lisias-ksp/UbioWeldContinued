@@ -950,10 +950,11 @@ namespace UbioWeldingLtd
 					string welding_pathname = this.welding_pathname; // Cache the built pathname
 					if (!File<UbioZurWeldingLtd>.Local.Exists(welding_pathname))
 					{
-						//create the file (why? ListasT)
+						//create the file (why? LisiasT)
 						L.StreamWriter partfile = File<UbioZurWeldingLtd>.Local.CreateText(welding_pathname);
 						partfile.Close();
-						WriteCfg(File<UbioZurWeldingLtd>.Local.Solve(welding_pathname));
+
+						WriteCfg(welding_pathname);
 						this.state = DisplayState.savedWindow;
 					}
 					else
@@ -1017,6 +1018,7 @@ namespace UbioWeldingLtd
 			// currently I'm rushing this to Release. Sometime in the near future this need to be FIXME.
 			// DANGER, WILL ROBINSON, DANGER!
 			// Failing on this code leads to KSP bluntly shutting down wihout warning or a log entry on KSP.log and Player.log/out_put.log!
+			pathname = File<UbioZurWeldingLtd>.Local.Solve(pathname);
 			pathname = System.IO.Path.Combine("GameData", pathname);
 			
 			Log.dbg("{0}{1}", Constants.logWritingFile, pathname);
