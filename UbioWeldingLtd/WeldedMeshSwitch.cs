@@ -150,7 +150,7 @@ namespace UbioWeldingLtd
 								{
 									if (destroyUnusedParts)
 									{
-										DestroyObject(t.gameObject);
+										Destroy(t.gameObject);
 									}
 									else
 									{

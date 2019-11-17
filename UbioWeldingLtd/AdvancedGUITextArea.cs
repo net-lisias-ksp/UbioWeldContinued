@@ -16,7 +16,7 @@ namespace UbioWeldingLtd
 				_ControlID = activeID;
 			}
 
-			if (_ControlID != activeID && Event.current.type == EventType.mouseDown && !rect.Contains(Event.current.mousePosition))
+			if (_ControlID != activeID && Event.current.type == EventType.MouseDown && !rect.Contains(Event.current.mousePosition))
 			{
 				GUI.FocusControl(GUI.GetNameOfFocusedControl());
 			}

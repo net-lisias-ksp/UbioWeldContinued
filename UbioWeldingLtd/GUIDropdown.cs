@@ -46,7 +46,7 @@ namespace UbioWeldingLtd
 
 			switch (Event.current.GetTypeForControl(controlID))
 			{
-				case EventType.mouseUp:
+				case EventType.MouseUp:
 					{
 						if (isClickedComboButton)
 						{
@@ -110,7 +110,7 @@ namespace UbioWeldingLtd
 
 		internal bool closeOnOutsideClick(Rect dropdownRect)
 		{
-			if (IsOpen && (Event.current.type == EventType.mouseDown) && !dropdownRect.Contains(Event.current.mousePosition))
+			if (IsOpen && (Event.current.type == EventType.MouseDown) && !dropdownRect.Contains(Event.current.mousePosition))
 			{
 				hide();
 				return true;
