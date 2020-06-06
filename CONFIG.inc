@@ -1,6 +1,7 @@
 source ../CONFIG.inc
 
 PACKAGE=UbioWeldingLtd
+PACKNAME=UbioWeldContinuum
 TARGETDIR="net.lisias.ksp/$PACKAGE"
 TARGETBINDIR="$TARGETDIR"
 PROJECTSDIR="Source/$PACKAGE/"
