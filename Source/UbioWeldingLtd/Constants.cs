@@ -13,7 +13,6 @@ namespace UbioWeldingLtd
 		 * + Pathnames *never* start with "/".
 		 * + Use Path.Combine where's possible.
 		 */
-		public const string GAMEDATA	= "GameData/";
 		public const string ROOT 		= "net.lisias.ksp/";
 		public const string BASE 		= "UbioWeldingLtd/";
 

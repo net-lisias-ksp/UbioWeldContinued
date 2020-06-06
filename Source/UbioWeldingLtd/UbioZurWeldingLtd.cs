@@ -4,8 +4,8 @@ using UnityEngine;
 using KSP.UI.Screens;
 
 using KSPe.IO;
-using D = KSPe.IO.Data;     // KSP/PluginData/net.lisias.ksp/UbioWeldingLtd/*
-using L = KSPe.IO.Local;    // KSP/GameData/__LOCAL/net.lisias.ksp/UbioWeldingLtd/*
+using D = KSPe.IO.Data<UbioWeldingLtd.OldWeldingPluginConfig>;	// <KSP>/PluginData/net.lisias.ksp/UbioWeldingLtd/*
+using L = KSPe.IO.Local<UbioWeldingLtd.UbioZurWeldingLtd>;		// <KSP>/GameData/__LOCAL/net.lisias.ksp/UbioWeldingLtd/*
 using GUILayout = KSPe.UI.GUILayout;
 using GUI = KSPe.UI.GUI;
 
@@ -209,17 +209,17 @@ namespace UbioWeldingLtd
 		/// </summary>
 		private void initConfig()
 		{
-			D.PluginConfiguration oldConfig = D.PluginConfiguration.CreateForType<OldWeldingPluginConfig>(Constants.settingXmlOldConfigFileName);
+			D.PluginConfiguration oldConfig = D.PluginConfiguration.CreateFor(Constants.settingXmlOldConfigFileName);
 			bool oldConfigFound = oldConfig.exists();
 			if (oldConfigFound)
 			{
-				oldConfig = D.PluginConfiguration.CreateForType<OldWeldingPluginConfig>();
+				oldConfig = D.PluginConfiguration.CreateFor();
 				oldConfig.load();
 				oldConfig.delete();
 				Log.dbg("old configfile found and deleted");
 			}
 
-			D.PluginConfiguration config = D.PluginConfiguration.CreateForType<OldWeldingPluginConfig>(Constants.settingXmlConfigFileName);
+			D.PluginConfiguration config = D.PluginConfiguration.CreateFor(Constants.settingXmlConfigFileName);
 			if (!config.exists())
 			{
 				_config = new WeldingConfiguration();
