@@ -32,25 +32,40 @@ namespace UbioWeldingLtd
 		{
 			Assembly _MMAssembly = null;
 			Assembly _TBAssembly = null;
+
+			Log.dbg("DatabaseHandler.initMMAssembly()");
+
 			// Walk through asseblies looking for ModuleManager* name
 			foreach (AssemblyLoader.LoadedAssembly lAssembly in AssemblyLoader.loadedAssemblies)
 			{
+				if (null == lAssembly || null == lAssembly.assembly)
+					Log.warn("Holly crap, a null entry on the AssemblyLoader.loadedAssemblies!");
+
 				Assembly assembly = lAssembly.assembly;
+				Log.dbg("{0} on {1}", assembly.GetName().Name, assembly.Location);
+
 				System.Version aVersion = assembly.GetName().Version;
 
-				if (assembly.GetName().Name.StartsWith(Dependencies.ModuleManager.name) &&
-				    (((_MMAssembly == null) && (aVersion >= Dependencies.ModuleManager.minVersion)) || //first instance of ModuleManager
-						(_MMAssembly.GetName().Version < aVersion)))	//in case was loaded multiple versions of ModuleManager
+				if (	assembly.GetName().Name.Equals(Dependencies.ModuleManager.name)
+					&& (
+						( (_MMAssembly == null) && (aVersion >= Dependencies.ModuleManager.minVersion) )	//first instance of ModuleManager
+						|| (_MMAssembly.GetName().Version < aVersion)										//in case was loaded multiple versions of ModuleManager
+						)
+					)
 				{
 					_MMAssembly = assembly;
 				}
-				else if (assembly.GetName().Name.StartsWith(Dependencies.ToobarControl.name) &&
-				    (((_TBAssembly == null) && (aVersion >= Dependencies.ToobarControl.minVersion)) || 
-				    	(_TBAssembly.GetName().Version < aVersion)))
+				else if (	assembly.GetName().Name.Equals(Dependencies.ToobarControl.name)
+					&& (
+						( (_TBAssembly == null) && (aVersion >= Dependencies.ToobarControl.minVersion) )
+						|| (_TBAssembly.GetName().Version < aVersion)
+						)
+					)
 				{
 					_TBAssembly = assembly;
 				}
-				Log.dbg(assembly.GetName().Name);
+
+				Log.dbg("{0} checked.", assembly.GetName().Name);
 			}
 
 			if (_MMAssembly != null)
